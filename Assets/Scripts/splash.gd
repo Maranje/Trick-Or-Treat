@@ -59,7 +59,6 @@ func reset_multiplayer():
 	multiplayer.multiplayer_peer = null
 	peer = ENetMultiplayerPeer.new()
 	
-	# Clean up existing labels
 	for label in peer_labels.values():
 		if is_instance_valid(label):
 			label.queue_free()
@@ -111,7 +110,6 @@ func _ready_pressed():
 func _user_name_edit(text):
 	if not is_multiplayer_active():
 		return
-		
 	var my_peer_id = multiplayer.get_unique_id()
 	if my_peer_id in peer_labels:
 		peer_labels[my_peer_id].label_sync_component.gather_input(text)
@@ -132,13 +130,29 @@ func _on_connection_failed():
 func _on_splash_theme_finished():
 	splash_theme.play()
 
+func reposition_all_labels():
+	await get_tree().process_frame
+	
+	var valid_labels = []
+	for peer_id in peer_labels.keys():
+		if is_instance_valid(peer_labels[peer_id]):
+			valid_labels.append(peer_labels[peer_id])
+	
+	valid_labels.sort_custom(func(a, b): return a.position.y < b.position.y)
+	
+	for i in range(valid_labels.size()):
+		valid_labels[i].position.y = i * 20 - 141
+	
+	label_y_offset = valid_labels.size() * 20
+	print("Repositioned %d labels" % valid_labels.size())
+
 func _on_peer_disconnected(id):
 	print("Peer ", id, " disconnected")
 	if id in peer_labels:
 		if is_instance_valid(peer_labels[id]):
 			peer_labels[id].queue_free()
 		peer_labels.erase(id)
-		label_y_offset -= 20
+		reposition_all_labels()
 
 func _on_server_disconnected():
 	print("Disconnected from server!")
