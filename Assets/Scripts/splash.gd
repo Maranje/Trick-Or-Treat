@@ -2,17 +2,13 @@ extends Node
 
 var label_scene: PackedScene = preload("uid://c2mrfsrph5ocy")
 @onready var label_spawner: MultiplayerSpawner = $Lobby/LabelSpawner
-
 @onready var address: LineEdit = $Connect/Address
 @onready var host_button: Button = $Connect/HBoxContainer/Host
 @onready var join_button: Button = $Connect/HBoxContainer/Join
 @onready var ready_button: Button = $Lobby/Ready
-
 @onready var user_name: LineEdit = $Lobby/UserName
-
 @onready var connect_disp: Node2D = $Connect
 @onready var lobby_disp: Node2D = $Lobby
-
 @onready var splash_theme: AudioStreamPlayer2D = $SplashTheme
 
 const PORT = 4139
@@ -34,6 +30,10 @@ func _ready() -> void:
 	user_name.text_changed.connect(_user_name_edit)
 	splash_theme.finished.connect(_on_splash_theme_finished)
 	
+	# Add disconnection signal handlers
+	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
+	multiplayer.server_disconnected.connect(_on_server_disconnected)
+	
 	label_spawner.spawn_function = func(data):
 		var new_label = label_scene.instantiate() as UserLabel
 		new_label.position.y += label_y_offset
@@ -42,6 +42,11 @@ func _ready() -> void:
 		new_label.name = str(data.peer_id)
 		peer_labels[data.peer_id] = new_label
 		return new_label
+
+func is_multiplayer_active() -> bool:
+	return multiplayer.has_multiplayer_peer() and \
+		   multiplayer.multiplayer_peer != null and \
+		   multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED
 
 func reset_multiplayer():
 	if multiplayer.connected_to_server.is_connected(_on_connected_client):
@@ -54,6 +59,10 @@ func reset_multiplayer():
 	multiplayer.multiplayer_peer = null
 	peer = ENetMultiplayerPeer.new()
 	
+	# Clean up existing labels
+	for label in peer_labels.values():
+		if is_instance_valid(label):
+			label.queue_free()
 	peer_labels.clear()
 	label_y_offset = 0
 
@@ -89,12 +98,19 @@ func _join_pressed():
 	multiplayer.connection_failed.connect(_on_connection_failed)
 
 func _ready_pressed():
+	if not is_multiplayer_active():
+		print("Cannot ready - multiplayer not active")
+		return
+		
 	var my_peer_id = multiplayer.get_unique_id()
 	if my_peer_id in peer_labels:
 		peer_labels[my_peer_id].label_sync_component.player_ready()
 		PlayerGlobals.user_name = peer_labels[my_peer_id].text
 
 func _user_name_edit(text):
+	if not is_multiplayer_active():
+		return
+		
 	var my_peer_id = multiplayer.get_unique_id()
 	if my_peer_id in peer_labels:
 		peer_labels[my_peer_id].label_sync_component.gather_input(text)
@@ -110,9 +126,39 @@ func _on_connected_client():
 
 func _on_connection_failed():
 	print("Failed to connect to server")
-	
+	_return_to_connection_screen()
+
 func _on_splash_theme_finished():
 	splash_theme.play()
+
+func _on_peer_disconnected(id):
+	print("Peer ", id, " disconnected")
+	if id in peer_labels:
+		if is_instance_valid(peer_labels[id]):
+			peer_labels[id].queue_free()
+		peer_labels.erase(id)
+
+func _on_server_disconnected():
+	print("Disconnected from server!")
+	_return_to_connection_screen()
+
+func _return_to_connection_screen():
+	# Show connection screen
+	lobby_disp.visible = false
+	connect_disp.visible = true
+	
+	# Clean up all labels
+	for label in peer_labels.values():
+		if is_instance_valid(label):
+			label.queue_free()
+	peer_labels.clear()
+	label_y_offset = 0
+	
+	# Reset multiplayer
+	multiplayer.multiplayer_peer = null
+	peer = ENetMultiplayerPeer.new()
+	
+	print("Returned to connection screen")
 
 @rpc("any_peer", "call_local", "reliable")
 func peer_ready():
