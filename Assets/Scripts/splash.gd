@@ -2,13 +2,17 @@ extends Node
 
 var label_scene: PackedScene = preload("uid://c2mrfsrph5ocy")
 @onready var label_spawner: MultiplayerSpawner = $Lobby/LabelSpawner
+
 @onready var address: LineEdit = $Connect/Address
 @onready var host_button: Button = $Connect/HBoxContainer/Host
 @onready var join_button: Button = $Connect/HBoxContainer/Join
 @onready var ready_button: Button = $Lobby/Ready
+
 @onready var user_name: LineEdit = $Lobby/UserName
+
 @onready var connect_disp: Node2D = $Connect
 @onready var lobby_disp: Node2D = $Lobby
+
 @onready var splash_theme: AudioStreamPlayer2D = $SplashTheme
 
 const PORT = 4139
