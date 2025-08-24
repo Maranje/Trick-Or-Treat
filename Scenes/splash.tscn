@@ -37,7 +37,6 @@ texture = ExtResource("4_qvm2y")
 centered = false
 
 [node name="Connect" type="Node2D" parent="."]
-visible = false
 position = Vector2(400, 240)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Connect"]
@@ -75,6 +74,7 @@ text = "127.0.0.1"
 placeholder_text = "174.97.120.207"
 
 [node name="Lobby" type="Node2D" parent="."]
+visible = false
 position = Vector2(400, 240)
 
 [node name="LobbyCard" type="Sprite2D" parent="Lobby"]

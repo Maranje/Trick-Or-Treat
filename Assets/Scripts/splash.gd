@@ -93,7 +93,6 @@ func _ready_pressed():
 	if my_peer_id in peer_labels:
 		peer_labels[my_peer_id].label_sync_component.player_ready()
 		PlayerGlobals.user_name = peer_labels[my_peer_id].text
-		print("Player %s ready!" % peer_labels[my_peer_id].text)
 
 func _user_name_edit(text):
 	var my_peer_id = multiplayer.get_unique_id()
