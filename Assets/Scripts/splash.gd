@@ -65,6 +65,7 @@ func reset_multiplayer():
 			label.queue_free()
 	peer_labels.clear()
 	label_y_offset = 0
+	label_y_offset = 0
 
 func _host_pressed():
 	reset_multiplayer()
@@ -137,6 +138,7 @@ func _on_peer_disconnected(id):
 		if is_instance_valid(peer_labels[id]):
 			peer_labels[id].queue_free()
 		peer_labels.erase(id)
+		label_y_offset -= 20
 
 func _on_server_disconnected():
 	print("Disconnected from server!")
@@ -152,13 +154,23 @@ func _return_to_connection_screen():
 		if is_instance_valid(label):
 			label.queue_free()
 	peer_labels.clear()
-	label_y_offset = 0
 	
 	# Reset multiplayer
 	multiplayer.multiplayer_peer = null
 	peer = ENetMultiplayerPeer.new()
 	
 	print("Returned to connection screen")
+
+func _reposition_labels():
+	# Wait a frame for the queue_free to process
+	await get_tree().process_frame
+	
+	# Reposition all remaining labels to remove gaps
+	var position_index = 0
+	for peer_id in peer_labels.keys():
+		if is_instance_valid(peer_labels[peer_id]):
+			peer_labels[peer_id].position.y = position_index * 20
+			position_index += 1
 
 @rpc("any_peer", "call_local", "reliable")
 func peer_ready():
