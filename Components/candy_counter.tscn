@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://cs0yf24scm6p0"]
+
+[ext_resource type="Script" uid="uid://brkkcg1fdfa6k" path="res://Assets/Scripts/candy_counter.gd" id="1_xng81"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_fb5lp"]
+font_size = 26
+font_color = Color(0, 0, 0, 1)
+
+[node name="CandyCounter" type="Label"]
+texture_filter = 1
+offset_left = -98.0
+offset_top = 41.0
+offset_right = -17.0
+offset_bottom = 77.0
+text = "0"
+label_settings = SubResource("LabelSettings_fb5lp")
+horizontal_alignment = 2
+script = ExtResource("1_xng81")
