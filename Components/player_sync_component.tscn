@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://dy4vw71mag042"]
+
+[ext_resource type="Script" uid="uid://dt07yv45bustl" path="res://Assets/Scripts/player_sync_component.gd" id="1_hty01"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_wc3bp"]
+properties/0/path = NodePath(".:movement")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="PlayerSyncComponent" type="MultiplayerSynchronizer"]
+root_path = NodePath(".")
+replication_config = SubResource("SceneReplicationConfig_wc3bp")
+script = ExtResource("1_hty01")
