@@ -6,10 +6,9 @@ func _ready() -> void:
 		text = "0"
 		return
 	
-	# Get the value from PlayerGlobals by variable name
 	var value = PlayerGlobals.get(source_number)
 	if value != null:
 		text = str(value)
 	else:
 		text = "0"
-		print("Warning: '%s' not found in PlayerGlobals" % source_number)
+		print("'%s' not found in PlayerGlobals :(" % source_number)
