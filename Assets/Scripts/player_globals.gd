@@ -1,6 +1,5 @@
 extends Node
 
-# Global properties
 var user_name: String = ""
 var candy_count: int = 0
 var candy_corn: int = 0
@@ -46,12 +45,4 @@ func add_candy(amount: int):
 
 func add_candy_corn(amount: int):
 	candy_corn += amount
-	save_data()
-
-func set_costume(costume_id: int):
-	current_costume = costume_id
-	save_data()
-
-func set_username(username: String):
-	user_name = username
 	save_data()
