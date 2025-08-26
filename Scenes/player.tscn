@@ -11,8 +11,16 @@ size = Vector2(20, 52)
 properties/0/path = NodePath(".:global_position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
+properties/1/path = NodePath("AnimatedSprite2D:animation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
 [node name="Player" type="CharacterBody2D"]
+scale = Vector2(2, 2)
+collision_layer = 0
 script = ExtResource("1_6t5aa")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -21,7 +29,6 @@ sprite_frames = ExtResource("1_v0iea")
 animation = &"idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2(0, 16)
 shape = SubResource("RectangleShape2D_cvnsp")
 

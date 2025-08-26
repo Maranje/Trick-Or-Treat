@@ -1,6 +1,7 @@
 extends Node
 
 var label_scene: PackedScene = preload("uid://c2mrfsrph5ocy")
+var stage_scene: PackedScene = preload("uid://cul6kxi3csn08")
 @onready var label_spawner: MultiplayerSpawner = $Lobby/LabelSpawner
 @onready var address: LineEdit = $Connect/Address
 @onready var host_button: Button = $Connect/HBoxContainer/Host
@@ -47,7 +48,7 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	if check_all_players_ready():
-		print("all players ready!") #change this shit to a scene change to start the stage when all players are ready
+		get_tree().change_scene_to_packed(stage_scene)
 
 func check_all_players_ready() -> bool:
 	if not peer_labels: return false

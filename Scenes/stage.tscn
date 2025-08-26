@@ -1,0 +1,73 @@
+[gd_scene load_steps=10 format=3 uid="uid://cul6kxi3csn08"]
+
+[ext_resource type="Texture2D" uid="uid://bknstvfikbog5" path="res://Assets/Sprites/Backgrounds/Sky/Sky.png" id="1_gdy8p"]
+[ext_resource type="Script" uid="uid://ieqnwsbd8cua" path="res://Assets/Scripts/stage.gd" id="1_gvphh"]
+[ext_resource type="PackedScene" uid="uid://dvknkvkg1h3hh" path="res://Components/clouds.tscn" id="2_gvphh"]
+[ext_resource type="Texture2D" uid="uid://1wxwtuq4445a" path="res://Assets/Sprites/Backgrounds/Sky/Moon.png" id="3_hyud0"]
+[ext_resource type="Texture2D" uid="uid://gxxv44l7ldsy" path="res://Assets/Sprites/Backgrounds/Trees/Trees1.png" id="4_ohi65"]
+[ext_resource type="Texture2D" uid="uid://ca4r5in37vsk4" path="res://Assets/Sprites/Backgrounds/Houses/Houses.png" id="5_sr6x0"]
+[ext_resource type="Texture2D" uid="uid://by0273gnxglry" path="res://Assets/Sprites/Backgrounds/Sidewalk/Street.png" id="6_p7ny2"]
+[ext_resource type="Texture2D" uid="uid://u0a4y1a507f1" path="res://Assets/Sprites/Backgrounds/Sidewalk/Sidewalk.png" id="7_462mf"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gvphh"]
+size = Vector2(7200, 20)
+
+[node name="Stage" type="Node"]
+script = ExtResource("1_gvphh")
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("..")
+
+[node name="Background" type="Node2D" parent="."]
+
+[node name="Sky" type="Sprite2D" parent="Background"]
+texture_filter = 1
+scale = Vector2(2, 2)
+texture = ExtResource("1_gdy8p")
+centered = false
+
+[node name="Clouds" parent="Background" instance=ExtResource("2_gvphh")]
+
+[node name="Moon" type="Sprite2D" parent="Background"]
+texture_filter = 1
+scale = Vector2(2, 2)
+texture = ExtResource("3_hyud0")
+centered = false
+
+[node name="Trees" type="Sprite2D" parent="Background"]
+texture_filter = 1
+scale = Vector2(2, 2)
+texture = ExtResource("4_ohi65")
+centered = false
+
+[node name="Houses" type="Sprite2D" parent="Background"]
+texture_filter = 1
+scale = Vector2(2, 2)
+texture = ExtResource("5_sr6x0")
+centered = false
+
+[node name="Ground" type="StaticBody2D" parent="Background"]
+
+[node name="StreetLeft" type="Sprite2D" parent="Background/Ground"]
+texture_filter = 1
+position = Vector2(-800, 0)
+scale = Vector2(2, 2)
+texture = ExtResource("6_p7ny2")
+centered = false
+
+[node name="Sidewalk" type="Sprite2D" parent="Background/Ground"]
+texture_filter = 1
+scale = Vector2(2, 2)
+texture = ExtResource("7_462mf")
+centered = false
+
+[node name="StreetRight" type="Sprite2D" parent="Background/Ground"]
+texture_filter = 1
+position = Vector2(7200, 0)
+scale = Vector2(2, 2)
+texture = ExtResource("6_p7ny2")
+centered = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Ground"]
+position = Vector2(3600, 434)
+shape = SubResource("RectangleShape2D_gvphh")
