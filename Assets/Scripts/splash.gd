@@ -33,7 +33,6 @@ func _ready() -> void:
 	user_name.text_changed.connect(_user_name_edit)
 	splash_theme.finished.connect(_on_splash_theme_finished)
 	
-	# Add disconnection signal handlers
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 	
