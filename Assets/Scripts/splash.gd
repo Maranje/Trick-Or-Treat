@@ -17,6 +17,8 @@ var label_y_offset = 0
 var peer_labels: Dictionary = {}
 
 func _ready() -> void:
+	PlayerGlobals.load_data()
+	user_name.text = PlayerGlobals.user_name
 	if not address or not host_button or not join_button:
 		print("ERROR: Missing UI nodes!")
 		return
@@ -119,6 +121,7 @@ func _ready_pressed():
 	if my_peer_id in peer_labels:
 		peer_labels[my_peer_id].label_sync_component.player_ready()
 		PlayerGlobals.user_name = peer_labels[my_peer_id].text
+		PlayerGlobals.save_data()
 
 func _user_name_edit(text):
 	if not is_multiplayer_active():
