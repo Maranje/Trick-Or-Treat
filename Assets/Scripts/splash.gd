@@ -79,7 +79,6 @@ func reset_multiplayer():
 			label.queue_free()
 	peer_labels.clear()
 	label_y_offset = 0
-	label_y_offset = 0
 
 func _host_pressed():
 	reset_multiplayer()
@@ -191,18 +190,12 @@ func _return_to_connection_screen():
 	
 	print("Returned to connection screen")
 
-func _reposition_labels():
-	# Wait a frame for the queue_free to process
-	await get_tree().process_frame
-	
-	# Reposition all remaining labels to remove gaps
-	var position_index = 0
-	for peer_id in peer_labels.keys():
-		if is_instance_valid(peer_labels[peer_id]):
-			peer_labels[peer_id].position.y = position_index * 20
-			position_index += 1
-
 @rpc("any_peer", "call_local", "reliable")
 func peer_ready():
 	var sender_id = multiplayer.get_remote_sender_id()
+	
+	# Fix the server self-call issue
+	if sender_id == 0:
+		sender_id = 1
+	
 	label_spawner.spawn({"peer_id": sender_id})
