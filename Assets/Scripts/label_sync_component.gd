@@ -8,4 +8,5 @@ func gather_input(text: String):
 		label_text = text
 
 func player_ready():
-	p_ready = true
+	if is_multiplayer_authority():
+		p_ready = !p_ready

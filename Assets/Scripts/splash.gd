@@ -43,6 +43,19 @@ func _ready() -> void:
 		peer_labels[data.peer_id] = new_label
 		return new_label
 
+func _process(_delta: float) -> void:
+	if check_all_players_ready():
+		print("all players ready!") #change this shit to a scene change to start the stage when all players are ready
+
+func check_all_players_ready() -> bool:
+	if not peer_labels: return false
+	var all_ready = true
+	for label in peer_labels.values():
+		if not label.player_ready:
+			all_ready = false
+			break
+	return all_ready
+
 func is_multiplayer_active() -> bool:
 	return multiplayer.has_multiplayer_peer() and \
 		   multiplayer.multiplayer_peer != null and \
