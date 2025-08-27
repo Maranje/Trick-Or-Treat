@@ -6,7 +6,8 @@ var input_multiplayer_authority: int
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @onready var camera_2d: Camera2D = $Camera2D
 var prev_anim: String
-var speed: int = 400
+var speed: int = 500
+var jump: int = -1000
 var gravity: int = 2500
 var jump_velocity: int = -1000
 
@@ -41,10 +42,8 @@ func _process(delta: float) -> void:
 	# Apply gravity
 	if not is_on_floor():
 		velocity.y += gravity * delta
-	
-	# Handle jumping
-	if is_on_floor() and Input.is_action_just_pressed("ui_accept"):
-		velocity.y = jump_velocity
+	elif player_sync_component.jump:
+		velocity.y = jump
 	
 	# Apply horizontal movement from sync component
 	velocity.x = player_sync_component.movement.x * speed
