@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cul6kxi3csn08"]
+[gd_scene load_steps=13 format=3 uid="uid://cul6kxi3csn08"]
 
 [ext_resource type="Texture2D" uid="uid://bknstvfikbog5" path="res://Assets/Sprites/Backgrounds/Sky/Sky.png" id="1_gdy8p"]
 [ext_resource type="Script" uid="uid://ieqnwsbd8cua" path="res://Assets/Scripts/stage.gd" id="1_gvphh"]
@@ -8,9 +8,14 @@
 [ext_resource type="Texture2D" uid="uid://ca4r5in37vsk4" path="res://Assets/Sprites/Backgrounds/Houses/Houses.png" id="5_sr6x0"]
 [ext_resource type="Texture2D" uid="uid://by0273gnxglry" path="res://Assets/Sprites/Backgrounds/Sidewalk/Street.png" id="6_p7ny2"]
 [ext_resource type="Texture2D" uid="uid://u0a4y1a507f1" path="res://Assets/Sprites/Backgrounds/Sidewalk/Sidewalk.png" id="7_462mf"]
+[ext_resource type="Texture2D" uid="uid://3lfgggan3x3p" path="res://Assets/Sprites/Backgrounds/Sidewalk/Truck.png" id="9_hyud0"]
+[ext_resource type="AudioStream" uid="uid://djx5vvfk1nu3c" path="res://Assets/Audio/Music/MainThemeFull.mp3" id="10_ohi65"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gvphh"]
 size = Vector2(7200, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ohi65"]
+size = Vector2(20, 444)
 
 [node name="Stage" type="Node"]
 script = ExtResource("1_gvphh")
@@ -68,6 +73,34 @@ scale = Vector2(2, 2)
 texture = ExtResource("6_p7ny2")
 centered = false
 
+[node name="TruckLeft" type="Sprite2D" parent="Background/Ground"]
+texture_filter = 1
+position = Vector2(-276, -4)
+scale = Vector2(2, 2)
+texture = ExtResource("9_hyud0")
+centered = false
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Ground"]
 position = Vector2(3600, 434)
 shape = SubResource("RectangleShape2D_gvphh")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Background/Ground"]
+position = Vector2(-10, 222)
+shape = SubResource("RectangleShape2D_ohi65")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Background/Ground"]
+position = Vector2(7210, 222)
+shape = SubResource("RectangleShape2D_ohi65")
+
+[node name="TruckRight" type="Sprite2D" parent="Background/Ground"]
+texture_filter = 1
+position = Vector2(7188, -4)
+scale = Vector2(2, 2)
+texture = ExtResource("9_hyud0")
+centered = false
+
+[node name="StageTheme" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("10_ohi65")
+autoplay = true
+attenuation = 1e-05
+parameters/looping = false

@@ -5,7 +5,9 @@ var input_multiplayer_authority: int
 @onready var player_sync: MultiplayerSynchronizer = $PlayerSync
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @onready var camera_2d: Camera2D = $Camera2D
+@onready var tag: Label = $tag
 var prev_anim: String
+var prev_tag: String  # Add this to track tag changes
 var speed: int = 500
 var jump: int = -1000
 var gravity: int = 2500
@@ -17,28 +19,31 @@ func _ready() -> void:
 	animated_sprite_2d.animation = "idle"
 	animated_sprite_2d.play()
 	
-	# Debug prints
 	print("Player ready - Peer ID: ", multiplayer.get_unique_id())
 	print("Input authority: ", input_multiplayer_authority)
 	print("Is authority: ", is_multiplayer_authority())
 	
-	# Camera setup
-	setup_camera()
+	setup_individuals()
 
-func setup_camera():
-	# Always disable all cameras first
+func setup_individuals():
 	camera_2d.enabled = false
 	
-	# Only enable for THIS client's player
+	# Set tag for ALL players
+	tag.text = player_sync_component.tag
+	prev_tag = player_sync_component.tag
+	
+	# Only enable camera for local player
 	if input_multiplayer_authority == multiplayer.get_unique_id():
-		print("Enabling camera for local player")
 		camera_2d.enabled = true
 		camera_2d.make_current()
 		camera_2d.position.y = 240 - global_position.y
-	else:
-		print("Disabling camera for remote player")
 
 func _process(delta: float) -> void:
+	# Update tag if it changed (for all players)
+	if prev_tag != player_sync_component.tag:
+		tag.text = player_sync_component.tag
+		prev_tag = player_sync_component.tag
+	
 	# Apply gravity
 	if not is_on_floor():
 		velocity.y += gravity * delta

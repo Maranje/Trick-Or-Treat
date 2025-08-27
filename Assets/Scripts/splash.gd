@@ -32,6 +32,7 @@ func _ready() -> void:
 	ready_button.pressed.connect(_ready_pressed)
 	user_name.text_changed.connect(_user_name_edit)
 	splash_theme.finished.connect(_on_splash_theme_finished)
+	label_spawner.spawned.connect(_on_label_spawned)
 	
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
@@ -87,14 +88,12 @@ func _host_pressed():
 	if error != OK:
 		print("Failed to create server: ", error)
 		return
-	
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_on_connected_host)
-	
-	lobby_disp.visible = true
-	connect_disp.visible = false
 	print("Server started on port ", PORT)
 	peer_ready.rpc_id(1)
+	_toggle_lobby()
+	peer_labels[1].label_sync_component.gather_input(PlayerGlobals.user_name)
 
 func _join_pressed():
 	if address.text.is_empty():
@@ -134,9 +133,8 @@ func _on_connected_host(id):
 
 func _on_connected_client():
 	print("Successfully connected to server")
-	lobby_disp.visible = true
-	connect_disp.visible = false
 	peer_ready.rpc_id(1)
+	_toggle_lobby()
 
 func _on_connection_failed():
 	print("Failed to connect to server")
@@ -190,12 +188,20 @@ func _return_to_connection_screen():
 	
 	print("Returned to connection screen")
 
+func _toggle_lobby():
+	lobby_disp.visible = true
+	connect_disp.visible = false
+	
+func _on_label_spawned(node):
+	var peer_id = node.input_multiplayer_authority
+	if peer_id == multiplayer.get_unique_id():
+		node.label_sync_component.gather_input(PlayerGlobals.user_name)
+
 @rpc("any_peer", "call_local", "reliable")
 func peer_ready():
 	var sender_id = multiplayer.get_remote_sender_id()
-	
 	# Fix the server self-call issue
 	if sender_id == 0:
 		sender_id = 1
-	
 	label_spawner.spawn({"peer_id": sender_id})
+	

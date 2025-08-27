@@ -7,6 +7,7 @@ var player_scene: PackedScene = preload("uid://df8j72jtyei4v")
 @onready var moon: Sprite2D = $Background/Moon
 @onready var trees: Sprite2D = $Background/Trees
 @onready var houses: Sprite2D = $Background/Houses
+@onready var stage_theme: AudioStreamPlayer2D = $StageTheme
 
 var ready_peers: Array[int] = []
 var scene_ready_peers: Array[int] = []
@@ -31,6 +32,8 @@ func _process(_delta: float) -> void:
 	# Get the local player (the one controlled by this client)
 	var my_peer_id = multiplayer.get_unique_id()
 	var my_player = get_node_or_null(str(my_peer_id))
+	
+	stage_theme.max_distance = INF
 	
 	if my_player and is_instance_valid(my_player):
 		var player_pos = my_player.global_position

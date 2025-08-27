@@ -5,6 +5,8 @@ var jump: bool = false
 var animation_select: String
 var direction: String = "left"
 
+@onready var tag: String = PlayerGlobals.user_name
+
 func _process(_delta: float) -> void:
 	if is_multiplayer_authority():
 		_gather_input()
