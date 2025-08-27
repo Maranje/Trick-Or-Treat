@@ -2,6 +2,12 @@ extends Node
 
 var player_scene: PackedScene = preload("uid://df8j72jtyei4v")
 @onready var player_spawner: MultiplayerSpawner = $PlayerSpawner
+@onready var sky: Sprite2D = $Background/Sky
+@onready var clouds: Node2D = $Background/Clouds
+@onready var moon: Sprite2D = $Background/Moon
+@onready var trees: Sprite2D = $Background/Trees
+@onready var houses: Sprite2D = $Background/Houses
+
 var ready_peers: Array[int] = []
 var scene_ready_peers: Array[int] = []
 
@@ -21,6 +27,20 @@ func _ready() -> void:
 	
 	scene_loaded.rpc_id(1)
 
+func _process(_delta: float) -> void:
+	# Get the local player (the one controlled by this client)
+	var my_peer_id = multiplayer.get_unique_id()
+	var my_player = get_node_or_null(str(my_peer_id))
+	
+	if my_player and is_instance_valid(my_player):
+		var player_pos = my_player.global_position
+		sky.position.x = player_pos.x - 400
+		moon.position.x = player_pos.x - 400
+		if clouds:
+			clouds.position.x = player_pos.x - 400
+		trees.position.x = player_pos.x / 4.5
+		houses.position.x = player_pos.x / 9
+
 @rpc("any_peer", "call_local", "reliable")
 func scene_loaded():
 	if not multiplayer.is_server():
@@ -39,7 +59,7 @@ func stage_ready_internal(peer_id: int):
 		return
 		
 	ready_peers.append(peer_id)
-	var result = player_spawner.spawn({"peer_id": peer_id})
+	player_spawner.spawn({"peer_id": peer_id})
 
 func _on_peer_disconnected(peer_id: int):
 	
