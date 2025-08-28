@@ -27,9 +27,14 @@ func _ready() -> void:
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 	
-	await get_tree().process_frame
-	await get_tree().process_frame
+	var timer = Timer.new()
+	add_child(timer)
+	timer.wait_time = 0.1
+	timer.one_shot = true
+	timer.timeout.connect(_load_stage)
+	timer.start()
 	
+func _load_stage():
 	scene_loaded.rpc_id(1)
 
 func _process(_delta: float) -> void:
