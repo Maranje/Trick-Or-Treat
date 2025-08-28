@@ -12,6 +12,7 @@ var speed: int = 500
 var jump: int = -1000
 var gravity: int = 2500
 var jump_velocity: int = -1000
+var at_door: bool = false
 
 func _ready() -> void:
 	player_sync_component.set_multiplayer_authority(input_multiplayer_authority)

@@ -8,9 +8,11 @@ var player_scene: PackedScene = preload("uid://df8j72jtyei4v")
 @onready var trees: Sprite2D = $Background/Trees
 @onready var houses: Sprite2D = $Background/Houses
 @onready var stage_theme: AudioStreamPlayer2D = $StageTheme
+@onready var houses_body: Area2D = $Background/Houses/HouseBody
 
 var ready_peers: Array[int] = []
 var scene_ready_peers: Array[int] = []
+var door_switch: bool = false
 
 func _ready() -> void:
 	# Set up the spawner

@@ -4,6 +4,7 @@ var movement: Vector2 = Vector2.ZERO
 var jump: bool = false
 var animation_select: String
 var direction: String = "left"
+var at_door: bool = false
 
 @onready var tag: String = PlayerGlobals.user_name
 
@@ -13,6 +14,7 @@ func _process(_delta: float) -> void:
 		
 func _gather_input():
 	movement = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	
 	if get_parent().velocity.y:
 		jump = false
 		if direction == "left":
@@ -28,4 +30,10 @@ func _gather_input():
 	elif movement.x > 0: 
 		animation_select = "right"
 		direction = "right"
+	elif at_door:
+		animation_select = "back"
 	else: animation_select = "idle"
+
+func toggle_at_door():
+	at_door = !at_door
+	
