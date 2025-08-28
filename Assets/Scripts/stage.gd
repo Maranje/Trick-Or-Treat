@@ -16,6 +16,7 @@ func _ready() -> void:
 	# Set up the spawner
 	player_spawner.spawn_function = func(data):
 		var new_player = player_scene.instantiate() as Player
+		new_player.position.x = (randi() % 177 + 2) * 40
 		new_player.input_multiplayer_authority = data.peer_id
 		new_player.name = str(data.peer_id)
 		return new_player
@@ -50,11 +51,7 @@ func scene_loaded():
 		return
 	
 	var sender_id = multiplayer.get_remote_sender_id()
-	if sender_id == 0:
-		sender_id = 1
-
 	scene_ready_peers.append(sender_id)
-	
 	stage_ready_internal(sender_id)
 
 func stage_ready_internal(peer_id: int):
