@@ -1,5 +1,6 @@
 extends Node
 
+var disconnect_scene: PackedScene = preload("uid://ctmuv3sgstkfa")
 var player_scene: PackedScene = preload("uid://df8j72jtyei4v")
 @onready var player_spawner: MultiplayerSpawner = $PlayerSpawner
 @onready var sky: Sprite2D = $Background/Sky
@@ -64,19 +65,19 @@ func stage_ready_internal(peer_id: int):
 	player_spawner.spawn({"peer_id": peer_id})
 
 func _on_peer_disconnected(peer_id: int):
-	
 	if multiplayer.is_server():
 		ready_peers.erase(peer_id)
 		scene_ready_peers.erase(peer_id)
-		
 		var player_node = get_node_or_null(str(peer_id))
 		if player_node and is_instance_valid(player_node):
 			player_node.queue_free()
 
 func _on_server_disconnected():
+	print("!!!!")
 	ready_peers.clear()
 	scene_ready_peers.clear()
-	
 	for child in get_children():
 		if child is Player:
 			child.queue_free()
+	get_tree().change_scene_to_packed(disconnect_scene)
+	
