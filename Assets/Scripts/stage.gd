@@ -19,6 +19,11 @@ func _ready() -> void:
 		new_player.position.x = (randi() % 177 + 2) * 40
 		new_player.input_multiplayer_authority = data.peer_id
 		new_player.name = str(data.peer_id)
+		# Pass costume data during spawn
+		if data.has("costume"):
+			new_player.sprite_frames = data.costume
+		if data.has("user_name"):
+			new_player.user_name = data.user_name
 		return new_player
 	
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
@@ -33,7 +38,7 @@ func _ready() -> void:
 	timer.start()
 	
 func _load_stage():
-	scene_loaded.rpc_id(1)
+	scene_loaded.rpc_id(1, PlayerGlobals.current_costume, PlayerGlobals.user_name)
 
 func _process(_delta: float) -> void:
 	# Get the local player (the one controlled by this client)
@@ -52,12 +57,12 @@ func _process(_delta: float) -> void:
 		houses.position.x = player_pos.x / 9
 
 @rpc("any_peer", "call_local", "reliable")
-func scene_loaded():
+func scene_loaded(costume_data: int = 0, user_name_data: String = ""):
 	if not multiplayer.is_server():
 		return
 	
 	var peer_id = multiplayer.get_remote_sender_id()
-	player_spawner.spawn({"peer_id": peer_id})
+	player_spawner.spawn({"peer_id": peer_id, "costume": costume_data, "user_name": user_name_data})
 
 func _on_peer_disconnected(peer_id: int):
 	if multiplayer.is_server():
