@@ -11,8 +11,6 @@ var player_scene: PackedScene = preload("uid://df8j72jtyei4v")
 @onready var stage_theme: AudioStreamPlayer2D = $StageTheme
 @onready var houses_body: Area2D = $Background/Houses/HouseBody
 
-#var ready_peers: Array[int] = []
-#var scene_ready_peers: Array[int] = []
 var door_switch: bool = false
 
 func _ready() -> void:
@@ -57,6 +55,7 @@ func _process(_delta: float) -> void:
 func scene_loaded():
 	if not multiplayer.is_server():
 		return
+	
 	var peer_id = multiplayer.get_remote_sender_id()
 	player_spawner.spawn({"peer_id": peer_id})
 

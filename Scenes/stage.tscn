@@ -62,6 +62,50 @@ script = ExtResource("7_sr6x0")
 position = Vector2(144.5, 177)
 shape = SubResource("RectangleShape2D_sr6x0")
 
+[node name="DoorTrigger2" type="CollisionShape2D" parent="Background/Houses/HouseBody"]
+position = Vector2(345, 177)
+shape = SubResource("RectangleShape2D_sr6x0")
+
+[node name="DoorTrigger3" type="CollisionShape2D" parent="Background/Houses/HouseBody"]
+position = Vector2(653.5, 176.5)
+shape = SubResource("RectangleShape2D_sr6x0")
+
+[node name="DoorTrigger4" type="CollisionShape2D" parent="Background/Houses/HouseBody"]
+position = Vector2(814, 174.5)
+shape = SubResource("RectangleShape2D_sr6x0")
+
+[node name="DoorTrigger5" type="CollisionShape2D" parent="Background/Houses/HouseBody"]
+position = Vector2(1193.5, 176.5)
+shape = SubResource("RectangleShape2D_sr6x0")
+
+[node name="DoorTrigger6" type="CollisionShape2D" parent="Background/Houses/HouseBody"]
+position = Vector2(1411, 176.5)
+shape = SubResource("RectangleShape2D_sr6x0")
+
+[node name="DoorTrigger7" type="CollisionShape2D" parent="Background/Houses/HouseBody"]
+position = Vector2(1689, 176.5)
+shape = SubResource("RectangleShape2D_sr6x0")
+
+[node name="DoorTrigger8" type="CollisionShape2D" parent="Background/Houses/HouseBody"]
+position = Vector2(1896, 176.5)
+shape = SubResource("RectangleShape2D_sr6x0")
+
+[node name="DoorTrigger9" type="CollisionShape2D" parent="Background/Houses/HouseBody"]
+position = Vector2(2278, 176.5)
+shape = SubResource("RectangleShape2D_sr6x0")
+
+[node name="DoorTrigger10" type="CollisionShape2D" parent="Background/Houses/HouseBody"]
+position = Vector2(2488.5, 176.5)
+shape = SubResource("RectangleShape2D_sr6x0")
+
+[node name="DoorTrigger11" type="CollisionShape2D" parent="Background/Houses/HouseBody"]
+position = Vector2(2699.5, 176.5)
+shape = SubResource("RectangleShape2D_sr6x0")
+
+[node name="DoorTrigger12" type="CollisionShape2D" parent="Background/Houses/HouseBody"]
+position = Vector2(2922, 176.5)
+shape = SubResource("RectangleShape2D_sr6x0")
+
 [node name="Ground" type="StaticBody2D" parent="Background"]
 
 [node name="StreetLeft" type="Sprite2D" parent="Background/Ground"]
