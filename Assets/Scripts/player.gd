@@ -13,7 +13,6 @@ var prev_anim: String
 var speed: int = 500
 var jump: int = -1000
 var gravity: int = 2500
-var jump_velocity: int = -1000
 var door_number: int
 var doors_hit: Array[Array]
 
