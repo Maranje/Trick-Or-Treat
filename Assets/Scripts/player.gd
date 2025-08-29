@@ -56,5 +56,5 @@ func _process(delta: float) -> void:
 		move_and_slide()
 	
 func trick_or_treat(door: int):
-	if door not in doors_hit[PlayerGlobals.current_costume]:
-		doors_hit[PlayerGlobals.current_costume].append(door)
+	if door not in doors_hit[sprite_frames]:
+		doors_hit[sprite_frames].append(door)
