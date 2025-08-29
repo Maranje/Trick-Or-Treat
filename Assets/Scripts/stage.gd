@@ -27,6 +27,7 @@ func _ready() -> void:
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 	
+	#stage load buffer timer
 	var timer = Timer.new()
 	add_child(timer)
 	timer.wait_time = 0.1
