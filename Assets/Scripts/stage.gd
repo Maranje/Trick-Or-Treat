@@ -11,12 +11,11 @@ var player_scene: PackedScene = preload("uid://df8j72jtyei4v")
 @onready var stage_theme: AudioStreamPlayer2D = $StageTheme
 @onready var houses_body: Area2D = $Background/Houses/HouseBody
 
-var ready_peers: Array[int] = []
-var scene_ready_peers: Array[int] = []
+#var ready_peers: Array[int] = []
+#var scene_ready_peers: Array[int] = []
 var door_switch: bool = false
 
 func _ready() -> void:
-	# Set up the spawner
 	player_spawner.spawn_function = func(data):
 		var new_player = player_scene.instantiate() as Player
 		new_player.position.x = (randi() % 177 + 2) * 40
@@ -58,30 +57,16 @@ func _process(_delta: float) -> void:
 func scene_loaded():
 	if not multiplayer.is_server():
 		return
-	
-	var sender_id = multiplayer.get_remote_sender_id()
-	scene_ready_peers.append(sender_id)
-	stage_ready_internal(sender_id)
-
-func stage_ready_internal(peer_id: int):
-	if peer_id in ready_peers:
-		return
-		
-	ready_peers.append(peer_id)
+	var peer_id = multiplayer.get_remote_sender_id()
 	player_spawner.spawn({"peer_id": peer_id})
 
 func _on_peer_disconnected(peer_id: int):
 	if multiplayer.is_server():
-		ready_peers.erase(peer_id)
-		scene_ready_peers.erase(peer_id)
 		var player_node = get_node_or_null(str(peer_id))
 		if player_node and is_instance_valid(player_node):
 			player_node.queue_free()
 
 func _on_server_disconnected():
-	print("!!!!")
-	ready_peers.clear()
-	scene_ready_peers.clear()
 	for child in get_children():
 		if child is Player:
 			child.queue_free()
