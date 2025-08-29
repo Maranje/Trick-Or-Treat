@@ -23,5 +23,6 @@ PlayerGlobals="*res://Assets/Scripts/player_globals.gd"
 
 window/size/viewport_width=800
 window/size/viewport_height=480
+window/size/mode=2
 window/stretch/mode="viewport"
 window/stretch/scale_mode="integer"
