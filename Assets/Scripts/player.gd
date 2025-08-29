@@ -31,13 +31,13 @@ func _ready() -> void:
 
 func setup_individuals():
 	camera_2d.enabled = false
-	animated_sprite_2d.sprite_frames = PlayerGlobals.costumes[PlayerGlobals.current_costume]
-	animated_sprite_2d.animation = "idle"
-	animated_sprite_2d.play()
 	tag.text = player_sync_component.tag
 	prev_tag = player_sync_component.tag
 	
 	if input_multiplayer_authority == multiplayer.get_unique_id():
+		animated_sprite_2d.sprite_frames = PlayerGlobals.costumes[PlayerGlobals.current_costume]
+		animated_sprite_2d.animation = "idle"
+		animated_sprite_2d.play()
 		camera_2d.enabled = true
 		camera_2d.make_current()
 
