@@ -1,0 +1,34 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://dasinxhkdns2b"]
+
+[resource]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"back",
+"speed": 8.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"idle",
+"speed": 8.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"left",
+"speed": 12.0
+}, {
+"frames": [],
+"loop": false,
+"name": &"left_jump",
+"speed": 12.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"right",
+"speed": 12.0
+}, {
+"frames": [],
+"loop": false,
+"name": &"right_jump",
+"speed": 12.0
+}]

@@ -3,7 +3,23 @@ extends Node
 var user_name: String = ""
 var candy_count: int = 0
 var candy_corn: int = 0
+var costume_count: int = 12
 var current_costume: int = 0
+
+var costumes = [
+	preload("res://Assets/SpriteFrames/player_frames.tres"),
+	preload("res://Assets/SpriteFrames/clown_frames.tres"),
+	preload("res://Assets/SpriteFrames/cape_frames.tres"),
+	preload("res://Assets/SpriteFrames/ninja_frames.tres"),
+	preload("res://Assets/SpriteFrames/pants_frames.tres"),
+	preload("res://Assets/SpriteFrames/nipple_frames.tres"),
+	preload("res://Assets/SpriteFrames/faceless_frames.tres"),
+	preload("res://Assets/SpriteFrames/egg_frames.tres"),
+	preload("res://Assets/SpriteFrames/hole_frames.tres"),
+	preload("res://Assets/SpriteFrames/unibrow_frames.tres"),
+	preload("res://Assets/SpriteFrames/static_frames.tres"),
+	preload("res://Assets/SpriteFrames/witch_hat_frames.tres")
+]
 
 const SAVE_FILE = "user://gamedata.save"
 
@@ -17,6 +33,7 @@ func save_data():
 			"user_name": user_name,
 			"candy_count": candy_count,
 			"candy_corn": candy_corn,
+			"costume_count": costume_count,
 			"current_costume": current_costume
 		}
 		file.store_string(JSON.stringify(save_dict))
@@ -36,6 +53,7 @@ func load_data():
 				user_name = loaded_data.get("user_name", "")
 				candy_count = loaded_data.get("candy_count", 0)
 				candy_corn = loaded_data.get("candy_corn", 0)
+				costume_count = loaded_data.get("costume_count", 12)
 				current_costume = loaded_data.get("current_costume", 0)
 
 # Convenience functions to update and save immediately
