@@ -19,9 +19,6 @@ var doors_hit: Array[Array]
 func _ready() -> void:
 	player_sync_component.set_multiplayer_authority(input_multiplayer_authority)
 	set_process(is_multiplayer_authority())
-	animated_sprite_2d.sprite_frames = PlayerGlobals.costumes[PlayerGlobals.current_costume]
-	animated_sprite_2d.animation = "idle"
-	animated_sprite_2d.play()
 	
 	print("Player ready - Peer ID: ", multiplayer.get_unique_id())
 	print("Input authority: ", input_multiplayer_authority)
@@ -34,7 +31,9 @@ func _ready() -> void:
 
 func setup_individuals():
 	camera_2d.enabled = false
-	
+	animated_sprite_2d.sprite_frames = PlayerGlobals.costumes[PlayerGlobals.current_costume]
+	animated_sprite_2d.animation = "idle"
+	animated_sprite_2d.play()
 	tag.text = player_sync_component.tag
 	prev_tag = player_sync_component.tag
 	
