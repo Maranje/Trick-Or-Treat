@@ -7,6 +7,7 @@ extends CharacterBody2D
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var tag: Label = $tag
 var sprite_frames: int = 0
+var total_costumes: int = 0
 var user_name: String
 var input_multiplayer_authority: int
 var prev_anim: String
@@ -33,7 +34,6 @@ func setup_individuals():
 		
 	tag.text = user_name
 	
-	# Update the sprite frames when they change
 	animated_sprite_2d.sprite_frames = PlayerGlobals.costumes[sprite_frames]
 	animated_sprite_2d.play()
 
@@ -42,17 +42,18 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("ui_up") and player_sync_component.at_door:
 		trick_or_treat(door_number)
 		print(doors_hit)
-	
-	if is_multiplayer_authority():
-		if not is_on_floor():
-			velocity.y += gravity * delta
-		elif player_sync_component.jump:
-			velocity.y = jump
-		velocity.x = player_sync_component.movement.x * speed
-		if prev_anim != player_sync_component.animation_select:
-			animated_sprite_2d.animation = player_sync_component.animation_select
-			prev_anim = animated_sprite_2d.animation
-		move_and_slide()
+		
+	if not is_multiplayer_authority(): return
+		
+	if not is_on_floor():
+		velocity.y += gravity * delta
+	elif player_sync_component.jump:
+		velocity.y = jump
+	velocity.x = player_sync_component.movement.x * speed
+	if prev_anim != player_sync_component.animation_select:
+		animated_sprite_2d.animation = player_sync_component.animation_select
+		prev_anim = animated_sprite_2d.animation
+	move_and_slide()
 	
 func trick_or_treat(door: int):
 	if door not in doors_hit[sprite_frames]:
