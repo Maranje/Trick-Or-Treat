@@ -15,7 +15,6 @@ func _ready() -> void:
 func _costume_button_left_pressed():
 	costume_number -= 1
 	if costume_number < 0: costume_number = PlayerGlobals.costume_count - 1
-	costume_number = costume_number % PlayerGlobals.costume_count
 	costume.frame = costume_number
 	PlayerGlobals.current_costume = costume_number
 	

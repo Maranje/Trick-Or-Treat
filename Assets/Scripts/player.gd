@@ -13,7 +13,6 @@ var prev_anim: String
 var speed: int = 500
 var jump: int = -1000
 var gravity: int = 2500
-var jump_velocity: int = -1000
 var door_number: int
 var doors_hit: Array[Array]
 
@@ -56,5 +55,5 @@ func _process(delta: float) -> void:
 		move_and_slide()
 	
 func trick_or_treat(door: int):
-	if door not in doors_hit[PlayerGlobals.current_costume]:
-		doors_hit[PlayerGlobals.current_costume].append(door)
+	if door not in doors_hit[sprite_frames]:
+		doors_hit[sprite_frames].append(door)
