@@ -1,6 +1,8 @@
 class_name Player
 extends CharacterBody2D
 
+var doorbell: PackedScene = preload("uid://bx542d0joldxk")
+
 @onready var player_sync_component: MultiplayerSynchronizer = $PlayerSyncComponent
 @onready var player_sync: MultiplayerSynchronizer = $PlayerSync
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
@@ -39,9 +41,13 @@ func setup_individuals():
 
 func _process(delta: float) -> void:
 	
-	if Input.is_action_just_pressed("ui_up") and player_sync_component.at_door:
-		trick_or_treat(door_number)
-		print(doors_hit)
+	if Input.is_action_just_pressed("ui_up") 	\
+		and player_sync_component.at_door 		\
+		and not has_node("TrickOrTreat"):
+			trick_or_treat(door_number)
+			var doorbell_instance = doorbell.instantiate()
+			add_child(doorbell_instance)
+			print(doors_hit)
 		
 	if not is_multiplayer_authority(): return
 		

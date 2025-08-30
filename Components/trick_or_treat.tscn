@@ -1,3 +1,21 @@
-[gd_scene format=3 uid="uid://bx542d0joldxk"]
+[gd_scene load_steps=5 format=3 uid="uid://bx542d0joldxk"]
 
-[node name="TrickOrTreat" type="Node"]
+[ext_resource type="Texture2D" uid="uid://cu5mdtc24kx7a" path="res://Assets/Sprites/ToT/Doorbell.png" id="1_m8imm"]
+[ext_resource type="Script" uid="uid://c1tf1mu5wstju" path="res://Assets/Scripts/trick_or_treat.gd" id="1_mowi4"]
+[ext_resource type="Texture2D" uid="uid://bparu8i01v34s" path="res://Assets/Sprites/ToT/Hand.png" id="2_mowi4"]
+[ext_resource type="AudioStream" uid="uid://c2i681pqydfrb" path="res://Assets/Audio/Effects/doorbell.mp3" id="4_riy1m"]
+
+[node name="TrickOrTreat" type="Node2D"]
+script = ExtResource("1_mowi4")
+
+[node name="Doorbell" type="Sprite2D" parent="."]
+position = Vector2(1, 282)
+texture = ExtResource("1_m8imm")
+
+[node name="Hand" type="Sprite2D" parent="."]
+position = Vector2(-353, 47)
+texture = ExtResource("2_mowi4")
+centered = false
+
+[node name="Ding" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_riy1m")

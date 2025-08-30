@@ -2,6 +2,7 @@ extends Node
 
 var disconnect_scene: PackedScene = preload("uid://ctmuv3sgstkfa")
 var player_scene: PackedScene = preload("uid://df8j72jtyei4v")
+
 @onready var player_spawner: MultiplayerSpawner = $PlayerSpawner
 @onready var sky: Sprite2D = $Background/Sky
 @onready var clouds: Node2D = $Background/Clouds
