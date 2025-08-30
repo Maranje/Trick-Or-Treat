@@ -10,12 +10,12 @@ script = ExtResource("1_mowi4")
 
 [node name="Doorbell" type="Sprite2D" parent="."]
 z_index = 1000
-position = Vector2(1, 282)
+position = Vector2(400, -15)
 texture = ExtResource("1_m8imm")
 
 [node name="Hand" type="Sprite2D" parent="."]
 z_index = 1000
-position = Vector2(-353, 47)
+position = Vector2(-300, 47)
 texture = ExtResource("2_mowi4")
 centered = false
 
