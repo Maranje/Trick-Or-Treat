@@ -15,9 +15,7 @@ func _process(_delta: float) -> void:
 func _gather_input():
 	if get_parent().has_node("TrickOrTreat"):
 		movement = Vector2.ZERO
-		if at_door:
-			animation_select = "back"
-		else: animation_select = "idle"
+		animation_select = "back"
 		return
 	
 	movement = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
