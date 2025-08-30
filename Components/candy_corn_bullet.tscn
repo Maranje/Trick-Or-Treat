@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://e1hrcf4p5may"]
+
+[ext_resource type="Texture2D" uid="uid://bpj5527oyyb7c" path="res://Assets/Sprites/Stuff/CC.png" id="1_i727i"]
+[ext_resource type="Script" uid="uid://cg3flwihdg0ca" path="res://Assets/Scripts/candy_corn_bullet.gd" id="1_xdjkq"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_roxhs"]
+radius = 2.0
+
+[node name="CandyCornBullet" type="RigidBody2D"]
+collision_layer = 2
+script = ExtResource("1_xdjkq")
+
+[node name="CandyCorn" type="Sprite2D" parent="."]
+position = Vector2(0, 20)
+texture = ExtResource("1_i727i")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 20)
+shape = SubResource("CircleShape2D_roxhs")

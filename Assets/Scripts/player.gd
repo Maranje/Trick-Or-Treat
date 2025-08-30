@@ -2,6 +2,7 @@ class_name Player
 extends CharacterBody2D
 
 var doorbell: PackedScene = preload("uid://bx542d0joldxk")
+var candycorn: PackedScene = preload("uid://e1hrcf4p5may")
 
 @onready var player_sync_component: MultiplayerSynchronizer = $PlayerSyncComponent
 @onready var player_sync: MultiplayerSynchronizer = $PlayerSync
@@ -50,6 +51,8 @@ func _process(delta: float) -> void:
 			print(doors_hit)
 		
 	if not is_multiplayer_authority(): return
+	
+	if not animated_sprite_2d.is_playing(): animated_sprite_2d.play()
 		
 	if not is_on_floor():
 		velocity.y += gravity * delta
@@ -64,3 +67,9 @@ func _process(delta: float) -> void:
 func trick_or_treat(door: int):
 	if door not in doors_hit[sprite_frames]:
 		doors_hit[sprite_frames].append(door)
+
+func shoot_candy_corn(direction: int = 1000):
+	var candy_corn = candycorn.instantiate()
+	candy_corn.direction = direction + velocity.x
+	candy_corn.position.x += direction / 50
+	add_child(candy_corn)
