@@ -155,7 +155,9 @@ texture = ExtResource("9_hyud0")
 centered = false
 
 [node name="StageTheme" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(3600, 0)
 stream = ExtResource("10_ohi65")
 autoplay = true
 attenuation = 1e-05
+panning_strength = 0.0
 parameters/looping = false
