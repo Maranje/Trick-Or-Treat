@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=50 format=3 uid="uid://dpjebqgohymdp"]
+[gd_resource type="SpriteFrames" load_steps=58 format=3 uid="uid://dpjebqgohymdp"]
 
 [ext_resource type="Texture2D" uid="uid://doxp6ivue2i53" path="res://Assets/Sprites/Cape/Cape-table-64-68.png" id="1_c4nwf"]
 
@@ -33,6 +33,38 @@ region = Rect2(384, 88, 64, 88)
 [sub_resource type="AtlasTexture" id="AtlasTexture_r4sfv"]
 atlas = ExtResource("1_c4nwf")
 region = Rect2(448, 88, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c4nwf"]
+atlas = ExtResource("1_c4nwf")
+region = Rect2(0, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8ah0u"]
+atlas = ExtResource("1_c4nwf")
+region = Rect2(64, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gfxki"]
+atlas = ExtResource("1_c4nwf")
+region = Rect2(128, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g067i"]
+atlas = ExtResource("1_c4nwf")
+region = Rect2(192, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0gw70"]
+atlas = ExtResource("1_c4nwf")
+region = Rect2(256, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qpfco"]
+atlas = ExtResource("1_c4nwf")
+region = Rect2(320, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a3wbm"]
+atlas = ExtResource("1_c4nwf")
+region = Rect2(384, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_crtw8"]
+atlas = ExtResource("1_c4nwf")
+region = Rect2(448, 528, 64, 88)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ui6im"]
 atlas = ExtResource("1_c4nwf")
@@ -224,6 +256,50 @@ animations = [{
 "loop": true,
 "name": &"back",
 "speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c4nwf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8ah0u")
+}],
+"loop": false,
+"name": &"chuck_left_1",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gfxki")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g067i")
+}],
+"loop": false,
+"name": &"chuck_left_2",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0gw70")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qpfco")
+}],
+"loop": false,
+"name": &"chuck_right_1",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a3wbm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_crtw8")
+}],
+"loop": false,
+"name": &"chuck_right_2",
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,
