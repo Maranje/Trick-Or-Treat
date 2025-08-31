@@ -28,7 +28,10 @@ func _ready() -> void:
 	candy_spawner.spawn_function = func(data):
 		var candy_corn = candycorn.instantiate()
 		candy_corn.direction = data.direction + velocity.x
-		candy_corn.position.x += data.direction / 50
+		if data.direction < 0:
+			candy_corn.position.x -= 20
+		else:
+			candy_corn.position.x += 20
 		return candy_corn
 
 func setup_individuals():
