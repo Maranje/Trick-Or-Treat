@@ -71,16 +71,6 @@ func trick_or_treat(door: int):
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: int = 1000):
-<<<<<<< HEAD
-	var candy_corn = candycorn.instantiate()
-	candy_corn.direction = direction + velocity.x
-	if direction > 0:
-		candy_corn.position.x += 20
-	elif direction < 0:
-		candy_corn.position.x -= 20
-	add_child(candy_corn)
-=======
 	if not multiplayer.is_server():
 		return
 	candy_spawner.spawn({"direction": direction})
->>>>>>> f19a1d7fcf2e06403fae4541ede374f98f47adfc
