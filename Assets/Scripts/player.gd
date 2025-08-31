@@ -36,26 +36,15 @@ func _ready() -> void:
 
 func setup_individuals():
 	camera_2d.enabled = false
-	
 	if input_multiplayer_authority == multiplayer.get_unique_id():
 		camera_2d.enabled = true
 		camera_2d.make_current()
-		
 	tag.text = user_name
-	
 	animated_sprite_2d.sprite_frames = PlayerGlobals.costumes[sprite_frames]
 	animated_sprite_2d.play()
 
 func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("ui_up") 	\
-		and player_sync_component.at_door 		\
-		and not has_node("TrickOrTreat"):
-			trick_or_treat(door_number)
-			var doorbell_instance = doorbell.instantiate()
-			add_child(doorbell_instance)
-			print(doors_hit)
-			print(PlayerGlobals.candy_corn)
-	if not animated_sprite_2d.is_playing(): animated_sprite_2d.play()	
+	if not animated_sprite_2d.is_playing(): animated_sprite_2d.play()
 	if not is_multiplayer_authority(): return
 	if not is_on_floor():
 		velocity.y += gravity * delta
@@ -67,10 +56,15 @@ func _process(delta: float) -> void:
 		prev_anim = animated_sprite_2d.animation
 	move_and_slide()
 	
-func trick_or_treat(door: int):
-	PlayerGlobals.add_candy_corn(5)
-	if door not in doors_hit[sprite_frames]:
-		doors_hit[sprite_frames].append(door)
+func trick_or_treat():
+	var doorbell_instance = doorbell.instantiate()
+	add_child(doorbell_instance)
+	print(doors_hit)
+	if door_number not in doors_hit[sprite_frames]:
+		PlayerGlobals.add_candy_corn(10)
+		doors_hit[sprite_frames].append(door_number)
+	else:
+		PlayerGlobals.add_candy_corn(1)
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: int = 1000):
