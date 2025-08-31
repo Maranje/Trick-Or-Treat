@@ -23,20 +23,16 @@ func _ready() -> void:
 	if not address or not host_button or not join_button:
 		print("ERROR: Missing UI nodes!")
 		return
-	
 	lobby_disp.visible = false
 	connect_disp.visible = true
-	
 	host_button.pressed.connect(_host_pressed)
 	join_button.pressed.connect(_join_pressed)
 	ready_button.pressed.connect(_ready_pressed)
 	user_name.text_changed.connect(_user_name_edit)
 	splash_theme.finished.connect(_on_splash_theme_finished)
 	label_spawner.spawned.connect(_on_label_spawned)
-	
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
-	
 	label_spawner.spawn_function = func(data):
 		var new_label = label_scene.instantiate() as UserLabel
 		new_label.position.y += label_y_offset
@@ -71,10 +67,8 @@ func reset_multiplayer():
 		multiplayer.connection_failed.disconnect(_on_connection_failed)
 	if multiplayer.peer_connected.is_connected(_on_connected_host):
 		multiplayer.peer_connected.disconnect(_on_connected_host)
-	
 	multiplayer.multiplayer_peer = null
 	peer = ENetMultiplayerPeer.new()
-	
 	for label in peer_labels.values():
 		if is_instance_valid(label):
 			label.queue_free()
@@ -83,7 +77,6 @@ func reset_multiplayer():
 
 func _host_pressed():
 	reset_multiplayer()
-	
 	var error = peer.create_server(PORT)
 	if error != OK:
 		print("Failed to create server: ", error)
@@ -98,14 +91,11 @@ func _host_pressed():
 func _join_pressed():
 	if address.text.is_empty():
 		return
-	
 	reset_multiplayer()
-	
 	var error = peer.create_client(address.text, PORT)
 	if error != OK:
 		print("Failed to create client: ", error)
 		return
-	
 	multiplayer.multiplayer_peer = peer
 	multiplayer.connected_to_server.connect(_on_connected_client)
 	multiplayer.connection_failed.connect(_on_connection_failed)
@@ -114,7 +104,6 @@ func _ready_pressed():
 	if not is_multiplayer_active():
 		print("Cannot ready - multiplayer not active")
 		return
-		
 	var my_peer_id = multiplayer.get_unique_id()
 	if my_peer_id in peer_labels:
 		peer_labels[my_peer_id].label_sync_component.player_ready()
@@ -150,12 +139,9 @@ func reposition_all_labels():
 	for peer_id in peer_labels.keys():
 		if is_instance_valid(peer_labels[peer_id]):
 			valid_labels.append(peer_labels[peer_id])
-	
 	valid_labels.sort_custom(func(a, b): return a.position.y < b.position.y)
-	
 	for i in range(valid_labels.size()):
 		valid_labels[i].position.y = i * 20 - 141
-	
 	label_y_offset = valid_labels.size() * 20
 	print("Repositioned %d labels" % valid_labels.size())
 
@@ -172,17 +158,12 @@ func _on_server_disconnected():
 	_return_to_connection_screen()
 
 func _return_to_connection_screen():
-	# Show connection screen
 	lobby_disp.visible = false
 	connect_disp.visible = true
-	
-	# Clean up all labels
 	for label in peer_labels.values():
 		if is_instance_valid(label):
 			label.queue_free()
 	peer_labels.clear()
-	
-	# Reset multiplayer
 	multiplayer.multiplayer_peer = null
 	peer = ENetMultiplayerPeer.new()
 	
@@ -200,7 +181,6 @@ func _on_label_spawned(node):
 @rpc("any_peer", "call_local", "reliable")
 func peer_ready():
 	var sender_id = multiplayer.get_remote_sender_id()
-	# Fix the server self-call issue
 	if sender_id == 0:
 		sender_id = 1
 	label_spawner.spawn({"peer_id": sender_id})

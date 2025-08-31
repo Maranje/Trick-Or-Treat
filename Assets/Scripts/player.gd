@@ -65,6 +65,7 @@ func _process(delta: float) -> void:
 	move_and_slide()
 	
 func trick_or_treat(door: int):
+	PlayerGlobals.add_candy_corn(5)
 	if door not in doors_hit[sprite_frames]:
 		doors_hit[sprite_frames].append(door)
 
@@ -73,3 +74,4 @@ func shoot_candy_corn(direction: int = 1000):
 	candy_corn.direction = direction + velocity.x
 	candy_corn.position.x += direction / 50
 	add_child(candy_corn)
+	PlayerGlobals.remove_one_candy_corn()

@@ -16,7 +16,6 @@ var door_switch: bool = false
 
 func _ready() -> void:
 	stage_theme.max_distance = INF
-	
 	player_spawner.spawn_function = func(data):
 		var new_player = player_scene.instantiate() as Player
 		new_player.position.x = (randi() % 177 + 2) * 40
@@ -28,11 +27,8 @@ func _ready() -> void:
 		if data.has("user_name"):
 			new_player.user_name = data.user_name
 		return new_player
-	
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
-	
-	#stage load buffer timer
 	var timer = Timer.new()
 	add_child(timer)
 	timer.wait_time = 0.1
@@ -44,7 +40,6 @@ func _load_stage():
 	scene_loaded.rpc_id(1, PlayerGlobals.current_costume, PlayerGlobals.user_name)
 
 func _process(_delta: float) -> void:
-	# Get the local player (the one controlled by this client)
 	var my_peer_id = multiplayer.get_unique_id()
 	var my_player = get_node_or_null(str(my_peer_id))
 	
