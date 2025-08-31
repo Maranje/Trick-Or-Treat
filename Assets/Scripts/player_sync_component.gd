@@ -49,10 +49,10 @@ func _set_animation():
 	else: animation_select = "idle"
 	
 func _check_throw():
-	if PlayerGlobals.candy_corn == 0: return 
-	
+	if PlayerGlobals.candy_corn <= 0: return 
 	if Input.is_action_just_pressed("shoot_left"):
-		get_parent().shoot_candy_corn(-1000)
+		get_parent().shoot_candy_corn.rpc_id(1, -1000)
+		PlayerGlobals.remove_one_candy_corn()
 		if chuck_left:
 			animation_select = "chuck_left_1"
 			chuck_left = false
@@ -61,7 +61,9 @@ func _check_throw():
 			chuck_left = true
 		_set_throw()
 	elif Input.is_action_just_pressed("shoot_right"):
-		get_parent().shoot_candy_corn(1000)
+		get_parent().shoot_candy_corn.rpc_id(1, 1000)
+		PlayerGlobals.remove_one_candy_corn()
+		print(PlayerGlobals.candy_corn)
 		if chuck_right:
 			animation_select = "chuck_right_1"
 			chuck_right = false

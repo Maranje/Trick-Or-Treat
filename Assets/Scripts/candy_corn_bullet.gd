@@ -15,4 +15,5 @@ func _process(_delta: float) -> void:
 
 func _on_body_entered(body):
 	print("Hit: ", body.name)
-	queue_free()
+	if multiplayer.is_server():
+		queue_free()
