@@ -71,5 +71,8 @@ func trick_or_treat(door: int):
 func shoot_candy_corn(direction: int = 1000):
 	var candy_corn = candycorn.instantiate()
 	candy_corn.direction = direction + velocity.x
-	candy_corn.position.x += direction / 50
+	if direction > 0:
+		candy_corn.position.x += 20
+	elif direction < 0:
+		candy_corn.position.x -= 20
 	add_child(candy_corn)
