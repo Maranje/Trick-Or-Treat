@@ -64,3 +64,7 @@ func add_candy(amount: int):
 func add_candy_corn(amount: int):
 	candy_corn += amount
 	save_data()
+	
+func remove_one_candy_corn():
+	candy_corn -= 1
+	save_data()

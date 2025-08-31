@@ -18,14 +18,11 @@ func _process(_delta: float) -> void:
 		
 func _gather_input():
 	if throwing: return
-	
 	if get_parent().has_node("TrickOrTreat"):
 		movement = Vector2.ZERO
 		animation_select = "back"
 		return
-	
 	movement = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	
 	_set_animation()
 	_check_throw()
 
@@ -52,8 +49,10 @@ func _set_animation():
 	else: animation_select = "idle"
 	
 func _check_throw():
-	if Input.is_action_just_pressed("shift_left"):
-		get_parent().shoot_candy_corn(-1000)
+	if PlayerGlobals.candy_corn <= 0: return 
+	if Input.is_action_just_pressed("shoot_left"):
+		get_parent().shoot_candy_corn.rpc_id(1, -1000)
+		PlayerGlobals.remove_one_candy_corn()
 		if chuck_left:
 			animation_select = "chuck_left_1"
 			chuck_left = false
@@ -61,8 +60,10 @@ func _check_throw():
 			animation_select = "chuck_left_2"
 			chuck_left = true
 		_set_throw()
-	elif Input.is_action_just_pressed("shift_right"):
-		get_parent().shoot_candy_corn(1000)
+	elif Input.is_action_just_pressed("shoot_right"):
+		get_parent().shoot_candy_corn.rpc_id(1, 1000)
+		PlayerGlobals.remove_one_candy_corn()
+		print(PlayerGlobals.candy_corn)
 		if chuck_right:
 			animation_select = "chuck_right_1"
 			chuck_right = false
