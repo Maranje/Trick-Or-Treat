@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=50 format=3 uid="uid://boieo5pk1wdnd"]
+[gd_resource type="SpriteFrames" load_steps=58 format=3 uid="uid://boieo5pk1wdnd"]
 
 [ext_resource type="Texture2D" uid="uid://b1cfqjm8k2o1o" path="res://Assets/Sprites/Nipples/Nipples-table-64-68.png" id="1_q5w4s"]
 
@@ -33,6 +33,38 @@ region = Rect2(384, 88, 64, 88)
 [sub_resource type="AtlasTexture" id="AtlasTexture_pu2lt"]
 atlas = ExtResource("1_q5w4s")
 region = Rect2(448, 88, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q5w4s"]
+atlas = ExtResource("1_q5w4s")
+region = Rect2(0, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mmh0j"]
+atlas = ExtResource("1_q5w4s")
+region = Rect2(64, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a34vy"]
+atlas = ExtResource("1_q5w4s")
+region = Rect2(128, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_loekj"]
+atlas = ExtResource("1_q5w4s")
+region = Rect2(192, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_belic"]
+atlas = ExtResource("1_q5w4s")
+region = Rect2(256, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kxngh"]
+atlas = ExtResource("1_q5w4s")
+region = Rect2(320, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gnu0t"]
+atlas = ExtResource("1_q5w4s")
+region = Rect2(384, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_377u5"]
+atlas = ExtResource("1_q5w4s")
+region = Rect2(448, 528, 64, 88)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ukyrk"]
 atlas = ExtResource("1_q5w4s")
@@ -224,6 +256,50 @@ animations = [{
 "loop": true,
 "name": &"back",
 "speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q5w4s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mmh0j")
+}],
+"loop": false,
+"name": &"chuck_left_1",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a34vy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_loekj")
+}],
+"loop": false,
+"name": &"chuck_left_2",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_belic")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kxngh")
+}],
+"loop": false,
+"name": &"chuck_right_1",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gnu0t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_377u5")
+}],
+"loop": false,
+"name": &"chuck_right_2",
+"speed": 12.0
 }, {
 "frames": [{
 "duration": 1.0,

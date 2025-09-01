@@ -66,7 +66,6 @@ func _set_throw(impulse: int, animation1: String, animation2: String):
 	throwing = true
 	get_parent().shoot_candy_corn.rpc_id(1, impulse)
 	PlayerGlobals.remove_one_candy_corn()
-	print(PlayerGlobals.candy_corn)
 	if chuck_anim:
 		animation_select = animation1
 		chuck_anim = false
