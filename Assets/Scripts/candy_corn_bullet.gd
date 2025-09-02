@@ -15,5 +15,8 @@ func _process(_delta: float) -> void:
 
 func _on_body_entered(body):
 	print("Hit: ", body.name)
+	if "player_health" in body and body.player_health > 0:
+		body.player_health -= 1
+		print("Damaged player! Health now: ", body.player_health)
 	if multiplayer.is_server():
 		queue_free()

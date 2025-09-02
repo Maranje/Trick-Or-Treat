@@ -57,9 +57,9 @@ func _set_animation():
 func _check_throw():
 	if PlayerGlobals.candy_corn <= 0: return 
 	if Input.is_action_just_pressed("shoot_left"):
-		_set_throw(-1000, "chuck_left_1", "chuck_left_2")
+		_set_throw(-1500, "chuck_left_1", "chuck_left_2")
 	elif Input.is_action_just_pressed("shoot_right"):
-		_set_throw(1000, "chuck_right_1", "chuck_right_2")
+		_set_throw(1500, "chuck_right_1", "chuck_right_2")
 
 func _set_throw(impulse: int, animation1: String, animation2: String):
 	movement = Vector2.ZERO

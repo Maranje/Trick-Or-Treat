@@ -9,6 +9,7 @@ var candycorn: PackedScene = preload("uid://e1hrcf4p5may")
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var tag: Label = $tag
+var player_health: int = 100
 var sprite_frames: int = 0
 var total_costumes: int = 0
 var user_name: String
@@ -57,6 +58,7 @@ func _process(delta: float) -> void:
 	move_and_slide()
 	
 func trick_or_treat():
+	print(player_health)
 	var doorbell_instance = doorbell.instantiate()
 	add_child(doorbell_instance)
 	print(doors_hit)
