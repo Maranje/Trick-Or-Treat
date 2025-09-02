@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://df8j72jtyei4v"]
+[gd_scene load_steps=8 format=3 uid="uid://df8j72jtyei4v"]
 
 [ext_resource type="Script" uid="uid://b0avha4lhbb5m" path="res://Assets/Scripts/player.gd" id="1_6t5aa"]
 [ext_resource type="PackedScene" uid="uid://dy4vw71mag042" path="res://Components/player_sync_component.tscn" id="2_cvnsp"]
 [ext_resource type="SpriteFrames" uid="uid://lao147i5u1q5" path="res://Assets/SpriteFrames/witch_hat_frames.tres" id="2_vgqql"]
 [ext_resource type="Script" uid="uid://cy1e3pstypfm1" path="res://Assets/Scripts/camera_2d.gd" id="4_vgqql"]
+[ext_resource type="PackedScene" uid="uid://c465xsbawgwoo" path="res://Components/ui.tscn" id="5_fkybt"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvnsp"]
 size = Vector2(20, 52)
@@ -60,8 +61,12 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 7
 theme_override_font_sizes/font_size = 9
+text = "test_username"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("..")
+
+[node name="UI" parent="." instance=ExtResource("5_fkybt")]
+position = Vector2(-24.5, -33.5)

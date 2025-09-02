@@ -9,7 +9,8 @@ var candycorn: PackedScene = preload("uid://e1hrcf4p5may")
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var tag: Label = $tag
-var player_health: int = 100
+@onready var ui: Node2D = $UI
+var player_health: int = 50
 var sprite_frames: int = 0
 var total_costumes: int = 0
 var user_name: String
@@ -28,7 +29,7 @@ func _ready() -> void:
 	setup_individuals()
 	candy_spawner.spawn_function = func(data):
 		var candy_corn = candycorn.instantiate()
-		candy_corn.direction = data.direction + velocity.x
+		candy_corn.direction = data.direction - velocity.x
 		if data.direction < 0:
 			candy_corn.position.x -= 20
 		else:

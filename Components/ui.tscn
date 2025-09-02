@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://c465xsbawgwoo"]
+
+[ext_resource type="Script" uid="uid://cagofawmh7p3b" path="res://Assets/Scripts/ui.gd" id="1_3pam7"]
+[ext_resource type="Texture2D" uid="uid://dic52dehdumud" path="res://Assets/Sprites/Stuff/red.png" id="2_sgocf"]
+[ext_resource type="Texture2D" uid="uid://bcnrni240jtqf" path="res://Assets/Sprites/Stuff/green.png" id="3_kh4jv"]
+
+[node name="UI" type="Node2D"]
+script = ExtResource("1_3pam7")
+
+[node name="RedBar" type="Sprite2D" parent="."]
+position = Vector2(25, 0)
+scale = Vector2(50, 2)
+texture = ExtResource("2_sgocf")
+
+[node name="GreenBar" type="Sprite2D" parent="."]
+position = Vector2(0, -1)
+scale = Vector2(50, 2)
+texture = ExtResource("3_kh4jv")
+centered = false
