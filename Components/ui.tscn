@@ -31,6 +31,7 @@ texture = ExtResource("3_kh4jv")
 centered = false
 
 [node name="TopRight" type="Node2D" parent="."]
+visible = false
 
 [node name="CandyCorn" type="Sprite2D" parent="TopRight"]
 position = Vector2(151, -125)

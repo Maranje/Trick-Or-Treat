@@ -53,7 +53,7 @@ func _ready() -> void:
 	timer.one_shot = true
 	timer.timeout.connect(_load_stage)
 	timer.start()
-	
+
 func _load_stage():
 	scene_loaded.rpc_id(1, PlayerGlobals.current_costume, PlayerGlobals.user_name)
 
@@ -88,13 +88,13 @@ func _on_server_disconnected():
 		if child is Player:
 			child.queue_free()
 	get_tree().change_scene_to_packed(disconnect_scene)
-	
+
 func _stage_play_finished():
 	buzzer.play()
 	var my_peer_id = multiplayer.get_unique_id()
 	var my_player = get_node_or_null(str(my_peer_id))
 	my_player.player_active = false
-	
+
 func _level_fade():
 	wind_down.play()
 	var my_peer_id = multiplayer.get_unique_id()
@@ -106,10 +106,10 @@ func _level_fade():
 		curtains_1.position.x = player_pos.x - 400
 	var tween = create_tween()
 	tween.tween_property(curtains_1, "modulate:a", 1.0, 6.27)
-	
+
 func _start_tally():
 	tally.play()
-	
+
 func _blast():
 	blast.play()
 	var my_peer_id = multiplayer.get_unique_id()
@@ -121,7 +121,8 @@ func _blast():
 		title_card.visible = true
 
 func _end_run():
-	_change_scene.rpc()
+	if multiplayer.is_server():
+		_change_scene.rpc()
 
 @rpc("authority", "call_local", "reliable")
 func _change_scene():
