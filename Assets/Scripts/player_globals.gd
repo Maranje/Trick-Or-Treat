@@ -52,7 +52,7 @@ func load_data():
 			var parse_result = json.parse(json_string)
 			if parse_result == OK:
 				var loaded_data = json.data
-				recent_ip = loaded_data.get("recent_ip")
+				recent_ip = loaded_data.get("recent_ip", "")
 				user_name = loaded_data.get("user_name", "")
 				candy_count = loaded_data.get("candy_count", 0)
 				candy_corn = loaded_data.get("candy_corn", 0)
