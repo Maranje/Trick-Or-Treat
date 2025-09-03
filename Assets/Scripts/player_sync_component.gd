@@ -16,6 +16,14 @@ func _process(_delta: float) -> void:
 		_gather_input()
 		
 func _gather_input():
+	if get_parent().player_health == 0:
+		movement = Vector2.ZERO
+		animation_select = "ko"
+		return
+	if not get_parent().player_active: 
+		movement = Vector2.ZERO
+		animation_select = "idle"
+		return
 	if throwing: return
 	if get_parent().has_node("TrickOrTreat"):
 		movement = Vector2.ZERO

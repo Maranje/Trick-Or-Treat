@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b0avha4lhbb5m" path="res://Assets/Scripts/player.gd" id="1_6t5aa"]
 [ext_resource type="PackedScene" uid="uid://dy4vw71mag042" path="res://Components/player_sync_component.tscn" id="2_cvnsp"]
-[ext_resource type="SpriteFrames" uid="uid://lao147i5u1q5" path="res://Assets/SpriteFrames/witch_hat_frames.tres" id="2_vgqql"]
+[ext_resource type="SpriteFrames" uid="uid://dpjebqgohymdp" path="res://Assets/SpriteFrames/cape_frames.tres" id="2_fkybt"]
 [ext_resource type="Script" uid="uid://cy1e3pstypfm1" path="res://Assets/Scripts/camera_2d.gd" id="4_vgqql"]
 [ext_resource type="PackedScene" uid="uid://c465xsbawgwoo" path="res://Components/ui.tscn" id="5_fkybt"]
 
@@ -32,8 +32,8 @@ script = ExtResource("1_6t5aa")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
-sprite_frames = ExtResource("2_vgqql")
-animation = &"chuck_right_2"
+sprite_frames = ExtResource("2_fkybt")
+animation = &"ko"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 16)

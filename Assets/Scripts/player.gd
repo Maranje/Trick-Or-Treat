@@ -10,6 +10,7 @@ var candycorn: PackedScene = preload("uid://e1hrcf4p5may")
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var tag: Label = $tag
 @onready var ui: Node2D = $UI
+var player_active: bool = true
 var player_health: int = 50
 var sprite_frames: int = 0
 var total_costumes: int = 0
@@ -21,6 +22,7 @@ var jump: int = -1000
 var gravity: int = 2500
 var door_number: int
 var doors_hit: Array[Array]
+
 
 func _ready() -> void:
 	player_sync_component.set_multiplayer_authority(input_multiplayer_authority)

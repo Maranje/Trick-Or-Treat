@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cul6kxi3csn08"]
+[gd_scene load_steps=25 format=3 uid="uid://cul6kxi3csn08"]
 
 [ext_resource type="Texture2D" uid="uid://bknstvfikbog5" path="res://Assets/Sprites/Backgrounds/Sky/Sky.png" id="1_gdy8p"]
 [ext_resource type="Script" uid="uid://ieqnwsbd8cua" path="res://Assets/Scripts/stage.gd" id="1_gvphh"]
@@ -10,7 +10,17 @@
 [ext_resource type="Texture2D" uid="uid://u0a4y1a507f1" path="res://Assets/Sprites/Backgrounds/Sidewalk/Sidewalk.png" id="7_462mf"]
 [ext_resource type="Script" uid="uid://lq2jypwh2dix" path="res://Assets/Scripts/house_body.gd" id="7_sr6x0"]
 [ext_resource type="Texture2D" uid="uid://3lfgggan3x3p" path="res://Assets/Sprites/Backgrounds/Sidewalk/Truck.png" id="9_hyud0"]
-[ext_resource type="AudioStream" uid="uid://djx5vvfk1nu3c" path="res://Assets/Audio/Music/MainThemeFull.mp3" id="10_ohi65"]
+[ext_resource type="AudioStream" uid="uid://ducmeco1w740s" path="res://Assets/Audio/Music/MainThemeStage.mp3" id="11_sr6x0"]
+[ext_resource type="AudioStream" uid="uid://b6ad5f5gkb1wq" path="res://Assets/Audio/Music/MainThemeWindDown.mp3" id="12_p7ny2"]
+[ext_resource type="AudioStream" uid="uid://cfcbvqo600iqy" path="res://Assets/Audio/Music/MainThemeBuzzer.mp3" id="13_83n1v"]
+[ext_resource type="Texture2D" uid="uid://ktkw03xmxwp2" path="res://Assets/Sprites/Stuff/Blank.png" id="13_462mf"]
+[ext_resource type="AudioStream" uid="uid://2173kx6tawfs" path="res://Assets/Audio/Music/MainThemeTally.mp3" id="14_105mv"]
+[ext_resource type="AudioStream" uid="uid://hqmxiddlmmer" path="res://Assets/Audio/Music/MainThemeBlast.mp3" id="15_0eise"]
+[ext_resource type="Texture2D" uid="uid://baonqdcj18t8e" path="res://Assets/Sprites/ToT/Blank.png" id="15_0yugm"]
+[ext_resource type="AudioStream" uid="uid://cf40vrqlh573u" path="res://Assets/Audio/Music/MainThemeEnd.mp3" id="16_maxbf"]
+[ext_resource type="Texture2D" uid="uid://dgmbnecp38rmr" path="res://Assets/Sprites/ToT/Trick.png" id="16_xl50b"]
+[ext_resource type="Texture2D" uid="uid://cudjwh6q2ex6p" path="res://Assets/Sprites/ToT/Treat.png" id="17_anoch"]
+[ext_resource type="Texture2D" uid="uid://bawv5qjwmkmgk" path="res://Assets/Sprites/ToT/Or.png" id="18_105mv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sr6x0"]
 
@@ -154,9 +164,61 @@ scale = Vector2(2, 2)
 texture = ExtResource("9_hyud0")
 centered = false
 
-[node name="StageTheme" type="AudioStreamPlayer2D" parent="."]
+[node name="Curtains1" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("13_462mf")
+centered = false
+
+[node name="TitleCard" type="Node2D" parent="."]
+visible = false
+scale = Vector2(2, 2)
+
+[node name="Blank" type="Sprite2D" parent="TitleCard"]
+texture = ExtResource("15_0yugm")
+centered = false
+
+[node name="Trick" type="Sprite2D" parent="TitleCard"]
+texture = ExtResource("16_xl50b")
+centered = false
+
+[node name="Treat" type="Sprite2D" parent="TitleCard"]
+texture = ExtResource("17_anoch")
+centered = false
+
+[node name="Or" type="Sprite2D" parent="TitleCard"]
+texture = ExtResource("18_105mv")
+centered = false
+
+[node name="Curtains2" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("13_462mf")
+centered = false
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="EndTheme" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("16_maxbf")
+
+[node name="BlastTheme" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("15_0eise")
+
+[node name="TallyTheme" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("14_105mv")
+
+[node name="WindDownTheme" type="AudioStreamPlayer2D" parent="Audio"]
 position = Vector2(3600, 0)
-stream = ExtResource("10_ohi65")
+stream = ExtResource("12_p7ny2")
+attenuation = 1e-05
+panning_strength = 0.0
+parameters/looping = false
+
+[node name="BuzzerTheme" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("13_83n1v")
+
+[node name="StageTheme" type="AudioStreamPlayer2D" parent="Audio"]
+z_index = 4096
+position = Vector2(3600, 0)
+stream = ExtResource("11_sr6x0")
 autoplay = true
 attenuation = 1e-05
 panning_strength = 0.0

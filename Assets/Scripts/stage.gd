@@ -2,26 +2,39 @@ extends Node
 
 var disconnect_scene: PackedScene = preload("uid://ctmuv3sgstkfa")
 var player_scene: PackedScene = preload("uid://df8j72jtyei4v")
+var splash_scene: PackedScene
 
 @onready var player_spawner: MultiplayerSpawner = $PlayerSpawner
+@onready var bg: Node2D = $Background
 @onready var sky: Sprite2D = $Background/Sky
 @onready var clouds: Node2D = $Background/Clouds
 @onready var moon: Sprite2D = $Background/Moon
 @onready var trees: Sprite2D = $Background/Trees
 @onready var houses: Sprite2D = $Background/Houses
-@onready var stage_theme: AudioStreamPlayer2D = $StageTheme
 @onready var houses_body: Area2D = $Background/Houses/HouseBody
-
+@onready var theme: AudioStreamPlayer2D = $Audio/StageTheme
+@onready var wind_down: AudioStreamPlayer2D = $Audio/WindDownTheme
+@onready var buzzer:AudioStreamPlayer2D = $Audio/BuzzerTheme
+@onready var tally: AudioStreamPlayer2D = $Audio/TallyTheme
+@onready var blast: AudioStreamPlayer2D = $Audio/BlastTheme
+@onready var end: AudioStreamPlayer2D = $Audio/EndTheme
+@onready var curtains_1: Sprite2D = $Curtains1
+@onready var curtains_2: Sprite2D = $Curtains2
+@onready var title_card: Node2D = $TitleCard
 var door_switch: bool = false
 
 func _ready() -> void:
-	stage_theme.max_distance = INF
+	theme.max_distance = INF
+	buzzer.max_distance = INF
+	wind_down.max_distance = INF
+	tally.max_distance = INF
+	blast.max_distance = INF
+	end.max_distance = INF
 	player_spawner.spawn_function = func(data):
 		var new_player = player_scene.instantiate() as Player
 		new_player.position.x = (randi() % 177 + 2) * 40
 		new_player.input_multiplayer_authority = data.peer_id
 		new_player.name = str(data.peer_id)
-		# Pass costume data during spawn
 		if data.has("costume"):
 			new_player.sprite_frames = data.costume
 		if data.has("user_name"):
@@ -29,6 +42,11 @@ func _ready() -> void:
 		return new_player
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
+	theme.finished.connect(_stage_play_finished)
+	buzzer.finished.connect(_level_fade)
+	wind_down.finished.connect(_start_tally)
+	tally.finished.connect(_blast)
+	blast.finished.connect(_end_run)
 	var timer = Timer.new()
 	add_child(timer)
 	timer.wait_time = 0.1
@@ -42,15 +60,14 @@ func _load_stage():
 func _process(_delta: float) -> void:
 	var my_peer_id = multiplayer.get_unique_id()
 	var my_player = get_node_or_null(str(my_peer_id))
-	
 	if my_player and is_instance_valid(my_player):
 		var player_pos = my_player.global_position
 		sky.position.x = player_pos.x - 400
 		moon.position.x = player_pos.x - 400
 		if clouds:
 			clouds.position.x = player_pos.x - 400
-		trees.position.x = player_pos.x / 4.5
-		houses.position.x = player_pos.x / 9
+			trees.position.x = player_pos.x / 4.5
+			houses.position.x = player_pos.x / 9
 
 @rpc("any_peer", "call_local", "reliable")
 func scene_loaded(costume_data: int = 0, user_name_data: String = ""):
@@ -72,3 +89,37 @@ func _on_server_disconnected():
 			child.queue_free()
 	get_tree().change_scene_to_packed(disconnect_scene)
 	
+func _stage_play_finished():
+	buzzer.play()
+	var my_peer_id = multiplayer.get_unique_id()
+	var my_player = get_node_or_null(str(my_peer_id))
+	my_player.player_active = false
+	
+func _level_fade():
+	wind_down.play()
+	var my_peer_id = multiplayer.get_unique_id()
+	var my_player = get_node_or_null(str(my_peer_id))
+	if my_player and is_instance_valid(my_player):
+		var player_pos = my_player.global_position
+		curtains_1.modulate.a = 0.0
+		curtains_1.visible = true
+		curtains_1.position.x = player_pos.x - 400
+	var tween = create_tween()
+	tween.tween_property(curtains_1, "modulate:a", 1.0, 6.27)
+	
+func _start_tally():
+	tally.play()
+	
+func _blast():
+	blast.play()
+	var my_peer_id = multiplayer.get_unique_id()
+	var my_player = get_node_or_null(str(my_peer_id))
+	if my_player and is_instance_valid(my_player):
+		var player_pos = my_player.global_position
+		title_card.position.x = player_pos.x - 400
+		title_card.z_index = 1
+		title_card.visible = true
+	
+func _end_run():
+	splash_scene = load("uid://cvr7jcnvq23fm")
+	get_tree().change_scene_to_packed(splash_scene)
