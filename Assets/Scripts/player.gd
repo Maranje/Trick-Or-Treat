@@ -22,7 +22,7 @@ var jump: int = -1000
 var gravity: int = 2500
 var door_number: int
 var doors_hit: Array[Array]
-
+var scrapping: bool = false
 
 func _ready() -> void:
 	player_sync_component.set_multiplayer_authority(input_multiplayer_authority)
