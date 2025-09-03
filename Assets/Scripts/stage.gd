@@ -134,7 +134,9 @@ func _change_scene():
 			if is_instance_valid(player):
 				player.queue_free()
 		players.clear()
+	if not splash_scene:
+		splash_scene = load("uid://cvr7jcnvq23fm")
+	if splash_scene:
+		get_tree().change_scene_to_packed(splash_scene)
 	else:
-		await get_tree().create_timer(0.1).timeout
-	splash_scene = load("uid://cvr7jcnvq23fm")
-	get_tree().change_scene_to_packed(splash_scene)
+		print("Error: Failed to load splash scene")
