@@ -14,7 +14,7 @@ func _process(_delta: float) -> void:
 	candy_corn.rotation += 0.1
 
 func _on_body_entered(body):
-	if body.scrapping: return
+	if body.player_sync_component.scrapping: return
 	if "player_health" in body and body.player_health > 0:
 		body.player_health -= 1
 		body.ui.green_bar.scale.x = body.player_health

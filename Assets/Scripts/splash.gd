@@ -124,7 +124,6 @@ func _ready_pressed():
 		peer_labels[my_peer_id].label_sync_component.player_ready()
 		PlayerGlobals.user_name = peer_labels[my_peer_id].text
 		PlayerGlobals.recent_ip = address.text
-		print(PlayerGlobals.recent_ip)
 		PlayerGlobals.save_data()
 
 func _user_name_edit(text):

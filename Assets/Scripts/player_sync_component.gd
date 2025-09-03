@@ -5,6 +5,7 @@ var jump: bool = false
 var animation_select: String
 var direction: String = "left"
 var at_door: bool = false
+var scrapping: bool = false
 var chuck_anim: bool = false
 var throwing: bool = false
 var throw_timer: Timer
@@ -17,18 +18,18 @@ func _process(_delta: float) -> void:
 		
 func _gather_input():
 	if get_parent().player_health == 0:
-		movement = Vector2.ZERO
-		animation_select = "ko"
+		_static_situation("ko")
 		return
-	if not get_parent().player_active: 
-		movement = Vector2.ZERO
-		animation_select = "idle"
+	if not get_parent().player_active:
+		_static_situation("idle")
+		return
+	if get_parent().has_node("Scrap"):
+		_scrap_input()
+		return
+	if get_parent().has_node("TrickOrTreat"):
+		_static_situation("back")
 		return
 	if throwing: return
-	if get_parent().has_node("TrickOrTreat"):
-		movement = Vector2.ZERO
-		animation_select = "back"
-		return
 	movement = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	_set_animation()
 	_check_throw()
@@ -89,5 +90,12 @@ func _set_throw(impulse: int, animation1: String, animation2: String):
 	throw_timer.timeout.connect(_toggle_throwing_false)
 	throw_timer.start()
 
+func _static_situation(Anim: String):
+	movement = Vector2.ZERO
+	animation_select = Anim
+
 func _toggle_throwing_false():
 	throwing = false
+
+func _scrap_input():
+	pass

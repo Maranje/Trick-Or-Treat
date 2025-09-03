@@ -3,6 +3,7 @@ extends Node
 @onready var scrap_window: Node2D = $ScrapWindow
 @onready var opp: AnimatedSprite2D = $ScrapWindow/Opp
 @onready var pov: Sprite2D = $ScrapWindow/POV
+var opponent: Player
 
 func _ready() -> void:
 	_reset_square_up()
