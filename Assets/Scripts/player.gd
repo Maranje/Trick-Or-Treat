@@ -41,6 +41,7 @@ func _ready() -> void:
 func setup_individuals():
 	camera_2d.enabled = false
 	if input_multiplayer_authority == multiplayer.get_unique_id():
+		ui.top_right.visible = true
 		camera_2d.enabled = true
 		camera_2d.make_current()
 	tag.text = user_name
