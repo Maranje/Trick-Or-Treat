@@ -101,9 +101,9 @@ func _host_pressed():
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_on_connected_host)
 	print("Server started on port ", PORT)
-	peer_ready.rpc_id(1)
+	peer_ready.rpc_id(1) #comment out for no host player
 	_toggle_lobby()
-	peer_labels[1].label_sync_component.gather_input(PlayerGlobals.user_name)
+	peer_labels[1].label_sync_component.gather_input(PlayerGlobals.user_name) #comment out for no host player
 
 func _join_pressed():
 	if address.text.is_empty():

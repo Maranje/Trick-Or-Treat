@@ -75,6 +75,7 @@ func scene_loaded(costume_data: int = 0, user_name_data: String = ""):
 		return
 	
 	var peer_id = multiplayer.get_remote_sender_id()
+	#if peer_id == 1: return
 	player_spawner.spawn({"peer_id": peer_id, "costume": costume_data, "user_name": user_name_data})
 
 func _on_peer_disconnected(peer_id: int):
