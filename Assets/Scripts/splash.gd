@@ -19,11 +19,7 @@ var label_y_offset = 0
 var peer_labels: Dictionary = {}
 
 func _ready() -> void:
-	PlayerGlobals.load_data()
 	user_name.text = PlayerGlobals.user_name
-	if not address or not host_button or not join_button:
-		print("ERROR: Missing UI nodes!")
-		return
 	lobby_disp.visible = false
 	connect_disp.visible = true
 	host_button.pressed.connect(_host_pressed)

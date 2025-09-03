@@ -22,6 +22,7 @@ var splash_scene: PackedScene
 @onready var curtains_2: Sprite2D = $Curtains2
 @onready var title_card: Node2D = $TitleCard
 var door_switch: bool = false
+var players: Dictionary = {}
 
 func _ready() -> void:
 	theme.max_distance = INF
@@ -39,6 +40,7 @@ func _ready() -> void:
 			new_player.sprite_frames = data.costume
 		if data.has("user_name"):
 			new_player.user_name = data.user_name
+		players[new_player.name] = new_player
 		return new_player
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
@@ -127,5 +129,12 @@ func _end_run():
 
 @rpc("authority", "call_local", "reliable")
 func _change_scene():
+	if multiplayer.is_server():
+		for player in players.values():
+			if is_instance_valid(player):
+				player.queue_free()
+		players.clear()
+	else:
+		await get_tree().create_timer(0.1).timeout
 	splash_scene = load("uid://cvr7jcnvq23fm")
 	get_tree().change_scene_to_packed(splash_scene)
