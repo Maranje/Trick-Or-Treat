@@ -63,15 +63,18 @@ func _process(delta: float) -> void:
 	
 func trick_or_treat():
 	var doorbell_instance = doorbell.instantiate()
-	add_child(doorbell_instance)
-	print(doors_hit)
 	if door_number not in doors_hit[sprite_frames]:
 		PlayerGlobals.add_candy_corn(10)
 		PlayerGlobals.add_candy(1)
+		doorbell_instance.candy = true
+		doorbell_instance.candy_corn = true
 		doors_hit[sprite_frames].append(door_number)
 	else:
 		PlayerGlobals.add_candy_corn(1)
-	ui.update_candies()
+		doorbell_instance.candy_corn = true
+	
+	add_child(doorbell_instance)
+	print(doors_hit)
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: int = 1000):

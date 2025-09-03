@@ -4,6 +4,9 @@ extends Node2D
 @onready var doorbell: Sprite2D = $Doorbell
 @onready var ding: AudioStreamPlayer2D = $Ding
 
+var candy: bool = false
+var candy_corn: bool = false
+
 func _ready() -> void:
 	var hand_tween = create_tween()
 	var doorbell_tween = create_tween()
@@ -24,4 +27,5 @@ func _doorbell_pressed():
 	timer.start()
 	
 func _remove_this_node():
+	get_parent().ui.run_notificon(candy, candy_corn)
 	queue_free()

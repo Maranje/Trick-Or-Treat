@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://c465xsbawgwoo"]
+[gd_scene load_steps=8 format=3 uid="uid://c465xsbawgwoo"]
 
 [ext_resource type="Script" uid="uid://cagofawmh7p3b" path="res://Assets/Scripts/ui.gd" id="1_3pam7"]
 [ext_resource type="Texture2D" uid="uid://dic52dehdumud" path="res://Assets/Sprites/Stuff/red.png" id="2_sgocf"]
@@ -8,6 +8,14 @@
 [sub_resource type="LabelSettings" id="LabelSettings_kh4jv"]
 font_color = Color(0, 0, 0, 1)
 outline_size = 10
+
+[sub_resource type="LabelSettings" id="LabelSettings_arrjb"]
+font_color = Color(0, 0, 0, 1)
+outline_size = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_li6kp"]
+font_color = Color(0, 0, 0, 1)
+outline_size = 8
 
 [node name="UI" type="Node2D"]
 script = ExtResource("1_3pam7")
@@ -23,10 +31,9 @@ texture = ExtResource("3_kh4jv")
 centered = false
 
 [node name="TopRight" type="Node2D" parent="."]
-visible = false
 
 [node name="CandyCorn" type="Sprite2D" parent="TopRight"]
-position = Vector2(171, -125)
+position = Vector2(151, -125)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("4_kh4jv")
 vframes = 2
@@ -49,7 +56,7 @@ label_settings = SubResource("LabelSettings_kh4jv")
 horizontal_alignment = 1
 
 [node name="Candy" type="Sprite2D" parent="TopRight"]
-position = Vector2(200, -125)
+position = Vector2(180, -125)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("4_kh4jv")
 vframes = 2
@@ -69,3 +76,38 @@ grow_vertical = 0
 text = "0000"
 label_settings = SubResource("LabelSettings_kh4jv")
 horizontal_alignment = 1
+
+[node name="Notificon" type="Node2D" parent="."]
+
+[node name="CandyIcon" type="Sprite2D" parent="Notificon"]
+visible = false
+position = Vector2(-8, 0)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("4_kh4jv")
+vframes = 2
+
+[node name="CandyIconLabel" type="Label" parent="Notificon/CandyIcon"]
+offset_left = -68.0
+offset_top = -12.0
+offset_right = -28.0
+offset_bottom = 11.0
+text = "+"
+label_settings = SubResource("LabelSettings_arrjb")
+horizontal_alignment = 2
+
+[node name="CandyCornIcon" type="Sprite2D" parent="Notificon"]
+visible = false
+position = Vector2(12, 0)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("4_kh4jv")
+vframes = 2
+frame = 1
+
+[node name="CandyCornIconLabel" type="Label" parent="Notificon/CandyCornIcon"]
+offset_left = -56.0
+offset_top = -12.0
+offset_right = -16.0
+offset_bottom = 11.0
+text = "+"
+label_settings = SubResource("LabelSettings_li6kp")
+horizontal_alignment = 2
