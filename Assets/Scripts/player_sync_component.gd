@@ -70,10 +70,12 @@ func _check_throw():
 		_set_throw(1500, "chuck_right_1", "chuck_right_2")
 
 func _set_throw(impulse: int, animation1: String, animation2: String):
+	var parent = get_parent()
 	movement = Vector2.ZERO
 	throwing = true
-	get_parent().shoot_candy_corn.rpc_id(1, impulse)
 	PlayerGlobals.remove_one_candy_corn()
+	parent.shoot_candy_corn.rpc_id(1, impulse)
+	parent.ui.update_candies()
 	if chuck_anim:
 		animation_select = animation1
 		chuck_anim = false

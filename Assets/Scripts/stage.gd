@@ -119,7 +119,11 @@ func _blast():
 		title_card.position.x = player_pos.x - 400
 		title_card.z_index = 1
 		title_card.visible = true
-	
+
 func _end_run():
+	_change_scene.rpc()
+
+@rpc("authority", "call_local", "reliable")
+func _change_scene():
 	splash_scene = load("uid://cvr7jcnvq23fm")
 	get_tree().change_scene_to_packed(splash_scene)
