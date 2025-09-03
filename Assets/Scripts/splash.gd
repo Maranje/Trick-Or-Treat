@@ -20,6 +20,7 @@ var peer_labels: Dictionary = {}
 
 func _ready() -> void:
 	user_name.text = PlayerGlobals.user_name
+	address.text = PlayerGlobals.recent_ip
 	lobby_disp.visible = false
 	connect_disp.visible = true
 	host_button.pressed.connect(_host_pressed)
@@ -60,6 +61,7 @@ func check_all_players_ready() -> bool:
 func cleanup_and_change_scene():
 	await get_tree().process_frame
 	if multiplayer.is_server():
+
 		for label in peer_labels.values():
 			if is_instance_valid(label):
 				label.queue_free()
@@ -121,6 +123,8 @@ func _ready_pressed():
 	if my_peer_id in peer_labels:
 		peer_labels[my_peer_id].label_sync_component.player_ready()
 		PlayerGlobals.user_name = peer_labels[my_peer_id].text
+		PlayerGlobals.recent_ip = address.text
+		print(PlayerGlobals.recent_ip)
 		PlayerGlobals.save_data()
 
 func _user_name_edit(text):
