@@ -100,8 +100,34 @@ func _toggle_throwing_false():
 	throwing = false
 
 func _scrap_input():
-	if Input.is_action_just_pressed("ui_left"):
-		print("check")
-		var opp = get_parent().get_node("Squabble").opponent.input_multiplayer_authority
-		var opponent = get_tree().get_node(opp.get_path())
-		opponent.get_node("Squabble").opp.animation = "punch_left"
+	if Input.is_action_just_pressed("shoot_left"):
+		_send_punch("punch_left")
+	elif Input.is_action_just_pressed("shoot_right"):
+		_send_punch("punch_right")
+	elif Input.is_action_just_pressed("shift_left"):
+		_send_block("block_left")
+	elif Input.is_action_just_pressed("shift_right"):
+		_send_block("block_right")
+	elif Input.is_action_just_pressed("ui_esc"):
+		_end_squabble()
+
+func _send_punch(animation: String):
+	var squabble = get_parent().get_node("Squabble")
+	var opponent = squabble.opponent
+	if opponent and opponent.has_node("Squabble"):
+		opponent.get_node("Squabble").show_punch.rpc_id(opponent.input_multiplayer_authority, animation)
+	squabble.pov_punch.rpc_id(get_parent().input_multiplayer_authority, animation)
+
+func _send_block(animation: String):
+	var squabble = get_parent().get_node("Squabble")
+	var opponent = squabble.opponent
+	if opponent and opponent.has_node("Squabble"):
+		opponent.get_node("Squabble").show_block.rpc_id(opponent.input_multiplayer_authority, animation)
+		squabble.pov_block.rpc_id(get_parent().input_multiplayer_authority, animation)
+	
+func _end_squabble():
+	var squabble = get_parent().get_node("Squabble")
+	var opponent = squabble.opponent
+	squabble.break_squabble.rpc_id(get_parent().input_multiplayer_authority)
+	if opponent and opponent.has_node("Squabble"):
+		opponent.get_node("Squabble").break_squabble.rpc_id(opponent.input_multiplayer_authority)

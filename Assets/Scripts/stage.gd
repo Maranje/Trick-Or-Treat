@@ -33,7 +33,7 @@ func _ready() -> void:
 	end.max_distance = INF
 	player_spawner.spawn_function = func(data):
 		var new_player = player_scene.instantiate() as Player
-		new_player.position.x = (randi() % 177 + 2) * 40
+		new_player.position.x = _find_safe_spawn_position()
 		new_player.input_multiplayer_authority = data.peer_id
 		new_player.name = str(data.peer_id)
 		if data.has("costume"):
@@ -76,6 +76,10 @@ func scene_loaded(costume_data: int = 0, user_name_data: String = ""):
 	if not multiplayer.is_server():
 		return
 	var peer_id = multiplayer.get_remote_sender_id()
+	
+	if players.has(str(peer_id)):
+		return
+		
 	player_spawner.spawn({"peer_id": peer_id, "costume": costume_data, "user_name": user_name_data})
 
 func _on_peer_disconnected(peer_id: int):
@@ -124,6 +128,29 @@ func _blast():
 func _end_run():
 	if multiplayer.is_server():
 		_change_scene.rpc()
+
+@rpc("authority", "call_local", "reliable")
+func _find_safe_spawn_position() -> float:
+	var min_distance = 200
+	var max_attempts = 50
+	var map_width = 177 * 40
+
+	for attempt in max_attempts:
+		var spawn_x = (randi() % 177 + 2) * 40
+		var safe_position = true
+
+		for player in players.values():
+			if is_instance_valid(player):
+				var distance = abs(spawn_x - player.position.x)
+				if distance < min_distance:
+					safe_position = false
+					break
+
+		if safe_position:
+			return spawn_x
+
+	var player_count = players.size()
+	return (player_count * 300) % map_width + 80
 
 @rpc("authority", "call_local", "reliable")
 func _change_scene():

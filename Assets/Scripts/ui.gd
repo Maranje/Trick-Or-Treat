@@ -44,3 +44,6 @@ func _notificon_reset():
 	candy_icon.visible = false
 	candy_corn_icon.visible = false
 	update_candies()
+
+func update_health(current_health: int, max_health: int = 50):
+	green_bar.scale.x = 50 * (float(current_health) / float(max_health))

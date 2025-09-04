@@ -50,6 +50,7 @@ func setup_individuals():
 	tag.text = user_name
 	animated_sprite_2d.sprite_frames = PlayerGlobals.costumes[sprite_frames]
 	animated_sprite_2d.play()
+	ui.update_health(player_health)
 
 func _process(delta: float) -> void:
 	if not animated_sprite_2d.is_playing(): animated_sprite_2d.play()
@@ -75,9 +76,7 @@ func trick_or_treat():
 	else:
 		PlayerGlobals.add_candy_corn(1)
 		doorbell_instance.candy_corn = true
-	
 	add_child(doorbell_instance)
-	print(doors_hit)
 
 func _on_player_collision(body):
 	if body is Player and body != self and not body.squabbling:
@@ -93,6 +92,36 @@ func player_squabble(opp: Player):
 		animated_sprite_2d.animation = "squabble_right"
 	else: 
 		animated_sprite_2d.animation = "squabble_left"
+	prev_anim = animated_sprite_2d.animation
+		
+func squabble_end():
+	var timer = Timer.new()
+	add_child(timer)
+	timer.wait_time = 4
+	timer.one_shot = true
+	timer.timeout.connect(_reset_area)
+	timer.start()
+	
+func _reset_area():
+	personal_space.monitoring = true
+
+@rpc("any_peer", "call_remote", "reliable")
+func request_damage(amount: int):
+	if multiplayer.is_server():
+		apply_damage.rpc(amount)
+
+@rpc("authority", "call_local", "reliable") 
+func apply_damage(amount: int):
+	player_health -= amount
+	if player_health <= 0:
+		player_health = 0
+	ui.update_health(player_health)
+
+func take_damage(amount: int):
+	if multiplayer.is_server():
+		apply_damage.rpc(amount)
+	else:
+		request_damage.rpc_id(1, amount)
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: int = 1000):
