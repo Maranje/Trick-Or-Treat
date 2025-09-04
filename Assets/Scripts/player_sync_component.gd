@@ -25,6 +25,7 @@ func _gather_input():
 		return
 	if get_parent().has_node("Scrap"):
 		_scrap_input()
+		movement = Vector2.ZERO
 		return
 	if get_parent().has_node("TrickOrTreat"):
 		_static_situation("back")
@@ -32,11 +33,22 @@ func _gather_input():
 	if throwing: return
 	movement = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	_set_animation()
+	#_check_scrap()
 	_check_throw()
 	_check_door()
 
 func toggle_at_door():
 	at_door = !at_door
+	
+func _check_scrap():
+	print("checking scrap")
+	var parent = get_parent()
+	for i in parent.get_slide_collision_count():
+		var collision = parent.get_slide_collision(i)
+		var collider = collision.get_collider()
+		if collider is Player and collider != self:
+			if collider.player_sync_component.scrapping: return
+			parent.player_squabble(collider, true)
 	
 func _check_door():
 	if not at_door: return

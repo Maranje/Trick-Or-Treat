@@ -3,6 +3,7 @@ extends CharacterBody2D
 
 var doorbell: PackedScene = preload("uid://bx542d0joldxk")
 var candycorn: PackedScene = preload("uid://e1hrcf4p5may")
+var scrap: PackedScene = preload("uid://bslx6ybji7hi1")
 @onready var candy_spawner: MultiplayerSpawner = $MultiplayerSpawner
 @onready var player_sync_component: MultiplayerSynchronizer = $PlayerSyncComponent
 @onready var player_sync: MultiplayerSynchronizer = $PlayerSync
@@ -59,7 +60,7 @@ func _process(delta: float) -> void:
 		animated_sprite_2d.animation = player_sync_component.animation_select
 		prev_anim = animated_sprite_2d.animation
 	move_and_slide()
-	
+
 func trick_or_treat():
 	var doorbell_instance = doorbell.instantiate()
 	if door_number not in doors_hit[sprite_frames]:
@@ -74,6 +75,18 @@ func trick_or_treat():
 	
 	add_child(doorbell_instance)
 	print(doors_hit)
+
+func player_squabble(opp: Player, init: bool):
+	var scrap_instance = scrap.instantiate()
+	scrap_instance.opponent = opp
+	add_child(scrap_instance)
+	
+	player_sync_component.scrapping = true
+	if position.x < opp.position.x:
+		animated_sprite_2d.animation = "squabble_right"
+	else: 
+		animated_sprite_2d.animation = "squabble_left"
+	if init: opp.player_squabble(self, false)
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: int = 1000):

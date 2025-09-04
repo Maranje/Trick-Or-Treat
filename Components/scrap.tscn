@@ -115,7 +115,7 @@ scale = Vector2(2, 2)
 
 [node name="Opp" type="AnimatedSprite2D" parent="ScrapWindow"]
 sprite_frames = SubResource("SpriteFrames_131is")
-animation = &"punch_right"
-centered = false
+animation = &"square_up"
+frame_progress = 0.562537
 
 [node name="POV" type="Sprite2D" parent="ScrapWindow"]
