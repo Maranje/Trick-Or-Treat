@@ -3,15 +3,17 @@ extends CharacterBody2D
 
 var doorbell: PackedScene = preload("uid://bx542d0joldxk")
 var candycorn: PackedScene = preload("uid://e1hrcf4p5may")
-var scrap: PackedScene = preload("uid://bslx6ybji7hi1")
+var squabble: PackedScene = preload("uid://e1mwxdchlsyn")
 @onready var candy_spawner: MultiplayerSpawner = $MultiplayerSpawner
 @onready var player_sync_component: MultiplayerSynchronizer = $PlayerSyncComponent
 @onready var player_sync: MultiplayerSynchronizer = $PlayerSync
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
+@onready var personal_space: Area2D = $PersonalSpace
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var tag: Label = $tag
 @onready var ui: Node2D = $UI
 var player_active: bool = true
+var squabbling: bool = false
 var player_health: int = 50
 var sprite_frames: int = 0
 var total_costumes: int = 0
@@ -29,6 +31,7 @@ func _ready() -> void:
 	for i in range(PlayerGlobals.costume_count):
 		doors_hit.append([])
 	setup_individuals()
+	personal_space.body_entered.connect(_on_player_collision)
 	candy_spawner.spawn_function = func(data):
 		var candy_corn = candycorn.instantiate()
 		candy_corn.direction = data.direction - velocity.x
@@ -76,17 +79,20 @@ func trick_or_treat():
 	add_child(doorbell_instance)
 	print(doors_hit)
 
-func player_squabble(opp: Player, init: bool):
-	var scrap_instance = scrap.instantiate()
-	scrap_instance.opponent = opp
-	add_child(scrap_instance)
-	
-	player_sync_component.scrapping = true
+func _on_player_collision(body):
+	if body is Player and body != self and not body.squabbling:
+		player_squabble(body)
+		body.squabbling = true
+		personal_space.set_deferred("monitoring", false)
+
+func player_squabble(opp: Player):
+	var squabble_instance = squabble.instantiate()
+	squabble_instance.opponent = opp
+	add_child(squabble_instance)
 	if position.x < opp.position.x:
 		animated_sprite_2d.animation = "squabble_right"
 	else: 
 		animated_sprite_2d.animation = "squabble_left"
-	if init: opp.player_squabble(self, false)
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: int = 1000):

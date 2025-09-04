@@ -12,6 +12,7 @@ var throw_timer: Timer
 
 @onready var tag: String = PlayerGlobals.user_name
 
+
 func _process(_delta: float) -> void:
 	if is_multiplayer_authority():
 		_gather_input()
@@ -23,7 +24,7 @@ func _gather_input():
 	if not get_parent().player_active:
 		_static_situation("idle")
 		return
-	if get_parent().has_node("Scrap"):
+	if get_parent().has_node("Squabble"):
 		_scrap_input()
 		movement = Vector2.ZERO
 		return
@@ -33,22 +34,11 @@ func _gather_input():
 	if throwing: return
 	movement = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	_set_animation()
-	#_check_scrap()
 	_check_throw()
 	_check_door()
 
 func toggle_at_door():
 	at_door = !at_door
-	
-func _check_scrap():
-	print("checking scrap")
-	var parent = get_parent()
-	for i in parent.get_slide_collision_count():
-		var collision = parent.get_slide_collision(i)
-		var collider = collision.get_collider()
-		if collider is Player and collider != self:
-			if collider.player_sync_component.scrapping: return
-			parent.player_squabble(collider, true)
 	
 func _check_door():
 	if not at_door: return

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://df8j72jtyei4v"]
+[gd_scene load_steps=9 format=3 uid="uid://df8j72jtyei4v"]
 
 [ext_resource type="Script" uid="uid://b0avha4lhbb5m" path="res://Assets/Scripts/player.gd" id="1_6t5aa"]
 [ext_resource type="PackedScene" uid="uid://dy4vw71mag042" path="res://Components/player_sync_component.tscn" id="2_cvnsp"]
@@ -8,6 +8,8 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cvnsp"]
 size = Vector2(20, 52)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fkybt"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6t5aa"]
 properties/0/path = NodePath(".:global_position")
@@ -34,12 +36,17 @@ script = ExtResource("1_6t5aa")
 texture_filter = 1
 sprite_frames = ExtResource("2_fkybt")
 animation = &"squabble_left"
-frame = 2
-frame_progress = 0.705034
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 16)
 shape = SubResource("RectangleShape2D_cvnsp")
+
+[node name="PersonalSpace" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PersonalSpace"]
+position = Vector2(0, 22)
+scale = Vector2(1.5, 1.5)
+shape = SubResource("RectangleShape2D_fkybt")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 script = ExtResource("4_vgqql")
