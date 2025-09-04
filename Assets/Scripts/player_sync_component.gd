@@ -100,4 +100,8 @@ func _toggle_throwing_false():
 	throwing = false
 
 func _scrap_input():
-	pass
+	if Input.is_action_just_pressed("ui_left"):
+		print("check")
+		var opp = get_parent().get_node("Squabble").opponent.input_multiplayer_authority
+		var opponent = get_tree().get_node(opp.get_path())
+		opponent.get_node("Squabble").opp.animation = "punch_left"

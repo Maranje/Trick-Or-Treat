@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://e1mwxdchlsyn"]
+[gd_scene load_steps=23 format=3 uid="uid://e1mwxdchlsyn"]
 
 [ext_resource type="Texture2D" uid="uid://da7dana04kqs" path="res://Assets/Sprites/Backgrounds/Scrap/BlockL.png" id="1_q186e"]
 [ext_resource type="Script" uid="uid://bod85oet4fqc3" path="res://Assets/Scripts/squabble.gd" id="1_xdh4n"]
@@ -8,6 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://oo6jwgyomper" path="res://Assets/Sprites/Backgrounds/Scrap/LoadR.png" id="5_oup5n"]
 [ext_resource type="Texture2D" uid="uid://vqowx312oynk" path="res://Assets/Sprites/Backgrounds/Scrap/PunchR.png" id="6_bo7gp"]
 [ext_resource type="Texture2D" uid="uid://dsnh7406wa5bq" path="res://Assets/Sprites/Backgrounds/Scrap/SquareUp.png" id="7_p8874"]
+[ext_resource type="AudioStream" uid="uid://bkxsr55xctx5o" path="res://Assets/Audio/Effects/scrapBellStart.mp3" id="9_d2vol"]
+[ext_resource type="AudioStream" uid="uid://c3x6rx5s3ngni" path="res://Assets/Audio/Effects/scrapBellEnd.mp3" id="10_oup5n"]
+[ext_resource type="AudioStream" uid="uid://ch5bdpl8m7bl4" path="res://Assets/Audio/Effects/grunt.mp3" id="11_oup5n"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0qh8w"]
 atlas = ExtResource("1_q186e")
@@ -116,3 +119,16 @@ animation = &"square_up"
 frame_progress = 0.651092
 
 [node name="POV" type="Sprite2D" parent="."]
+
+[node name="Audio" type="Node2D" parent="."]
+
+[node name="StartBell" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("9_d2vol")
+
+[node name="EndBell" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("10_oup5n")
+
+[node name="Grunt" type="AudioStreamPlayer2D" parent="Audio"]
+stream = ExtResource("11_oup5n")
+
+[node name="Punches" type="AudioStreamPlayer2D" parent="Audio"]

@@ -13,7 +13,7 @@ dest_files=["res://.godot/imported/scrapBellStart.mp3-a6e12a79957602d1dec8f5ea13
 [params]
 
 loop=false
-loop_offset=0
-bpm=0
+loop_offset=0.0
+bpm=0.0
 beat_count=0
 bar_beats=4

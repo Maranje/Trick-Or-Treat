@@ -3,10 +3,16 @@ extends Node2D
 @onready var opp: AnimatedSprite2D = $Opp
 @onready var pov: Sprite2D = $POV
 @onready var y_pos = 240
+@onready var start_bell: AudioStreamPlayer2D = $Audio/StartBell
+@onready var end_bell: AudioStreamPlayer2D = $Audio/EndBell
+@onready var grunt: AudioStreamPlayer2D = $Audio/Grunt
+@onready var punches: AudioStreamPlayer2D = $Audio/Punches
+
 var opponent: Player
 var printed: bool = false
 
 func _ready():
+	start_bell.play()
 	var my_player = get_parent() as Player
 	var my_peer_id = multiplayer.get_unique_id()
 	if my_peer_id != my_player.input_multiplayer_authority:
