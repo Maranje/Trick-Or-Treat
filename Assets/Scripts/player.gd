@@ -53,8 +53,10 @@ func setup_individuals():
 	ui.update_health(player_health)
 
 func _process(delta: float) -> void:
+	
 	if not animated_sprite_2d.is_playing(): animated_sprite_2d.play()
 	if not is_multiplayer_authority(): return
+	print("player: ", input_multiplayer_authority, ", area: ", personal_space.monitoring)
 	if not is_on_floor():
 		velocity.y += gravity * delta
 	elif player_sync_component.jump:
