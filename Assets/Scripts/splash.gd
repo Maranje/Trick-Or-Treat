@@ -22,11 +22,9 @@ func _ready() -> void:
 	
 	user_name.text = PlayerGlobals.user_name
 	address.text = PlayerGlobals.recent_ip
-	lobby_disp.visible = false
-	connect_disp.visible = true
 	
 	if multiplayer.get_peers().size() > 0:
-		_toggle_lobby()
+		_return_to_lobby()
 	
 	host_button.pressed.connect(_host_pressed)
 	join_button.pressed.connect(_join_pressed)
@@ -193,6 +191,9 @@ func _return_to_connection_screen():
 func _toggle_lobby():
 	lobby_disp.visible = true
 	connect_disp.visible = false
+	
+func _return_to_lobby():
+	peer_ready.rpc_id(1)
 	
 func _on_label_spawned(node):
 	var peer_id = node.input_multiplayer_authority
