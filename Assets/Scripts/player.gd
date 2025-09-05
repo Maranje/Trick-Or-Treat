@@ -79,7 +79,7 @@ func trick_or_treat():
 	add_child(doorbell_instance)
 
 func _on_player_collision(body):
-	if body is Player and body != self and not body.squabbling:
+	if body is Player and body != self and body.player_active and not body.squabbling:
 		player_squabble(body)
 		body.squabbling = true
 		personal_space.set_deferred("monitoring", false)
@@ -115,6 +115,7 @@ func apply_damage(amount: int):
 	player_health -= amount
 	if player_health <= 0:
 		player_health = 0
+		player_active = false
 	ui.update_health(player_health)
 
 func take_damage(amount: int):
@@ -122,6 +123,8 @@ func take_damage(amount: int):
 		apply_damage.rpc(amount)
 	else:
 		request_damage.rpc_id(1, amount)
+	if player_health == 0:
+		personal_space.monitoring = false
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: int = 1000):
