@@ -25,8 +25,8 @@ func _gather_input():
 		_static_situation("idle")
 		return
 	if get_parent().has_node("Squabble"):
+		_static_situation(animation_select)
 		_scrap_input()
-		movement = Vector2.ZERO
 		return
 	if get_parent().has_node("TrickOrTreat"):
 		_static_situation("back")

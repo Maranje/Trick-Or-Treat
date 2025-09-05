@@ -60,7 +60,7 @@ func _process(delta: float) -> void:
 	elif player_sync_component.jump:
 		velocity.y = jump
 	velocity.x = player_sync_component.movement.x * speed
-	if not squabbling and prev_anim != player_sync_component.animation_select:
+	if prev_anim != player_sync_component.animation_select:
 		animated_sprite_2d.animation = player_sync_component.animation_select
 		prev_anim = animated_sprite_2d.animation
 	move_and_slide()
@@ -94,8 +94,10 @@ func player_squabble(opp: Player):
 	add_child(squabble_instance)
 	if position.x < opp.position.x:
 		animated_sprite_2d.animation = "squabble_right"
+		player_sync_component.animation_select = "squabble_right"
 	else: 
 		animated_sprite_2d.animation = "squabble_left"
+		player_sync_component.animation_select = "squabble_left"
 	prev_anim = animated_sprite_2d.animation
 		
 func squabble_end():
