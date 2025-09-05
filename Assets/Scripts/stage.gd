@@ -127,6 +127,7 @@ func _blast():
 		title_card.visible = true
 
 func _end_run():
+	stage_ended = true
 	if multiplayer.is_server():
 		_change_scene.rpc()
 
@@ -160,8 +161,7 @@ func _change_scene():
 			if is_instance_valid(player):
 				player.queue_free()
 		players.clear()
-	
-	stage_ended = true
+
 	multiplayer.multiplayer_peer = null
 	
 	if not splash_scene:
