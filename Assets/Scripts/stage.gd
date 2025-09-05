@@ -159,6 +159,9 @@ func _change_scene():
 			if is_instance_valid(player):
 				player.queue_free()
 		players.clear()
+	
+	multiplayer.multiplayer_peer = null
+	
 	if not splash_scene:
 		splash_scene = load("uid://cvr7jcnvq23fm")
 	if splash_scene:
