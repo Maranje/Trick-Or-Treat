@@ -37,6 +37,9 @@ func _ready() -> void:
 		new_label.name = str(data.peer_id)
 		peer_labels[data.peer_id] = new_label
 		return new_label
+	
+	print(multiplayer.get_peers().size())
+	print(multiplayer.get_peers())
 	if multiplayer.get_peers().size() > 0:
 		_return_to_lobby()
 
