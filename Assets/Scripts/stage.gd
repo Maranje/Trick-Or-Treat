@@ -95,7 +95,6 @@ func _on_server_disconnected():
 	if not splash_scene:
 		splash_scene = load("uid://cvr7jcnvq23fm")
 	if splash_scene:
-		print("scene change")
 		get_tree().change_scene_to_packed(splash_scene)
 	else:
 		print("Error: Failed to load splash scene")
@@ -171,7 +170,6 @@ func _change_scene():
 	if not splash_scene:
 		splash_scene = load("uid://cvr7jcnvq23fm")
 	if splash_scene:
-		print("scene change")
 		get_tree().change_scene_to_packed(splash_scene)
 	else:
 		print("Error: Failed to load splash scene")

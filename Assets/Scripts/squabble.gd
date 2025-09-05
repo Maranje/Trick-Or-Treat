@@ -46,8 +46,10 @@ func _process(_delta: float) -> void:
 	global_position.y = y_pos
 	if pov.animation == "block_left":
 		blocking_left = true
+		blocking_right = false
 	elif pov.animation == "block_right":
 		blocking_right = true
+		blocking_left = false
 	else:
 		blocking_left = false
 		blocking_right = false
@@ -62,10 +64,6 @@ func _reset_square_up_pov():
 	
 @rpc("any_peer", "call_local", "reliable")
 func break_squabble():
-	#var my_player = get_parent()
-	#my_player.reset_squabbling_flag.rpc()
-	#if opponent and is_instance_valid(opponent):
-		#opponent.reset_squabbling_flag.rpc()
 	queue_free()
 
 @rpc("any_peer", "call_local", "reliable")
@@ -110,12 +108,12 @@ func update_squabble_health():
 @rpc("any_peer", "call_local", "reliable")
 func _check_hit(punch_direction: String):
 	_reset_square_up_opp()
-	if (punch_direction == "punch_left" and blocking_right) or (punch_direction == "punch_right" and blocking_left):
-		return
-	
+	if (punch_direction == "punch_left" and blocking_right) or (punch_direction == "punch_right" and blocking_left): return
 	var parent = get_parent()
-	parent.take_damage(10)
-	call_deferred("_update_health_displays")
+	parent.take_damage(5)
+	# Wait a frame for the health to update, then update displays
+	await get_tree().process_frame
+	_update_health_displays()
 	if opponent and opponent.has_node("Squabble"):
 		opponent.get_node("Squabble").update_squabble_health.rpc()
 	grunt.play()

@@ -108,8 +108,8 @@ func _scrap_input():
 		_send_block("block_left")
 	elif Input.is_action_just_pressed("shift_right"):
 		_send_block("block_right")
-	elif Input.is_action_just_pressed("ui_esc") or animation_select == "ko":
-		_end_squabble()
+	elif Input.is_action_just_pressed("ui_esc"):
+		end_squabble()
 
 func _send_punch(animation: String):
 	var squabble = get_parent().get_node("Squabble")
@@ -125,7 +125,7 @@ func _send_block(animation: String):
 		opponent.get_node("Squabble").show_block.rpc_id(opponent.input_multiplayer_authority, animation)
 		squabble.pov_block.rpc_id(get_parent().input_multiplayer_authority, animation)
 	
-func _end_squabble():
+func end_squabble():
 	var squabble = get_parent().get_node("Squabble")
 	var opponent = squabble.opponent
 	squabble.break_squabble.rpc_id(get_parent().input_multiplayer_authority)

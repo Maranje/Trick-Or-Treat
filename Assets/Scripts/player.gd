@@ -89,7 +89,6 @@ func _on_player_collision(body):
 		and not body.squabbling:
 		player_squabble(body)
 		body.squabbling = true
-		#personal_space.set_deferred("monitoring", false)
 		opponent = body
 		
 func _collision_reset(body):
@@ -109,19 +108,6 @@ func player_squabble(opp: Player):
 		player_sync_component.animation_select = "squabble_left"
 	prev_anim = animated_sprite_2d.animation
 
-#@rpc("any_peer", "call_local", "reliable")
-#func reset_squabbling_flag():
-	#personal_space.monitoring = true
-	#var timer = Timer.new()
-	#add_child(timer)
-	#timer.wait_time = 1
-	#timer.one_shot = true
-	#timer.timeout.connect(_post_timer_reset)
-	#timer.start()
-#
-#func _post_timer_reset():
-	#squabbling = false
-
 @rpc("any_peer", "call_remote", "reliable")
 func request_damage(amount: int):
 	if multiplayer.is_server():
@@ -133,6 +119,7 @@ func apply_damage(amount: int):
 	if player_health <= 0:
 		player_health = 0
 		player_active = false
+		player_sync_component.end_squabble()
 	ui.update_health(player_health)
 
 func take_damage(amount: int):
