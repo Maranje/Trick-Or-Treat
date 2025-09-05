@@ -21,8 +21,8 @@ var splash_scene: PackedScene
 @onready var curtains_1: Sprite2D = $Curtains1
 @onready var curtains_2: Sprite2D = $Curtains2
 @onready var title_card: Node2D = $TitleCard
-var door_switch: bool = false
 var players: Dictionary = {}
+var stage_ended: bool = false
 
 func _ready() -> void:
 	theme.max_distance = INF
@@ -89,6 +89,7 @@ func _on_peer_disconnected(peer_id: int):
 			player_node.queue_free()
 
 func _on_server_disconnected():
+	if stage_ended: return
 	for child in get_children():
 		if child is Player:
 			child.queue_free()
@@ -160,11 +161,13 @@ func _change_scene():
 				player.queue_free()
 		players.clear()
 	
+	stage_ended = true
 	multiplayer.multiplayer_peer = null
 	
 	if not splash_scene:
 		splash_scene = load("uid://cvr7jcnvq23fm")
 	if splash_scene:
+		print("scene change")
 		get_tree().change_scene_to_packed(splash_scene)
 	else:
 		print("Error: Failed to load splash scene")

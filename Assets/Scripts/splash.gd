@@ -37,11 +37,6 @@ func _ready() -> void:
 		new_label.name = str(data.peer_id)
 		peer_labels[data.peer_id] = new_label
 		return new_label
-	
-	print(multiplayer.get_peers().size())
-	print(multiplayer.get_peers())
-	if multiplayer.get_peers().size() > 0:
-		_return_to_lobby()
 
 func _process(_delta: float) -> void:
 	if not transitioning_to_stage and check_all_players_ready():
