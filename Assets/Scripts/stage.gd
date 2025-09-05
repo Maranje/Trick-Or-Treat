@@ -97,11 +97,11 @@ func _on_server_disconnected():
 			get_tree().change_scene_to_packed(splash_scene)
 		else:
 			print("Error: Failed to load splash scene")
-
-	for child in get_children():
-		if child is Player:
-			child.queue_free()
-	get_tree().change_scene_to_packed(disconnect_scene)
+	else:
+		for child in get_children():
+			if child is Player:
+				child.queue_free()
+		get_tree().change_scene_to_packed(disconnect_scene)
 
 func _stage_play_finished():
 	buzzer.play()
