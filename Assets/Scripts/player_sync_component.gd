@@ -108,7 +108,7 @@ func _scrap_input():
 		_send_block("block_left")
 	elif Input.is_action_just_pressed("shift_right"):
 		_send_block("block_right")
-	elif Input.is_action_just_pressed("ui_esc"):
+	elif Input.is_action_just_pressed("ui_esc") or animation_select == "ko":
 		_end_squabble()
 
 func _send_punch(animation: String):

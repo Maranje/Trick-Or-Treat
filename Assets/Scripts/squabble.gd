@@ -25,7 +25,6 @@ var opponent: Player
 var blocking_left: bool = false
 var blocking_right: bool = false
 
-
 func _ready():
 	start_bell.play()
 	ui.play()
@@ -63,12 +62,10 @@ func _reset_square_up_pov():
 	
 @rpc("any_peer", "call_local", "reliable")
 func break_squabble():
-	# Immediately reset squabbling flags for both players
 	var my_player = get_parent()
 	my_player.squabbling = false
 	if opponent and is_instance_valid(opponent):
 		opponent.squabbling = false
-	
 	get_parent().squabble_end()
 	queue_free()
 
