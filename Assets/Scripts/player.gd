@@ -79,7 +79,11 @@ func trick_or_treat():
 	add_child(doorbell_instance)
 
 func _on_player_collision(body):
-	if body is Player and body != self and body.player_active and not body.squabbling:
+	if body is Player 			\
+		and body != self 		\
+		and player_active		\
+		and body.player_active 	\
+		and not body.squabbling:
 		player_squabble(body)
 		body.squabbling = true
 		personal_space.set_deferred("monitoring", false)
