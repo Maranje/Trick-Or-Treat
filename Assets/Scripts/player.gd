@@ -101,21 +101,19 @@ func player_squabble(opp: Player):
 		animated_sprite_2d.animation = "squabble_left"
 		player_sync_component.animation_select = "squabble_left"
 	prev_anim = animated_sprite_2d.animation
-		
-func squabble_end():
-	var timer = Timer.new()
-	add_child(timer)
-	timer.wait_time = 4
-	timer.one_shot = true
-	timer.timeout.connect(_rpc_reset_area_call)
-	timer.start()
-
-func _rpc_reset_area_call():
-	_reset_area.rpc()
 
 @rpc("any_peer", "call_local", "reliable")
-func _reset_area():
+func reset_squabbling_flag():
 	personal_space.monitoring = true
+	var timer = Timer.new()
+	add_child(timer)
+	timer.wait_time = 1
+	timer.one_shot = true
+	timer.timeout.connect(_post_timer_reset)
+	timer.start()
+
+func _post_timer_reset():
+	squabbling = false
 
 @rpc("any_peer", "call_remote", "reliable")
 func request_damage(amount: int):
