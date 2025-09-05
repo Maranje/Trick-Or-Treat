@@ -24,8 +24,11 @@ extends Node2D
 var opponent: Player
 var blocking_left: bool = false
 var blocking_right: bool = false
-var gas: int = 50
-var def: int = 50
+var punching: bool = false
+@onready var gas: float = 50
+@onready var def: float = 50
+@onready var gas_opp: float = 50
+@onready var def_opp: float = 50
 
 func _ready():
 	start_bell.play()
@@ -42,9 +45,13 @@ func _ready():
 	global_position.y = y_pos
 	z_index = 1
 	pov.animation_finished.connect(_reset_square_up_pov)
-	_update_health_displays()
 
 func _process(_delta: float) -> void:
+	if gas < 50: _increment_gas()
+	if def < 50: _increment_def()
+	_update_stats_displays()
+	
+	if multiplayer.get_unique_id() != get_parent().input_multiplayer_authority: return
 	global_position.y = y_pos
 	if pov.animation == "block_left":
 		blocking_left = true
@@ -56,20 +63,31 @@ func _process(_delta: float) -> void:
 		blocking_left = false
 		blocking_right = false
 	
-	_increment_gas()
-	_increment_def()
+	_check_ko()
 	
 func _increment_gas():
-	pass
+	gas += 0.125
+	if gas > 50: gas = 50
+	if opponent and opponent.has_node("Squabble"):
+		opponent.get_node("Squabble").sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
 	
 func _increment_def():
-	pass
+	def += 0.025
+	if def > 50: def = 50
+	if opponent and opponent.has_node("Squabble"):
+		opponent.get_node("Squabble").sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
 
 func decrememnt_gas():
-	pass
+	gas -= 10
+	if gas < 0: gas = 0
+	if opponent and opponent.has_node("Squabble"):
+		opponent.get_node("Squabble").sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
 	
-func decrement_def():
-	pass
+func decrement_def(amount: int):
+	def -= amount
+	if def < 1: def = 1
+	if opponent and opponent.has_node("Squabble"):
+		opponent.get_node("Squabble").sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
 
 func _reset_square_up_opp():
 	opp.animation = "square_up"
@@ -78,13 +96,20 @@ func _reset_square_up_opp():
 func _reset_square_up_pov():
 	pov.animation = "square_up"
 	pov.play()
+	punching = false
 	
+@rpc("any_peer", "call_local", "reliable")
+func sync_stats(new_def: float, new_gas: float):
+	def_opp = new_def
+	gas_opp = new_gas
+
 @rpc("any_peer", "call_local", "reliable")
 func break_squabble():
 	queue_free()
 
 @rpc("any_peer", "call_local", "reliable")
 func pov_punch(animation: String):
+	decrememnt_gas()
 	pov.animation = animation
 	pov.play()
 	if not punches.playing:
@@ -112,25 +137,33 @@ func show_block(animation: String):
 	opp.animation = animation
 	opp.play()
 
-func _update_health_displays():
+func _update_stats_displays():
 	var my_player = get_parent() as Player
-	if opponent and is_instance_valid(opponent):
+	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
 		pov_hp.scale.y = 25 * (float(my_player.player_health) / 50.0)
+		pov_def.scale.y = 25 * (def / 50.0)
+		pov_gas.scale.y = 25 * (gas / 50.0)
 		opp_hp.scale.y = 15 * (float(opponent.player_health) / 50.0)
-
-@rpc("any_peer", "call_local", "reliable") 
-func update_squabble_health():
-	_update_health_displays()
+		opp_def.scale.y = 15 * (def_opp / 50.0)
+		opp_gas.scale.y = 15 * (gas_opp / 50.0)
 
 @rpc("any_peer", "call_local", "reliable")
 func _check_hit(punch_direction: String):
 	_reset_square_up_opp()
-	if (punch_direction == "punch_left" and blocking_right) or (punch_direction == "punch_right" and blocking_left): return
+	decrement_def(2)
+	if (punch_direction == "punch_left" and blocking_right) or \
+	(punch_direction == "punch_right" and blocking_left): return
+	decrement_def(3)
 	var parent = get_parent()
-	parent.take_damage(5)
-	# Wait a frame for the health to update, then update displays
-	await get_tree().process_frame
-	_update_health_displays()
-	if opponent and opponent.has_node("Squabble"):
-		opponent.get_node("Squabble").update_squabble_health.rpc()
+	parent.take_damage(50 / def)
+	if parent.player_health == 0: 
+		opponent.get_node("Squabble").break_squabble.rpc_id(opponent.input_multiplayer_authority)
+		break_squabble.rpc_id(get_parent().input_multiplayer_authority)
 	grunt.play()
+
+func _check_ko():
+	var parent = get_parent()
+	if parent.player_health == 0: 
+		if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
+			opponent.get_node("Squabble").break_squabble.rpc_id(opponent.input_multiplayer_authority)
+		break_squabble.rpc_id(get_parent().input_multiplayer_authority)

@@ -55,6 +55,7 @@ func setup_individuals():
 	ui.update_health(player_health)
 
 func _process(delta: float) -> void:
+	ui.update_health(player_health)
 	if not animated_sprite_2d.is_playing(): animated_sprite_2d.play()
 	if not is_multiplayer_authority(): return
 	if not is_on_floor():
@@ -119,8 +120,6 @@ func apply_damage(amount: int):
 	if player_health <= 0:
 		player_health = 0
 		player_active = false
-		player_sync_component.end_squabble()
-	ui.update_health(player_health)
 
 func take_damage(amount: int):
 	if multiplayer.is_server():

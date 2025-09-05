@@ -113,6 +113,8 @@ func _scrap_input():
 
 func _send_punch(animation: String):
 	var squabble = get_parent().get_node("Squabble")
+	if squabble.punching or squabble.gas < 10: return
+	squabble.punching = true
 	var opponent = squabble.opponent
 	if opponent and opponent.has_node("Squabble"):
 		opponent.get_node("Squabble").show_punch.rpc_id(opponent.input_multiplayer_authority, animation)

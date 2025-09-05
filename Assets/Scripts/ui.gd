@@ -24,7 +24,6 @@ func update_candies():
 	candy_corn_label.text = str(PlayerGlobals.candy_corn)
 
 func run_notificon(candy: bool, candy_corn: bool):
-	
 	var tween = create_tween()
 	tween.set_ease(Tween.EASE_OUT)
 	tween.set_trans(Tween.TRANS_ELASTIC)
