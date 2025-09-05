@@ -19,13 +19,8 @@ var label_y_offset = 0
 var peer_labels: Dictionary = {}
 
 func _ready() -> void:
-	
 	user_name.text = PlayerGlobals.user_name
 	address.text = PlayerGlobals.recent_ip
-	
-	if multiplayer.get_peers().size() > 0:
-		_return_to_lobby()
-	
 	host_button.pressed.connect(_host_pressed)
 	join_button.pressed.connect(_join_pressed)
 	ready_button.pressed.connect(_ready_pressed)
@@ -42,6 +37,8 @@ func _ready() -> void:
 		new_label.name = str(data.peer_id)
 		peer_labels[data.peer_id] = new_label
 		return new_label
+	if multiplayer.get_peers().size() > 0:
+		_return_to_lobby()
 
 func _process(_delta: float) -> void:
 	if not transitioning_to_stage and check_all_players_ready():
