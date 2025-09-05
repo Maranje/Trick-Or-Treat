@@ -111,9 +111,9 @@ func squabble_end():
 	timer.start()
 
 func _rpc_reset_area_call():
-	_reset_area.rpc_id(1)
+	_reset_area.rpc()
 
-@rpc("any_peer", "call_remote", "reliable")
+@rpc("any_peer", "call_local", "reliable")
 func _reset_area():
 	personal_space.monitoring = true
 
