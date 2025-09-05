@@ -38,9 +38,9 @@ func _ready() -> void:
 		var candy_corn = candycorn.instantiate()
 		candy_corn.direction = data.direction - velocity.x
 		if data.direction < 0:
-			candy_corn.position.x -= 20
+			candy_corn.position.x -= 25
 		else:
-			candy_corn.position.x += 20
+			candy_corn.position.x += 25
 		return candy_corn
 
 func setup_individuals():
@@ -120,14 +120,13 @@ func apply_damage(amount: int):
 	if player_health <= 0:
 		player_health = 0
 		player_active = false
+		personal_space.monitoring = false
 
 func take_damage(amount: int):
 	if multiplayer.is_server():
 		apply_damage.rpc(amount)
 	else:
 		request_damage.rpc_id(1, amount)
-	if player_health == 0:
-		personal_space.monitoring = false
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: int = 1000):

@@ -14,8 +14,8 @@ func _process(_delta: float) -> void:
 	candy_corn.rotation += 0.1
 
 func _on_body_entered(body):
+	if not multiplayer.is_server(): return
 	if "player_health" in body and body.player_health > 0:
 		if body.player_sync_component.scrapping: return
-		body.take_damage(1)
-	if multiplayer.is_server():
-		queue_free()
+		body.apply_damage.rpc_id(1, 1)
+	queue_free()

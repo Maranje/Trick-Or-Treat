@@ -122,6 +122,7 @@ func _send_punch(animation: String):
 
 func _send_block(animation: String):
 	var squabble = get_parent().get_node("Squabble")
+	if squabble.punching: return
 	var opponent = squabble.opponent
 	if opponent and opponent.has_node("Squabble"):
 		opponent.get_node("Squabble").show_block.rpc_id(opponent.input_multiplayer_authority, animation)

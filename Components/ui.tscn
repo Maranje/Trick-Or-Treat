@@ -21,12 +21,12 @@ outline_size = 8
 script = ExtResource("1_3pam7")
 
 [node name="RedBar" type="Sprite2D" parent="."]
-scale = Vector2(50, 2)
+scale = Vector2(20, 2)
 texture = ExtResource("2_sgocf")
 
 [node name="GreenBar" type="Sprite2D" parent="."]
-position = Vector2(-25, -1)
-scale = Vector2(50, 2)
+position = Vector2(-10, -1)
+scale = Vector2(20, 2)
 texture = ExtResource("3_kh4jv")
 centered = false
 

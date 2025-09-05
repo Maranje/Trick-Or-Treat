@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=67 format=3 uid="uid://lao147i5u1q5"]
+[gd_resource type="SpriteFrames" load_steps=75 format=3 uid="uid://lao147i5u1q5"]
 
 [ext_resource type="Texture2D" uid="uid://olgmhr42v5a6" path="res://Assets/Sprites/WitchHat/WitchHat.png" id="1_o4lll"]
 [ext_resource type="Texture2D" uid="uid://1mew7prmjku6" path="res://Assets/Sprites/Stuff/KO.png" id="2_mh87d"]
@@ -258,6 +258,38 @@ region = Rect2(384, 440, 64, 88)
 [sub_resource type="AtlasTexture" id="AtlasTexture_jalag"]
 atlas = ExtResource("1_o4lll")
 region = Rect2(448, 440, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xbob3"]
+atlas = ExtResource("1_o4lll")
+region = Rect2(0, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cgvim"]
+atlas = ExtResource("1_o4lll")
+region = Rect2(64, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_crjws"]
+atlas = ExtResource("1_o4lll")
+region = Rect2(128, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s3pyy"]
+atlas = ExtResource("1_o4lll")
+region = Rect2(192, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f4gcy"]
+atlas = ExtResource("1_o4lll")
+region = Rect2(256, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jsgs0"]
+atlas = ExtResource("1_o4lll")
+region = Rect2(320, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5gxv5"]
+atlas = ExtResource("1_o4lll")
+region = Rect2(384, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uvpdg"]
+atlas = ExtResource("1_o4lll")
+region = Rect2(448, 528, 64, 88)
 
 [resource]
 animations = [{
@@ -537,4 +569,38 @@ animations = [{
 "loop": false,
 "name": &"right_jump",
 "speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xbob3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cgvim")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_crjws")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s3pyy")
+}],
+"loop": true,
+"name": &"squabble_left",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f4gcy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jsgs0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5gxv5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uvpdg")
+}],
+"loop": true,
+"name": &"squabble_right",
+"speed": 8.0
 }]

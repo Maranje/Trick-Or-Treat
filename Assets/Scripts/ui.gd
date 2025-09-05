@@ -45,4 +45,4 @@ func _notificon_reset():
 	update_candies()
 
 func update_health(current_health: int, max_health: int = 50):
-	green_bar.scale.x = 50 * (float(current_health) / float(max_health))
+	green_bar.scale.x = 20 * (float(current_health) / float(max_health))

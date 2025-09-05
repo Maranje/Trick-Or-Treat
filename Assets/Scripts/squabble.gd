@@ -14,21 +14,21 @@ extends Node2D
 @onready var end_bell: AudioStreamPlayer2D = $Audio/EndBell
 @onready var grunt: AudioStreamPlayer2D = $Audio/Grunt
 @onready var punches: AudioStreamPlayer2D = $Audio/Punches
+@onready var gas: float = 50
+@onready var def: float = 50
+@onready var gas_opp: float = 50
+@onready var def_opp: float = 50
+@onready var dmg_coefficient = 10
 @onready var punch_audio = [
 	preload("uid://dtyqjjnfxvue0"),
 	preload("uid://gdsvuhydau47"),
 	preload("uid://bdwu8u0buoq0r"),
 	preload("uid://dcfl75nd333c3")
 ]
-
 var opponent: Player
 var blocking_left: bool = false
 var blocking_right: bool = false
 var punching: bool = false
-@onready var gas: float = 50
-@onready var def: float = 50
-@onready var gas_opp: float = 50
-@onready var def_opp: float = 50
 
 func _ready():
 	start_bell.play()
@@ -46,9 +46,9 @@ func _ready():
 	z_index = 1
 	pov.animation_finished.connect(_reset_square_up_pov)
 
-func _process(_delta: float) -> void:
-	if gas < 50: _increment_gas()
-	if def < 50: _increment_def()
+func _process(delta: float) -> void:
+	if gas < 50: _increment_gas(delta)
+	if def < 50: _increment_def(delta)
 	_update_stats_displays()
 	
 	if multiplayer.get_unique_id() != get_parent().input_multiplayer_authority: return
@@ -65,14 +65,14 @@ func _process(_delta: float) -> void:
 	
 	_check_ko()
 	
-func _increment_gas():
-	gas += 0.125
+func _increment_gas(delta: float):
+	gas += 5 * delta
 	if gas > 50: gas = 50
 	if opponent and opponent.has_node("Squabble"):
 		opponent.get_node("Squabble").sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
 	
-func _increment_def():
-	def += 0.025
+func _increment_def(delta: float):
+	def += 3 * delta
 	if def > 50: def = 50
 	if opponent and opponent.has_node("Squabble"):
 		opponent.get_node("Squabble").sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
@@ -150,12 +150,13 @@ func _update_stats_displays():
 @rpc("any_peer", "call_local", "reliable")
 func _check_hit(punch_direction: String):
 	_reset_square_up_opp()
-	decrement_def(2)
+	decrement_def(4)
 	if (punch_direction == "punch_left" and blocking_right) or \
 	(punch_direction == "punch_right" and blocking_left): return
-	decrement_def(3)
+	decrement_def(6)
 	var parent = get_parent()
-	parent.take_damage(50 / def)
+	var calc_damage = 1 + (dmg_coefficient / def)
+	parent.take_damage(calc_damage)
 	if parent.player_health == 0: 
 		opponent.get_node("Squabble").break_squabble.rpc_id(opponent.input_multiplayer_authority)
 		break_squabble.rpc_id(get_parent().input_multiplayer_authority)
