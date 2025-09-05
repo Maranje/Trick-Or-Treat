@@ -107,9 +107,13 @@ func squabble_end():
 	add_child(timer)
 	timer.wait_time = 4
 	timer.one_shot = true
-	timer.timeout.connect(_reset_area)
+	timer.timeout.connect(_rpc_reset_area_call)
 	timer.start()
-	
+
+func _rpc_reset_area_call():
+	_reset_area.rpc_id(1)
+
+@rpc("any_peer", "call_remote", "reliable")
 func _reset_area():
 	personal_space.monitoring = true
 
