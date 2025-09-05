@@ -194,6 +194,8 @@ func _toggle_lobby():
 	
 func _return_to_lobby():
 	peer_ready.rpc_id(1)
+	lobby_disp.visible = true
+	connect_disp.visible = false
 	
 func _on_label_spawned(node):
 	var peer_id = node.input_multiplayer_authority
