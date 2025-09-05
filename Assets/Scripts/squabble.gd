@@ -24,6 +24,8 @@ extends Node2D
 var opponent: Player
 var blocking_left: bool = false
 var blocking_right: bool = false
+var gas: int = 50
+var def: int = 50
 
 func _ready():
 	start_bell.play()
@@ -53,6 +55,21 @@ func _process(_delta: float) -> void:
 	else:
 		blocking_left = false
 		blocking_right = false
+	
+	_increment_gas()
+	_increment_def()
+	
+func _increment_gas():
+	pass
+	
+func _increment_def():
+	pass
+
+func decrememnt_gas():
+	pass
+	
+func decrement_def():
+	pass
 
 func _reset_square_up_opp():
 	opp.animation = "square_up"
