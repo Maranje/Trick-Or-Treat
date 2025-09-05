@@ -60,7 +60,7 @@ func _process(delta: float) -> void:
 	elif player_sync_component.jump:
 		velocity.y = jump
 	velocity.x = player_sync_component.movement.x * speed
-	if prev_anim != player_sync_component.animation_select:
+	if not squabbling and prev_anim != player_sync_component.animation_select:
 		animated_sprite_2d.animation = player_sync_component.animation_select
 		prev_anim = animated_sprite_2d.animation
 	move_and_slide()
