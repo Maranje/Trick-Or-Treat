@@ -441,7 +441,7 @@ horizontal_alignment = 1
 [node name="POV" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_oup5n")
 animation = &"square_up"
-frame_progress = 0.0359335
+frame_progress = 0.207289
 
 [node name="Audio" type="Node2D" parent="."]
 
