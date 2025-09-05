@@ -19,12 +19,15 @@ var label_y_offset = 0
 var peer_labels: Dictionary = {}
 
 func _ready() -> void:
-	if multiplayer.get_peers().size() > 0:
-		_toggle_lobby()
+	
 	user_name.text = PlayerGlobals.user_name
 	address.text = PlayerGlobals.recent_ip
 	lobby_disp.visible = false
 	connect_disp.visible = true
+	
+	if multiplayer.get_peers().size() > 0:
+		_toggle_lobby()
+	
 	host_button.pressed.connect(_host_pressed)
 	join_button.pressed.connect(_join_pressed)
 	ready_button.pressed.connect(_ready_pressed)
