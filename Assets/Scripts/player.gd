@@ -25,6 +25,7 @@ var jump: int = -1000
 var gravity: int = 2500
 var door_number: int
 var doors_hit: Array[Array]
+var opponent: Node2D = null
 
 func _ready() -> void:
 	player_sync_component.set_multiplayer_authority(input_multiplayer_authority)
@@ -32,6 +33,7 @@ func _ready() -> void:
 		doors_hit.append([])
 	setup_individuals()
 	personal_space.body_entered.connect(_on_player_collision)
+	personal_space.body_exited.connect(_collision_reset)
 	candy_spawner.spawn_function = func(data):
 		var candy_corn = candycorn.instantiate()
 		candy_corn.direction = data.direction - velocity.x
@@ -53,10 +55,8 @@ func setup_individuals():
 	ui.update_health(player_health)
 
 func _process(delta: float) -> void:
-	
 	if not animated_sprite_2d.is_playing(): animated_sprite_2d.play()
 	if not is_multiplayer_authority(): return
-	print("player: ", input_multiplayer_authority, ", area: ", personal_space.monitoring)
 	if not is_on_floor():
 		velocity.y += gravity * delta
 	elif player_sync_component.jump:
@@ -81,6 +81,7 @@ func trick_or_treat():
 	add_child(doorbell_instance)
 
 func _on_player_collision(body):
+	if opponent: return
 	if body is Player 			\
 		and body != self 		\
 		and player_active		\
@@ -88,7 +89,13 @@ func _on_player_collision(body):
 		and not body.squabbling:
 		player_squabble(body)
 		body.squabbling = true
-		personal_space.set_deferred("monitoring", false)
+		#personal_space.set_deferred("monitoring", false)
+		opponent = body
+		
+func _collision_reset(body):
+	if body != opponent: return
+	squabbling = false
+	opponent = null
 
 func player_squabble(opp: Player):
 	var squabble_instance = squabble.instantiate()
@@ -102,18 +109,18 @@ func player_squabble(opp: Player):
 		player_sync_component.animation_select = "squabble_left"
 	prev_anim = animated_sprite_2d.animation
 
-@rpc("any_peer", "call_local", "reliable")
-func reset_squabbling_flag():
-	personal_space.monitoring = true
-	var timer = Timer.new()
-	add_child(timer)
-	timer.wait_time = 1
-	timer.one_shot = true
-	timer.timeout.connect(_post_timer_reset)
-	timer.start()
-
-func _post_timer_reset():
-	squabbling = false
+#@rpc("any_peer", "call_local", "reliable")
+#func reset_squabbling_flag():
+	#personal_space.monitoring = true
+	#var timer = Timer.new()
+	#add_child(timer)
+	#timer.wait_time = 1
+	#timer.one_shot = true
+	#timer.timeout.connect(_post_timer_reset)
+	#timer.start()
+#
+#func _post_timer_reset():
+	#squabbling = false
 
 @rpc("any_peer", "call_remote", "reliable")
 func request_damage(amount: int):

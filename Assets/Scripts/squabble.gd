@@ -62,10 +62,10 @@ func _reset_square_up_pov():
 	
 @rpc("any_peer", "call_local", "reliable")
 func break_squabble():
-	var my_player = get_parent()
-	my_player.reset_squabbling_flag.rpc()
-	if opponent and is_instance_valid(opponent):
-		opponent.reset_squabbling_flag.rpc()
+	#var my_player = get_parent()
+	#my_player.reset_squabbling_flag.rpc()
+	#if opponent and is_instance_valid(opponent):
+		#opponent.reset_squabbling_flag.rpc()
 	queue_free()
 
 @rpc("any_peer", "call_local", "reliable")
