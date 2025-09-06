@@ -114,7 +114,19 @@ func _scrap_routine(delta: float):
 	var parent_squabble = parent.get_node("Squabble")
 	if parent_squabble.gas < 50: parent_squabble._increment_gas(delta)
 	if parent_squabble.def < 50: parent_squabble._increment_def(delta)
-	parent_squabble._update_stats_displays()
+	_update_stats_displays()
+	
+func _update_stats_displays():
+	var parent = get_parent() as Player
+	var parent_squabble = parent.get_node("Squabble")
+	var opponent = parent_squabble.opponent
+	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
+		parent_squabble.pov_hp.scale.y = 25 * (float(parent.player_health) / 50.0)
+		parent_squabble.pov_def.scale.y = 25 * (parent_squabble.def / 50.0)
+		parent_squabble.pov_gas.scale.y = 25 * (parent_squabble.gas / 50.0)
+		parent_squabble.opp_hp.scale.y = 15 * (float(opponent.player_health) / 50.0)
+		parent_squabble.opp_def.scale.y = 15 * (parent_squabble.def_opp / 50.0)
+		parent_squabble.opp_gas.scale.y = 15 * (parent_squabble.gas_opp / 50.0)
 
 func _send_punch(animation: String):
 	var squabble = get_parent().get_node("Squabble")

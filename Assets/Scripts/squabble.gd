@@ -140,16 +140,6 @@ func show_block(animation: String):
 	opp.animation = animation
 	opp.play()
 
-func _update_stats_displays():
-	var my_player = get_parent() as Player
-	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
-		pov_hp.scale.y = 25 * (float(my_player.player_health) / 50.0)
-		pov_def.scale.y = 25 * (def / 50.0)
-		pov_gas.scale.y = 25 * (gas / 50.0)
-		opp_hp.scale.y = 15 * (float(opponent.player_health) / 50.0)
-		opp_def.scale.y = 15 * (def_opp / 50.0)
-		opp_gas.scale.y = 15 * (gas_opp / 50.0)
-
 @rpc("any_peer", "call_local", "reliable")
 func _check_hit(punch_direction: String):
 	_reset_square_up_opp()
