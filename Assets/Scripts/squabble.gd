@@ -49,10 +49,6 @@ func _ready():
 
 func _process(_delta: float) -> void:
 	if multiplayer.get_unique_id() != get_parent().input_multiplayer_authority: return
-	#if gas < 50: _increment_gas(delta)
-	#if def < 50: _increment_def(delta)
-	#_update_stats_displays()
-	
 	global_position.y = y_pos
 	if pov.animation == "block_left":
 		blocking_left = true
@@ -112,14 +108,6 @@ func sync_stats(new_def: float, new_gas: float):
 
 @rpc("any_peer", "call_local", "reliable")
 func break_squabble():
-	var break_squabble_timer = Timer.new()
-	add_child(break_squabble_timer)
-	break_squabble_timer.wait_time = 1
-	break_squabble_timer.one_shot = true
-	break_squabble_timer.timeout.connect(_break_squable_timed)
-	break_squabble_timer.start()
-
-func _break_squable_timed():
 	queue_free()
 
 @rpc("any_peer", "call_local", "reliable")

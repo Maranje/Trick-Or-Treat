@@ -5,7 +5,6 @@ var jump: bool = false
 var animation_select: String
 var direction: String = "left"
 var at_door: bool = false
-var scrapping: bool = false
 var chuck_anim: bool = false
 var throwing: bool = false
 var esc_pressed: bool = false
@@ -36,7 +35,6 @@ func _gather_input(delta: float):
 	_set_animation()
 	_check_throw()
 	_check_door()
-	scrapping = true
 
 func toggle_at_door():
 	at_door = !at_door
@@ -103,10 +101,8 @@ func _toggle_throwing_false():
 func _scrap_routine(delta: float):
 	var parent = get_parent()
 	if Input.is_action_just_pressed("ui_esc") or parent.player_health == 0:
-		if scrapping: end_squabble()
-		scrapping = false
+		end_squabble()
 		return
-	if not scrapping: return
 	if Input.is_action_just_pressed("shoot_left"):
 		_send_punch("punch_left")
 	elif Input.is_action_just_pressed("shoot_right"):
@@ -119,7 +115,6 @@ func _scrap_routine(delta: float):
 	if parent_squabble.gas < 50: parent_squabble._increment_gas(delta)
 	if parent_squabble.def < 50: parent_squabble._increment_def(delta)
 	parent_squabble._update_stats_displays()
-	scrapping = true
 
 func _send_punch(animation: String):
 	var squabble = get_parent().get_node("Squabble")
