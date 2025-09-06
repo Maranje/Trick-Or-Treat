@@ -112,7 +112,7 @@ func sync_stats(new_def: float, new_gas: float):
 
 @rpc("any_peer", "call_local", "reliable")
 func break_squabble():
-	queue_free()
+	call_deferred("queue_free")
 
 @rpc("any_peer", "call_local", "reliable")
 func pov_punch(animation: String):
