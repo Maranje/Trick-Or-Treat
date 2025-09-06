@@ -49,9 +49,9 @@ func _ready():
 
 func _process(delta: float) -> void:
 	if multiplayer.get_unique_id() != get_parent().input_multiplayer_authority: return
-	if gas < 50: _increment_gas(delta)
-	if def < 50: _increment_def(delta)
-	_update_stats_displays()
+	#if gas < 50: _increment_gas(delta)
+	#if def < 50: _increment_def(delta)
+	#_update_stats_displays()
 	
 	global_position.y = y_pos
 	if pov.animation == "block_left":

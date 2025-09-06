@@ -13,14 +13,14 @@ var throw_timer: Timer
 @onready var tag: String = PlayerGlobals.user_name
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if is_multiplayer_authority():
-		_gather_input()
+		_gather_input(delta)
 		
-func _gather_input():
+func _gather_input(delta: float):
 	if get_parent().has_node("Squabble"):
 		_static_situation(animation_select)
-		_scrap_input()
+		_scrap_routine(delta)
 		return
 	if get_parent().player_health == 0:
 		_static_situation("ko")
@@ -99,10 +99,12 @@ func _static_situation(Anim: String):
 func _toggle_throwing_false():
 	throwing = false
 
-func _scrap_input():
-	if Input.is_action_just_pressed("ui_esc") or get_parent().player_health == 0:
+func _scrap_routine(delta: float):
+	var parent = get_parent()
+	if Input.is_action_just_pressed("ui_esc") or parent.player_health == 0:
 		print("end squabl")
 		end_squabble()
+		return
 	elif Input.is_action_just_pressed("shoot_left"):
 		_send_punch("punch_left")
 	elif Input.is_action_just_pressed("shoot_right"):
@@ -111,6 +113,10 @@ func _scrap_input():
 		_send_block("block_left")
 	elif Input.is_action_just_pressed("shift_right"):
 		_send_block("block_right")
+	var parent_squabble = parent.get_node("Squabble")
+	if parent_squabble.gas < 50: parent_squabble._increment_gas(delta)
+	if parent_squabble.def < 50: parent_squabble._increment_def(delta)
+	parent_squabble._update_stats_displays()
 
 func _send_punch(animation: String):
 	var squabble = get_parent().get_node("Squabble")
