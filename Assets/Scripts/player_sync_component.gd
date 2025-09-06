@@ -36,6 +36,7 @@ func _gather_input(delta: float):
 	_set_animation()
 	_check_throw()
 	_check_door()
+	scrapping = true
 
 func toggle_at_door():
 	at_door = !at_door
