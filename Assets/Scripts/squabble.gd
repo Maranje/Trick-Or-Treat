@@ -48,10 +48,11 @@ func _ready():
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
 func _process(delta: float) -> void:
+	print("start _proc squabl")
 	if gas < 50: _increment_gas(delta)
 	if def < 50: _increment_def(delta)
 	_update_stats_displays()
-	
+	print("end _proc squabl")
 	if multiplayer.get_unique_id() != get_parent().input_multiplayer_authority: return
 	global_position.y = y_pos
 	if pov.animation == "block_left":
@@ -63,6 +64,7 @@ func _process(delta: float) -> void:
 	else:
 		blocking_left = false
 		blocking_right = false
+	print("end _proc squabl mult auth")
 	
 func _increment_gas(delta: float):
 	gas += 5 * delta
