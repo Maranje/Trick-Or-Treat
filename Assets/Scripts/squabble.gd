@@ -63,34 +63,18 @@ func _process(_delta: float) -> void:
 func _increment_gas(delta: float):
 	gas += 5 * delta
 	if gas > 50: gas = 50
-	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
-		var opp_squabble = opponent.get_node("Squabble")
-		if is_instance_valid(opp_squabble):
-			opp_squabble.sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
 	
 func _increment_def(delta: float):
 	def += 3 * delta
 	if def > 50: def = 50
-	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
-		var opp_squabble = opponent.get_node("Squabble")
-		if is_instance_valid(opp_squabble):
-			opp_squabble.sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
 
 func decrememnt_gas():
 	gas -= 10
 	if gas < 0: gas = 0
-	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
-		var opp_squabble = opponent.get_node("Squabble")
-		if is_instance_valid(opp_squabble):
-			opp_squabble.sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
 	
 func decrement_def(amount: int):
 	def -= amount
 	if def < 1: def = 1
-	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
-		var opp_squabble = opponent.get_node("Squabble")
-		if is_instance_valid(opp_squabble):
-			opp_squabble.sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
 
 func _reset_square_up_opp():
 	opp.animation = "square_up"
@@ -101,58 +85,10 @@ func _reset_square_up_pov():
 	pov.play()
 	punching = false
 	
-@rpc("any_peer", "call_local", "reliable")
-func sync_stats(new_def: float, new_gas: float):
-	def_opp = new_def
-	gas_opp = new_gas
-
-@rpc("any_peer", "call_local", "reliable")
-func break_squabble():
-	queue_free()
-
-@rpc("any_peer", "call_local", "reliable")
-func pov_punch(animation: String):
-	decrememnt_gas()
-	pov.animation = animation
-	pov.play()
-	if not punches.playing:
-		punches.stream = punch_audio[randi() % 4]
-		punches.play()
-	
-@rpc("any_peer", "call_local", "reliable")
-func pov_block(animation: String):
-	blocking_left = true
-	pov.animation = animation
-	pov.play()
-
-@rpc("any_peer", "call_local", "reliable")
-func show_punch(animation: String):
-	opp.animation = animation
-	opp.play()
-	if not opp.animation_finished.is_connected(_check_hit):
-		opp.animation_finished.connect(func(): _check_hit(animation), CONNECT_ONE_SHOT)
-	if not punches.playing:
-		punches.stream = punch_audio[randi() % 4]
-		punches.play()
-
-@rpc("any_peer", "call_local", "reliable")
-func show_block(animation: String):
-	opp.animation = animation
-	opp.play()
-
-@rpc("any_peer", "call_local", "reliable")
-func _check_hit(punch_direction: String):
-	_reset_square_up_opp()
-	decrement_def(4)
-	if (punch_direction == "punch_left" and blocking_right) or \
-	(punch_direction == "punch_right" and blocking_left): return
-	decrement_def(6)
-	var parent = get_parent()
-	var calc_damage = 1 + (dmg_coefficient / def)
-	parent.take_damage(calc_damage)
-	grunt.play()
 
 func _on_peer_disconnected(peer_id: int):
 	if opponent and opponent.input_multiplayer_authority == peer_id:
 		print("Opponent disconnected during squabble, breaking squabble gracefully")
-		break_squabble.rpc_id(get_parent().input_multiplayer_authority)
+		var parent = get_parent() as Player
+		if parent.has_node("PlayerSyncComponent"):
+			parent.get_node("PlayerSyncComponent").break_squabble.rpc_id(parent.input_multiplayer_authority)

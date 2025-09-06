@@ -7,7 +7,7 @@ var direction: String = "left"
 var at_door: bool = false
 var chuck_anim: bool = false
 var throwing: bool = false
-var esc_pressed: bool = false
+var scrapping: bool = false
 var throw_timer: Timer
 
 @onready var tag: String = PlayerGlobals.user_name
@@ -100,8 +100,11 @@ func _toggle_throwing_false():
 
 func _scrap_routine(delta: float):
 	var parent = get_parent()
-	if Input.is_action_just_pressed("ui_esc") or parent.player_health == 0:
-		end_squabble()
+	if not parent.has_node("Squabble"): return
+	var opponent = parent.get_node("Squabble").opponent
+	if Input.is_action_pressed("ui_esc") or parent.player_health == 0 or opponent.player_health == 0:
+		if scrapping: end_squabble()
+		scrapping = false
 		return
 	if Input.is_action_just_pressed("shoot_left"):
 		_send_punch("punch_left")
@@ -115,6 +118,7 @@ func _scrap_routine(delta: float):
 	if parent_squabble.gas < 50: parent_squabble._increment_gas(delta)
 	if parent_squabble.def < 50: parent_squabble._increment_def(delta)
 	_update_stats_displays()
+	scrapping = true
 	
 func _update_stats_displays():
 	var parent = get_parent() as Player
@@ -133,23 +137,88 @@ func _send_punch(animation: String):
 	if squabble.punching or squabble.gas < 10: return
 	squabble.punching = true
 	var opponent = squabble.opponent
-	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
-		opponent.get_node("Squabble").show_punch.rpc_id(opponent.input_multiplayer_authority, animation)
-	squabble.pov_punch.rpc_id(get_parent().input_multiplayer_authority, animation)
+	if opponent and is_instance_valid(opponent) and opponent.has_node("PlayerSyncComponent"):
+		opponent.get_node("PlayerSyncComponent").show_punch.rpc_id(opponent.input_multiplayer_authority, animation)
+	pov_punch.rpc_id(get_parent().input_multiplayer_authority, animation)
 
 func _send_block(animation: String):
 	var squabble = get_parent().get_node("Squabble")
 	if squabble.punching: return
 	var opponent = squabble.opponent
-	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
-		opponent.get_node("Squabble").show_block.rpc_id(opponent.input_multiplayer_authority, animation)
-		squabble.pov_block.rpc_id(get_parent().input_multiplayer_authority, animation)
+	if opponent and is_instance_valid(opponent) and opponent.has_node("PlayerSyncComponent"):
+		opponent.get_node("PlayerSyncComponent").show_block.rpc_id(opponent.input_multiplayer_authority, animation)
+		pov_block.rpc_id(get_parent().input_multiplayer_authority, animation)
 	
 func end_squabble():
 	var squabble = get_parent().get_node("Squabble")
 	var opponent = squabble.opponent
-	squabble.break_squabble.rpc_id(get_parent().input_multiplayer_authority)
-	squabble.break_squabble.rpc_id(opponent.input_multiplayer_authority)
-	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
-		opponent.get_node("Squabble").break_squabble.rpc_id(opponent.input_multiplayer_authority)
-		opponent.get_node("Squabble").break_squabble.rpc_id(get_parent().input_multiplayer_authority)
+	break_squabble.rpc_id(get_parent().input_multiplayer_authority)
+	break_squabble.rpc_id(opponent.input_multiplayer_authority)
+	if opponent and is_instance_valid(opponent) and opponent.has_node("PlayerSyncComponent"):
+		opponent.get_node("PlayerSyncComponent").break_squabble.rpc_id(opponent.input_multiplayer_authority)
+		opponent.get_node("PlayerSyncComponent").break_squabble.rpc_id(get_parent().input_multiplayer_authority)
+
+# Squabble RPC functions moved from squabble.gd
+@rpc("any_peer", "call_local", "reliable")
+func sync_stats(new_def: float, new_gas: float):
+	if not get_parent().has_node("Squabble"): return
+	var squabble = get_parent().get_node("Squabble")
+	squabble.def_opp = new_def
+	squabble.gas_opp = new_gas
+
+@rpc("any_peer", "call_local", "reliable")
+func break_squabble():
+	if get_parent().has_node("Squabble"):
+		get_parent().get_node("Squabble").queue_free()
+
+@rpc("any_peer", "call_local", "reliable")
+func pov_punch(animation: String):
+	if not get_parent().has_node("Squabble"): return
+	var squabble = get_parent().get_node("Squabble")
+	squabble.decrememnt_gas()
+	squabble.pov.animation = animation
+	squabble.pov.play()
+	if not squabble.punches.playing:
+		squabble.punches.stream = squabble.punch_audio[randi() % 4]
+		squabble.punches.play()
+	
+@rpc("any_peer", "call_local", "reliable")
+func pov_block(animation: String):
+	if not get_parent().has_node("Squabble"): return
+	var squabble = get_parent().get_node("Squabble")
+	squabble.blocking_left = true
+	squabble.pov.animation = animation
+	squabble.pov.play()
+
+@rpc("any_peer", "call_local", "reliable")
+func show_punch(animation: String):
+	if not get_parent().has_node("Squabble"): return
+	var squabble = get_parent().get_node("Squabble")
+	squabble.opp.animation = animation
+	squabble.opp.play()
+	if not squabble.opp.animation_finished.is_connected(_check_hit):
+		squabble.opp.animation_finished.connect(func(): _check_hit(animation), CONNECT_ONE_SHOT)
+	if not squabble.punches.playing:
+		squabble.punches.stream = squabble.punch_audio[randi() % 4]
+		squabble.punches.play()
+
+@rpc("any_peer", "call_local", "reliable")
+func show_block(animation: String):
+	if not get_parent().has_node("Squabble"): return
+	var squabble = get_parent().get_node("Squabble")
+	squabble.opp.animation = animation
+	squabble.opp.play()
+
+@rpc("any_peer", "call_local", "reliable")
+func _check_hit(punch_direction: String):
+	if not get_parent().has_node("Squabble"): return
+	var squabble = get_parent().get_node("Squabble")
+	squabble._reset_square_up_opp()
+	squabble.decrement_def(4)
+	if (punch_direction == "punch_left" and squabble.blocking_right) or \
+	(punch_direction == "punch_right" and squabble.blocking_left): return
+	squabble.decrement_def(6)
+	var parent = get_parent()
+	var calc_damage = 1 + (squabble.dmg_coefficient / squabble.def)
+	parent.take_damage(calc_damage)
+	squabble.grunt.play()
