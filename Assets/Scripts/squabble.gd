@@ -47,7 +47,7 @@ func _ready():
 	pov.animation_finished.connect(_reset_square_up_pov)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if multiplayer.get_unique_id() != get_parent().input_multiplayer_authority: return
 	#if gas < 50: _increment_gas(delta)
 	#if def < 50: _increment_def(delta)

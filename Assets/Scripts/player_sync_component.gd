@@ -102,8 +102,8 @@ func _toggle_throwing_false():
 func _scrap_routine(delta: float):
 	var parent = get_parent()
 	if Input.is_action_just_pressed("ui_esc") or parent.player_health == 0:
-		print("end squabl")
-		end_squabble()
+		if scrapping: end_squabble()
+		scrapping = false
 		return
 	elif Input.is_action_just_pressed("shoot_left"):
 		_send_punch("punch_left")
@@ -117,6 +117,7 @@ func _scrap_routine(delta: float):
 	if parent_squabble.gas < 50: parent_squabble._increment_gas(delta)
 	if parent_squabble.def < 50: parent_squabble._increment_def(delta)
 	parent_squabble._update_stats_displays()
+	scrapping = true
 
 func _send_punch(animation: String):
 	var squabble = get_parent().get_node("Squabble")
