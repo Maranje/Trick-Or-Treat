@@ -133,5 +133,7 @@ func end_squabble():
 	var squabble = get_parent().get_node("Squabble")
 	var opponent = squabble.opponent
 	squabble.break_squabble.rpc_id(get_parent().input_multiplayer_authority)
+	squabble.break_squabble.rpc_id(opponent.input_multiplayer_authority)
 	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
 		opponent.get_node("Squabble").break_squabble.rpc_id(opponent.input_multiplayer_authority)
+		opponent.get_node("Squabble").break_squabble.rpc_id(get_parent().input_multiplayer_authority)
