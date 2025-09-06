@@ -84,7 +84,6 @@ func _reset_square_up_pov():
 	pov.animation = "square_up"
 	pov.play()
 	punching = false
-	
 
 func _on_peer_disconnected(peer_id: int):
 	if opponent and opponent.input_multiplayer_authority == peer_id:

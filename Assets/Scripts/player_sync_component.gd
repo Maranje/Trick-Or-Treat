@@ -115,8 +115,19 @@ func _scrap_routine(delta: float):
 	elif Input.is_action_just_pressed("shift_right"):
 		_send_block("block_right")
 	var parent_squabble = parent.get_node("Squabble")
-	if parent_squabble.gas < 50: parent_squabble._increment_gas(delta)
-	if parent_squabble.def < 50: parent_squabble._increment_def(delta)
+	var stats_changed = false
+	if parent_squabble.gas < 50: 
+		parent_squabble._increment_gas(delta)
+		stats_changed = true
+	if parent_squabble.def < 50: 
+		parent_squabble._increment_def(delta)
+		stats_changed = true
+	
+	# Sync stats with opponent when they change
+	if stats_changed:
+		if opponent and is_instance_valid(opponent) and opponent.has_node("PlayerSyncComponent"):
+			opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, parent_squabble.def, parent_squabble.gas)
+	
 	_update_stats_displays()
 	scrapping = true
 	
@@ -158,7 +169,6 @@ func end_squabble():
 		opponent.get_node("PlayerSyncComponent").break_squabble.rpc_id(opponent.input_multiplayer_authority)
 		opponent.get_node("PlayerSyncComponent").break_squabble.rpc_id(get_parent().input_multiplayer_authority)
 
-# Squabble RPC functions moved from squabble.gd
 @rpc("any_peer", "call_local", "reliable")
 func sync_stats(new_def: float, new_gas: float):
 	if not get_parent().has_node("Squabble"): return
@@ -181,6 +191,11 @@ func pov_punch(animation: String):
 	if not squabble.punches.playing:
 		squabble.punches.stream = squabble.punch_audio[randi() % 4]
 		squabble.punches.play()
+	
+	# Sync updated stats with opponent
+	var opponent = squabble.opponent
+	if opponent and is_instance_valid(opponent) and opponent.has_node("PlayerSyncComponent"):
+		opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, squabble.def, squabble.gas)
 	
 @rpc("any_peer", "call_local", "reliable")
 func pov_block(animation: String):
@@ -222,3 +237,8 @@ func _check_hit(punch_direction: String):
 	var calc_damage = 1 + (squabble.dmg_coefficient / squabble.def)
 	parent.take_damage(calc_damage)
 	squabble.grunt.play()
+	
+	# Sync updated stats with opponent after taking damage
+	var opponent = squabble.opponent
+	if opponent and is_instance_valid(opponent) and opponent.has_node("PlayerSyncComponent"):
+		opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, squabble.def, squabble.gas)
