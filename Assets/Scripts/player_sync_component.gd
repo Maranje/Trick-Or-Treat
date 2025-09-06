@@ -109,6 +109,7 @@ func _scrap_input():
 	elif Input.is_action_just_pressed("shift_right"):
 		_send_block("block_right")
 	elif Input.is_action_just_pressed("ui_esc") or get_parent().player_health == 0:
+		print("end squabl")
 		end_squabble()
 
 func _send_punch(animation: String):

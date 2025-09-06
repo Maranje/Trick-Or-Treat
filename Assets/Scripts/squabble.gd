@@ -63,7 +63,6 @@ func _process(delta: float) -> void:
 	else:
 		blocking_left = false
 		blocking_right = false
-	#_check_ko()
 	
 func _increment_gas(delta: float):
 	gas += 5 * delta
@@ -166,11 +165,6 @@ func _check_hit(punch_direction: String):
 	var calc_damage = 1 + (dmg_coefficient / def)
 	parent.take_damage(calc_damage)
 	grunt.play()
-
-#func _check_ko():
-	#var parent = get_parent()
-	#if parent.player_health == 0:
-		#parent.player_sync_component.ko = true
 
 func _on_peer_disconnected(peer_id: int):
 	if opponent and opponent.input_multiplayer_authority == peer_id:
