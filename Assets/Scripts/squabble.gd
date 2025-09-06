@@ -48,11 +48,11 @@ func _ready():
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
 func _process(delta: float) -> void:
+	if multiplayer.get_unique_id() != get_parent().input_multiplayer_authority: return
 	if gas < 50: _increment_gas(delta)
 	if def < 50: _increment_def(delta)
 	_update_stats_displays()
-	print(get_parent().user_name)
-	if multiplayer.get_unique_id() != get_parent().input_multiplayer_authority: return
+	
 	global_position.y = y_pos
 	if pov.animation == "block_left":
 		blocking_left = true
