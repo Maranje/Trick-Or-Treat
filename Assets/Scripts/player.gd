@@ -71,13 +71,13 @@ func _process(delta: float) -> void:
 func trick_or_treat():
 	var doorbell_instance = doorbell.instantiate()
 	if door_number not in doors_hit[sprite_frames]:
-		PlayerGlobals.add_candy_corn(10)
-		PlayerGlobals.add_candy(1)
+		PlayerGlobals.edit_candy_corn(10)
+		PlayerGlobals.edit_candy(1)
 		doorbell_instance.candy = true
 		doorbell_instance.candy_corn = true
 		doors_hit[sprite_frames].append(door_number)
 	else:
-		PlayerGlobals.add_candy_corn(1)
+		PlayerGlobals.edit_candy_corn(1)
 		doorbell_instance.candy_corn = true
 	add_child(doorbell_instance)
 
@@ -108,6 +108,9 @@ func player_squabble(opp: Player):
 		animated_sprite_2d.animation = "squabble_left"
 		player_sync_component.animation_select = "squabble_left"
 	prev_anim = animated_sprite_2d.animation
+
+func player_edit_candy(amount: int):
+	PlayerGlobals.edit_candy(amount)
 
 @rpc("any_peer", "call_remote", "reliable")
 func request_damage(amount: int):

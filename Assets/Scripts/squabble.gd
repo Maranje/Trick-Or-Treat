@@ -45,6 +45,7 @@ func _ready():
 	global_position.y = y_pos
 	z_index = 1
 	pov.animation_finished.connect(_reset_square_up_pov)
+	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 
 func _process(delta: float) -> void:
 	if gas < 50: _increment_gas(delta)
@@ -62,32 +63,39 @@ func _process(delta: float) -> void:
 	else:
 		blocking_left = false
 		blocking_right = false
-	
-	_check_ko()
+	#_check_ko()
 	
 func _increment_gas(delta: float):
 	gas += 5 * delta
 	if gas > 50: gas = 50
-	if opponent and opponent.has_node("Squabble"):
-		opponent.get_node("Squabble").sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
+	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
+		var opp_squabble = opponent.get_node("Squabble")
+		if is_instance_valid(opp_squabble):
+			opp_squabble.sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
 	
 func _increment_def(delta: float):
 	def += 3 * delta
 	if def > 50: def = 50
-	if opponent and opponent.has_node("Squabble"):
-		opponent.get_node("Squabble").sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
+	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
+		var opp_squabble = opponent.get_node("Squabble")
+		if is_instance_valid(opp_squabble):
+			opp_squabble.sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
 
 func decrememnt_gas():
 	gas -= 10
 	if gas < 0: gas = 0
-	if opponent and opponent.has_node("Squabble"):
-		opponent.get_node("Squabble").sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
+	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
+		var opp_squabble = opponent.get_node("Squabble")
+		if is_instance_valid(opp_squabble):
+			opp_squabble.sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
 	
 func decrement_def(amount: int):
 	def -= amount
 	if def < 1: def = 1
-	if opponent and opponent.has_node("Squabble"):
-		opponent.get_node("Squabble").sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
+	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
+		var opp_squabble = opponent.get_node("Squabble")
+		if is_instance_valid(opp_squabble):
+			opp_squabble.sync_stats.rpc_id(opponent.input_multiplayer_authority, def, gas)
 
 func _reset_square_up_opp():
 	opp.animation = "square_up"
@@ -157,14 +165,14 @@ func _check_hit(punch_direction: String):
 	var parent = get_parent()
 	var calc_damage = 1 + (dmg_coefficient / def)
 	parent.take_damage(calc_damage)
-	if parent.player_health == 0: 
-		opponent.get_node("Squabble").break_squabble.rpc_id(opponent.input_multiplayer_authority)
-		break_squabble.rpc_id(get_parent().input_multiplayer_authority)
 	grunt.play()
 
-func _check_ko():
-	var parent = get_parent()
-	if parent.player_health == 0: 
-		if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
-			opponent.get_node("Squabble").break_squabble.rpc_id(opponent.input_multiplayer_authority)
+#func _check_ko():
+	#var parent = get_parent()
+	#if parent.player_health == 0:
+		#parent.player_sync_component.ko = true
+
+func _on_peer_disconnected(peer_id: int):
+	if opponent and opponent.input_multiplayer_authority == peer_id:
+		print("Opponent disconnected during squabble, breaking squabble gracefully")
 		break_squabble.rpc_id(get_parent().input_multiplayer_authority)

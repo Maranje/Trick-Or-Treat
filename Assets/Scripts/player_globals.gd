@@ -60,14 +60,10 @@ func load_data():
 				current_costume = loaded_data.get("current_costume", 0)
 
 # Convenience functions to update and save immediately
-func add_candy(amount: int):
+func edit_candy(amount: int):
 	candy_count += amount
 	save_data()
 
-func add_candy_corn(amount: int):
+func edit_candy_corn(amount: int):
 	candy_corn += amount
-	save_data()
-	
-func remove_one_candy_corn():
-	candy_corn -= 1
 	save_data()

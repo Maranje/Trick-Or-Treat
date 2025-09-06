@@ -18,15 +18,15 @@ func _process(_delta: float) -> void:
 		_gather_input()
 		
 func _gather_input():
+	if get_parent().has_node("Squabble"):
+		_static_situation(animation_select)
+		_scrap_input()
+		return
 	if get_parent().player_health == 0:
 		_static_situation("ko")
 		return
 	if not get_parent().player_active:
 		_static_situation("idle")
-		return
-	if get_parent().has_node("Squabble"):
-		_static_situation(animation_select)
-		_scrap_input()
 		return
 	if get_parent().has_node("TrickOrTreat"):
 		_static_situation("back")
@@ -76,7 +76,7 @@ func _set_throw(impulse: int, animation1: String, animation2: String):
 	var parent = get_parent()
 	movement = Vector2.ZERO
 	throwing = true
-	PlayerGlobals.remove_one_candy_corn()
+	PlayerGlobals.edit_candy_corn(-1)
 	parent.shoot_candy_corn.rpc_id(1, impulse)
 	parent.ui.update_candies()
 	if chuck_anim:
@@ -108,7 +108,7 @@ func _scrap_input():
 		_send_block("block_left")
 	elif Input.is_action_just_pressed("shift_right"):
 		_send_block("block_right")
-	elif Input.is_action_just_pressed("ui_esc"):
+	elif Input.is_action_just_pressed("ui_esc") or get_parent().player_health == 0:
 		end_squabble()
 
 func _send_punch(animation: String):
@@ -116,7 +116,7 @@ func _send_punch(animation: String):
 	if squabble.punching or squabble.gas < 10: return
 	squabble.punching = true
 	var opponent = squabble.opponent
-	if opponent and opponent.has_node("Squabble"):
+	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
 		opponent.get_node("Squabble").show_punch.rpc_id(opponent.input_multiplayer_authority, animation)
 	squabble.pov_punch.rpc_id(get_parent().input_multiplayer_authority, animation)
 
@@ -124,7 +124,7 @@ func _send_block(animation: String):
 	var squabble = get_parent().get_node("Squabble")
 	if squabble.punching: return
 	var opponent = squabble.opponent
-	if opponent and opponent.has_node("Squabble"):
+	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
 		opponent.get_node("Squabble").show_block.rpc_id(opponent.input_multiplayer_authority, animation)
 		squabble.pov_block.rpc_id(get_parent().input_multiplayer_authority, animation)
 	
@@ -132,5 +132,5 @@ func end_squabble():
 	var squabble = get_parent().get_node("Squabble")
 	var opponent = squabble.opponent
 	squabble.break_squabble.rpc_id(get_parent().input_multiplayer_authority)
-	if opponent and opponent.has_node("Squabble"):
+	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
 		opponent.get_node("Squabble").break_squabble.rpc_id(opponent.input_multiplayer_authority)
