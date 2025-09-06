@@ -8,10 +8,10 @@ var at_door: bool = false
 var scrapping: bool = false
 var chuck_anim: bool = false
 var throwing: bool = false
+var esc_pressed: bool = false
 var throw_timer: Timer
 
 @onready var tag: String = PlayerGlobals.user_name
-
 
 func _process(delta: float) -> void:
 	if is_multiplayer_authority():
@@ -105,7 +105,8 @@ func _scrap_routine(delta: float):
 		if scrapping: end_squabble()
 		scrapping = false
 		return
-	elif Input.is_action_just_pressed("shoot_left"):
+	if not scrapping: return
+	if Input.is_action_just_pressed("shoot_left"):
 		_send_punch("punch_left")
 	elif Input.is_action_just_pressed("shoot_right"):
 		_send_punch("punch_right")

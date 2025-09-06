@@ -112,7 +112,15 @@ func sync_stats(new_def: float, new_gas: float):
 
 @rpc("any_peer", "call_local", "reliable")
 func break_squabble():
-	call_deferred("queue_free")
+	var break_squabble_timer = Timer.new()
+	add_child(break_squabble_timer)
+	break_squabble_timer.wait_time = 0.1
+	break_squabble_timer.one_shot = true
+	break_squabble_timer.timeout.connect(_break_squable_timed)
+	break_squabble_timer.start()
+
+func _break_squable_timed():
+	queue_free()
 
 @rpc("any_peer", "call_local", "reliable")
 func pov_punch(animation: String):
