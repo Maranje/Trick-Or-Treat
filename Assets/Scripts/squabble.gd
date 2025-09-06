@@ -51,7 +51,7 @@ func _process(delta: float) -> void:
 	if gas < 50: _increment_gas(delta)
 	if def < 50: _increment_def(delta)
 	_update_stats_displays()
-	print(multiplayer.get_unique_id())
+	print(get_parent().user_name)
 	if multiplayer.get_unique_id() != get_parent().input_multiplayer_authority: return
 	global_position.y = y_pos
 	if pov.animation == "block_left":

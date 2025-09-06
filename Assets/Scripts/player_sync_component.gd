@@ -100,7 +100,10 @@ func _toggle_throwing_false():
 	throwing = false
 
 func _scrap_input():
-	if Input.is_action_just_pressed("shoot_left"):
+	if Input.is_action_just_pressed("ui_esc") or get_parent().player_health == 0:
+		print("end squabl")
+		end_squabble()
+	elif Input.is_action_just_pressed("shoot_left"):
 		_send_punch("punch_left")
 	elif Input.is_action_just_pressed("shoot_right"):
 		_send_punch("punch_right")
@@ -108,9 +111,6 @@ func _scrap_input():
 		_send_block("block_left")
 	elif Input.is_action_just_pressed("shift_right"):
 		_send_block("block_right")
-	elif Input.is_action_just_pressed("ui_esc") or get_parent().player_health == 0:
-		print("end squabl")
-		end_squabble()
 
 func _send_punch(animation: String):
 	var squabble = get_parent().get_node("Squabble")
