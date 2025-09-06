@@ -114,7 +114,7 @@ func sync_stats(new_def: float, new_gas: float):
 func break_squabble():
 	var break_squabble_timer = Timer.new()
 	add_child(break_squabble_timer)
-	break_squabble_timer.wait_time = 0.1
+	break_squabble_timer.wait_time = 1
 	break_squabble_timer.one_shot = true
 	break_squabble_timer.timeout.connect(_break_squable_timed)
 	break_squabble_timer.start()
