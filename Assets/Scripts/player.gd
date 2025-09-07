@@ -55,6 +55,7 @@ func setup_individuals():
 	ui.update_health(player_health)
 
 func _process(delta: float) -> void:
+	if squabbling and not has_node("Squabbling"): squabbling = false #sometimes this shit just sucks. idk.
 	ui.update_health(player_health)
 	if not animated_sprite_2d.is_playing(): animated_sprite_2d.play()
 	if not is_multiplayer_authority(): return

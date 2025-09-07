@@ -171,7 +171,6 @@ func end_squabble():
 @rpc("any_peer", "call_local", "reliable")
 func edit_candy(candy: int):
 	PlayerGlobals.edit_candy(candy)
-	print(get_parent().user_name, " candy changed by: ", candy, " for a total of: ", PlayerGlobals.candy_count)
 
 @rpc("any_peer", "call_local", "reliable")
 func play_pop_rpc(frame: int):
@@ -201,8 +200,6 @@ func pov_punch(animation: String):
 	if not squabble.punches.playing:
 		squabble.punches.stream = squabble.punch_audio[randi() % 4]
 		squabble.punches.play()
-	
-	# Sync updated stats with opponent
 	var opponent = squabble.opponent
 	if opponent and is_instance_valid(opponent) and opponent.has_node("PlayerSyncComponent"):
 		opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, squabble.def, squabble.gas)
