@@ -18,6 +18,7 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	top_right.global_position.y = static_center_pos
+	notificon.global_position.y = static_center_pos
 
 func update_candies():
 	candy_label.text = str(PlayerGlobals.candy_count)
@@ -25,21 +26,25 @@ func update_candies():
 
 func run_notificon(candy: bool, candy_corn: bool):
 	var tween = create_tween()
-	tween.set_ease(Tween.EASE_OUT)
-	tween.set_trans(Tween.TRANS_ELASTIC)
-	tween.tween_property(notificon, "position", Vector2(0, -25), 1)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.set_trans(Tween.TRANS_CUBIC)
 	if candy: 
-		tween.parallel().tween_property(candy_icon, "modulate:a", 1.0, 1)
+		tween.tween_property(candy_icon, "position", Vector2(180, -125), 1)
+		tween.parallel().tween_property(candy_icon, "modulate:a", 1.0, 0.5)
+		tween.parallel().tween_property(candy_icon, "scale", Vector2(0.5, 0.5), 0.5)
 		candy_icon.visible = true
 	if candy_corn: 
-		tween.parallel().tween_property(candy_corn_icon, "modulate:a", 1.0, 1)
+		tween.parallel().tween_property(candy_corn_icon, "position", Vector2(151, -125), 1)
+		tween.parallel().tween_property(candy_corn_icon, "modulate:a", 1.0, 0.5)
+		tween.parallel().tween_property(candy_corn_icon, "scale", Vector2(0.5, 0.5), 0.5)
 		candy_corn_icon.visible = true
 	tween.tween_callback(_notificon_reset)
 	
 func _notificon_reset():
 	candy_icon.modulate.a = 0
 	candy_corn_icon.modulate.a = 0
-	notificon.position.y = 0
+	candy_icon.position = Vector2.ZERO
+	candy_corn_icon.position = Vector2.ZERO
 	candy_icon.visible = false
 	candy_corn_icon.visible = false
 	update_candies()

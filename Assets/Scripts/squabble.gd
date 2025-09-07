@@ -9,11 +9,12 @@ extends Node2D
 @onready var pov_hp: Sprite2D = $UI/POVStats/HP
 @onready var pov_def: Sprite2D = $UI/POVStats/DEF
 @onready var pov_gas: Sprite2D = $UI/POVStats/GAS
-@onready var y_pos = 240
 @onready var start_bell: AudioStreamPlayer2D = $Audio/StartBell
 @onready var end_bell: AudioStreamPlayer2D = $Audio/EndBell
 @onready var grunt: AudioStreamPlayer2D = $Audio/Grunt
 @onready var punches: AudioStreamPlayer2D = $Audio/Punches
+@onready var pops: Sprite2D = $UI/Pops
+@onready var y_pos = 240
 @onready var gas: float = 50
 @onready var def: float = 50
 @onready var gas_opp: float = 50
@@ -84,6 +85,20 @@ func _reset_square_up_pov():
 	pov.animation = "square_up"
 	pov.play()
 	punching = false
+
+func play_pop(frame: int):
+	pops.position.x = position.x + (randi() % 100 - 100)
+	pops.position.y = position.y + (randi() % 100 - 100)
+	pops.frame = frame
+	var timer = Timer.new()
+	add_child(timer)
+	timer.one_shot = true
+	timer.wait_time = 0.5
+	timer.timeout.connect(_reset_pop)
+	timer.start()
+	
+func _reset_pop():
+	pops.frame = 3
 
 func _on_peer_disconnected(peer_id: int):
 	if opponent and opponent.input_multiplayer_authority == peer_id:

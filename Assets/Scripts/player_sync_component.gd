@@ -122,8 +122,7 @@ func _scrap_routine(delta: float):
 	if parent_squabble.def < 50: 
 		parent_squabble._increment_def(delta)
 		stats_changed = true
-	
-	# Sync stats with opponent when they change
+
 	if stats_changed:
 		if opponent and is_instance_valid(opponent) and opponent.has_node("PlayerSyncComponent"):
 			opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, parent_squabble.def, parent_squabble.gas)
@@ -231,14 +230,17 @@ func _check_hit(punch_direction: String):
 	squabble._reset_square_up_opp()
 	squabble.decrement_def(4)
 	if (punch_direction == "punch_left" and squabble.blocking_right) or \
-	(punch_direction == "punch_right" and squabble.blocking_left): return
+		(punch_direction == "punch_right" and squabble.blocking_left): return
 	squabble.decrement_def(6)
+	squabble.play_pop(2)
+	squabble.grunt.play()
 	var parent = get_parent()
 	var calc_damage = 1 + (squabble.dmg_coefficient / squabble.def)
 	parent.take_damage(calc_damage)
-	squabble.grunt.play()
-	
-	# Sync updated stats with opponent after taking damage
 	var opponent = squabble.opponent
-	if opponent and is_instance_valid(opponent) and opponent.has_node("PlayerSyncComponent"):
-		opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, squabble.def, squabble.gas)
+	if opponent and \
+		is_instance_valid(opponent) and \
+		opponent.has_node("PlayerSyncComponent") and \
+		opponent.has_node("Squabble"):
+			opponent.get_node("Squabble").play_pop(2)
+			opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, squabble.def, squabble.gas)

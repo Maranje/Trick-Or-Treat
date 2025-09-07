@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://e1mwxdchlsyn"]
+[gd_scene load_steps=63 format=3 uid="uid://e1mwxdchlsyn"]
 
 [ext_resource type="Texture2D" uid="uid://da7dana04kqs" path="res://Assets/Sprites/Backgrounds/Scrap/BlockL.png" id="1_q186e"]
 [ext_resource type="Script" uid="uid://bod85oet4fqc3" path="res://Assets/Scripts/squabble.gd" id="1_xdh4n"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://cgjs2h3x3wgy5" path="res://Assets/Sprites/Backgrounds/Scrap/HP.png" id="10_dncye"]
 [ext_resource type="AudioStream" uid="uid://c3x6rx5s3ngni" path="res://Assets/Audio/Effects/scrapBellEnd.mp3" id="10_oup5n"]
 [ext_resource type="Texture2D" uid="uid://cxh83vhqx2rky" path="res://Assets/Sprites/Backgrounds/Scrap/BlockRight .png" id="10_prdyc"]
+[ext_resource type="Texture2D" uid="uid://bm8vi7edqgyuu" path="res://Assets/Sprites/Backgrounds/Scrap/Pops.png" id="11_7feas"]
 [ext_resource type="Texture2D" uid="uid://1pqd1wwxpmbh" path="res://Assets/Sprites/Backgrounds/Scrap/PunchLeft.png" id="11_dncye"]
 [ext_resource type="AudioStream" uid="uid://ch5bdpl8m7bl4" path="res://Assets/Audio/Effects/grunt.mp3" id="11_oup5n"]
 [ext_resource type="Texture2D" uid="uid://d365eohy3s1a6" path="res://Assets/Sprites/Backgrounds/Scrap/PunchRight.png" id="12_xm3m4"]
@@ -437,6 +438,13 @@ offset_bottom = -11.0
 text = "DEF"
 label_settings = SubResource("LabelSettings_aoe6d")
 horizontal_alignment = 1
+
+[node name="Pops" type="Sprite2D" parent="UI"]
+position = Vector2(-61.3333, -36)
+scale = Vector2(2, 2)
+texture = ExtResource("11_7feas")
+vframes = 4
+frame = 3
 
 [node name="POV" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_oup5n")
