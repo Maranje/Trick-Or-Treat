@@ -6,6 +6,7 @@ extends Node2D
 
 var candy: bool = false
 var candy_corn: bool = false
+var static_center_pos: int = 340
 
 func _ready() -> void:
 	var hand_tween = create_tween()
@@ -16,6 +17,9 @@ func _ready() -> void:
 	doorbell_tween.tween_property(doorbell, "position", Vector2(0, -50), 0.3)
 	hand_tween.tween_property(hand, "position", Vector2(-30, -100), 0.65)
 	doorbell_tween.tween_callback(_doorbell_pressed)
+
+func _process(_delta: float) -> void:
+	global_position.y = static_center_pos
 
 func _doorbell_pressed():
 	ding.play()
