@@ -169,6 +169,12 @@ func end_squabble():
 		opponent.get_node("PlayerSyncComponent").break_squabble.rpc_id(get_parent().input_multiplayer_authority)
 
 @rpc("any_peer", "call_local", "reliable")
+func play_pop_rpc(frame: int):
+	if not get_parent().has_node("Squabble"): return
+	var squabble = get_parent().get_node("Squabble")
+	squabble.play_pop(frame)
+
+@rpc("any_peer", "call_local", "reliable")
 func sync_stats(new_def: float, new_gas: float):
 	if not get_parent().has_node("Squabble"): return
 	var squabble = get_parent().get_node("Squabble")
@@ -225,22 +231,28 @@ func show_block(animation: String):
 
 @rpc("any_peer", "call_local", "reliable")
 func _check_hit(punch_direction: String):
+	var parent = get_parent()
 	if not get_parent().has_node("Squabble"): return
-	var squabble = get_parent().get_node("Squabble")
+	var squabble = parent.get_node("Squabble")
+	var opponent = squabble.opponent
+	if not opponent or not \
+		is_instance_valid(opponent) or not \
+		opponent.has_node("PlayerSyncComponent") or not \
+		opponent.has_node("Squabble"): return
+	var calc_damage: float
 	squabble._reset_square_up_opp()
 	squabble.decrement_def(4)
 	if (punch_direction == "punch_left" and squabble.blocking_right) or \
-		(punch_direction == "punch_right" and squabble.blocking_left): return
+		(punch_direction == "punch_right" and squabble.blocking_left): 
+			squabble.play_pop(1)
+			opponent.get_node("PlayerSyncComponent").play_pop_rpc.rpc_id(opponent.input_multiplayer_authority, 0)
+			return
 	squabble.decrement_def(6)
 	squabble.play_pop(2)
+	opponent.get_node("PlayerSyncComponent").play_pop_rpc.rpc_id(opponent.input_multiplayer_authority, 2)
 	squabble.grunt.play()
-	var parent = get_parent()
-	var calc_damage = 1 + (squabble.dmg_coefficient / squabble.def)
+	calc_damage = 1 + (squabble.dmg_coefficient / squabble.def)
 	parent.take_damage(calc_damage)
-	var opponent = squabble.opponent
-	if opponent and \
-		is_instance_valid(opponent) and \
-		opponent.has_node("PlayerSyncComponent") and \
-		opponent.has_node("Squabble"):
-			opponent.get_node("Squabble").play_pop(2)
-			opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, squabble.def, squabble.gas)
+	squabble.play_pop(2)
+	opponent.get_node("PlayerSyncComponent").play_pop_rpc.rpc_id(opponent.input_multiplayer_authority, 2)
+	opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, squabble.def, squabble.gas)
