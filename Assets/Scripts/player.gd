@@ -29,6 +29,19 @@ var door_number: int
 var doors_hit: Array[Array]
 var opponent: Node2D = null
 
+#run stats
+var candy_gathered: int#
+var candy_robbed: int#
+var candy_lost: int#
+var candy_corn_gathered: int#
+var candy_corn_thrown: int#
+var houses_hit: int#
+var houses_revisited: int#
+var jumps: int#
+var dmg_dealt: float#
+var dmg_received: float#
+var dmg_blocked: float#
+
 func _ready() -> void:
 	player_sync_component.set_multiplayer_authority(input_multiplayer_authority)
 	for i in range(PlayerGlobals.costume_count):
@@ -64,6 +77,7 @@ func _process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y += gravity * delta
 	elif player_sync_component.jump:
+		jumps += 1
 		velocity.y = jump
 	velocity.x = player_sync_component.movement.x * speed
 	if prev_anim != player_sync_component.animation_select:
@@ -79,9 +93,14 @@ func trick_or_treat():
 		doorbell_instance.candy = true
 		doorbell_instance.candy_corn = true
 		doors_hit[sprite_frames].append(door_number)
+		candy_corn_gathered += 10
+		candy_gathered += 1
+		houses_hit += 1
 	else:
 		PlayerGlobals.edit_candy_corn(1)
 		doorbell_instance.candy_corn = true
+		candy_corn_gathered += 1
+		houses_revisited += 1
 	add_child(doorbell_instance)
 
 func _on_player_collision(body):

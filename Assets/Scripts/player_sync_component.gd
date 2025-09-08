@@ -78,6 +78,7 @@ func _set_throw(impulse: int, animation1: String, animation2: String):
 	PlayerGlobals.edit_candy_corn(-1)
 	parent.shoot_candy_corn.rpc_id(1, impulse)
 	parent.ui.update_candies()
+	parent.candy_corn_thrown += 1
 	if chuck_anim:
 		animation_select = animation1
 		chuck_anim = false
@@ -174,8 +175,10 @@ func edit_candy(candy: int):
 		return
 	if candy < 0:
 		get_parent().get_node("Squabble").lose_candy()
+		get_parent().candy_lost += 1
 	elif candy > 0:
 		get_parent().get_node("Squabble").gain_candy()
+		get_parent().candy_robbed += 1
 	PlayerGlobals.edit_candy(candy)
 
 @rpc("any_peer", "call_local", "reliable")
@@ -239,22 +242,27 @@ func show_block(animation: String):
 	squabble.opp.play()
 
 @rpc("any_peer", "call_local", "reliable")
+func report_dmg_dealt(dmg):
+	get_parent().dmg_dealt += dmg
+
+@rpc("any_peer", "call_local", "reliable")
 func _check_hit(punch_direction: String):
 	var parent = get_parent()
 	if not get_parent().has_node("Squabble"): return
 	var squabble = parent.get_node("Squabble")
 	var opponent = squabble.opponent
+	var calc_damage = 1 + (squabble.dmg_coefficient / squabble.def)
 	if not opponent or not \
 		is_instance_valid(opponent) or not \
 		opponent.has_node("PlayerSyncComponent") or not \
 		opponent.has_node("Squabble"): return
-	var calc_damage: float
 	squabble._reset_square_up_opp()
 	squabble.decrement_def(4)
 	if (punch_direction == "punch_left" and squabble.blocking_right) or \
 		(punch_direction == "punch_right" and squabble.blocking_left): 
 			squabble.play_pop(1)
 			opponent.get_node("PlayerSyncComponent").play_pop_rpc.rpc_id(opponent.input_multiplayer_authority, 0)
+			parent.dmg_blocked += calc_damage
 			return
 	squabble.decrement_def(6)
 	squabble.play_pop(2)
@@ -267,5 +275,6 @@ func _check_hit(punch_direction: String):
 		opponent.get_node("PlayerSyncComponent").edit_candy.rpc_id(opponent.input_multiplayer_authority, 1)
 		opponent.get_node("PlayerSyncComponent").play_pop_rpc.rpc_id(opponent.input_multiplayer_authority, 2)
 	opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, squabble.def, squabble.gas)
-	calc_damage = 1 + (squabble.dmg_coefficient / squabble.def)
+	parent.dmg_received += calc_damage
+	opponent.get_node("PlayerSyncComponent").report_dmg_dealt.rpc_id(opponent.input_multiplayer_authority, calc_damage)
 	parent.take_damage(calc_damage)
