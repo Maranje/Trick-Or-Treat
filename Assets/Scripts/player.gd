@@ -98,7 +98,7 @@ func _collision_reset(body):
 	squabbling = false
 	opponent = null
 	if has_node("Squabble"):
-		get_node("Squabble").free()
+		get_node("Squabble").queue_free()
 
 func player_squabble(opp: Player):
 	var squabble_instance = squabble.instantiate()
