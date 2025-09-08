@@ -77,7 +77,6 @@ func _process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y += gravity * delta
 	elif player_sync_component.jump:
-		jumps += 1
 		velocity.y = jump
 	velocity.x = player_sync_component.movement.x * speed
 	if prev_anim != player_sync_component.animation_select:

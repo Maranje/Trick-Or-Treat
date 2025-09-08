@@ -53,6 +53,7 @@ func _set_animation():
 		elif direction == "right":
 			animation_select = "right_jump"
 	elif Input.is_action_just_pressed("ui_accept"):
+		get_parent().jumps += 1
 		jump = true
 	elif movement.x < 0: 
 		animation_select = "left"
