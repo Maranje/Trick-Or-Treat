@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://e1mwxdchlsyn"]
+[gd_scene load_steps=64 format=3 uid="uid://e1mwxdchlsyn"]
 
 [ext_resource type="Texture2D" uid="uid://da7dana04kqs" path="res://Assets/Sprites/Backgrounds/Scrap/BlockL.png" id="1_q186e"]
 [ext_resource type="Script" uid="uid://bod85oet4fqc3" path="res://Assets/Scripts/squabble.gd" id="1_xdh4n"]
@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://bm8vi7edqgyuu" path="res://Assets/Sprites/Backgrounds/Scrap/Pops.png" id="11_7feas"]
 [ext_resource type="Texture2D" uid="uid://1pqd1wwxpmbh" path="res://Assets/Sprites/Backgrounds/Scrap/PunchLeft.png" id="11_dncye"]
 [ext_resource type="AudioStream" uid="uid://ch5bdpl8m7bl4" path="res://Assets/Audio/Effects/grunt.mp3" id="11_oup5n"]
+[ext_resource type="Texture2D" uid="uid://cjf67sh4d63xl" path="res://Assets/Sprites/Stuff/Candies.png" id="12_tqipc"]
 [ext_resource type="Texture2D" uid="uid://d365eohy3s1a6" path="res://Assets/Sprites/Backgrounds/Scrap/PunchRight.png" id="12_xm3m4"]
 [ext_resource type="Texture2D" uid="uid://bca17ofunn76a" path="res://Assets/Sprites/Backgrounds/Scrap/PunchLeftPre.png" id="13_k4ofr"]
 [ext_resource type="Texture2D" uid="uid://b2tmhvcgkycac" path="res://Assets/Sprites/Backgrounds/Scrap/PunchRightPre.png" id="15_7feas"]
@@ -445,6 +446,12 @@ scale = Vector2(2, 2)
 texture = ExtResource("11_7feas")
 vframes = 4
 frame = 3
+
+[node name="CandyUI" type="Sprite2D" parent="UI"]
+visible = false
+position = Vector2(-216, -177.333)
+texture = ExtResource("12_tqipc")
+vframes = 2
 
 [node name="POV" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_oup5n")

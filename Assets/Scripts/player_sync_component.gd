@@ -170,6 +170,10 @@ func end_squabble():
 
 @rpc("any_peer", "call_local", "reliable")
 func edit_candy(candy: int):
+	if candy < 0:
+		get_parent().get_node("Squabble").lose_candy()
+	elif candy > 0:
+		get_parent().get_node("Squabble").gain_candy()
 	PlayerGlobals.edit_candy(candy)
 
 @rpc("any_peer", "call_local", "reliable")
@@ -251,6 +255,7 @@ func _check_hit(punch_direction: String):
 			return
 	squabble.decrement_def(6)
 	squabble.play_pop(2)
+	
 	edit_candy(-1)
 	opponent.get_node("PlayerSyncComponent").play_pop_rpc.rpc_id(opponent.input_multiplayer_authority, 2)
 	squabble.grunt.play()

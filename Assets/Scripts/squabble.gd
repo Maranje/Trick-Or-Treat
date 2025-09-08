@@ -14,6 +14,7 @@ extends Node2D
 @onready var grunt: AudioStreamPlayer2D = $Audio/Grunt
 @onready var punches: AudioStreamPlayer2D = $Audio/Punches
 @onready var pops: Sprite2D = $UI/Pops
+@onready var candy_ui: Sprite2D = $UI/CandyUI
 @onready var y_pos = 240
 @onready var gas: float = 50
 @onready var def: float = 50
@@ -42,6 +43,7 @@ func _ready():
 		visible = true
 	_reset_square_up_opp()
 	_reset_square_up_pov()
+	_reset_candy_ui()
 	global_position.x = get_parent().position.x
 	global_position.y = y_pos
 	z_index = 1
@@ -76,6 +78,32 @@ func decrememnt_gas():
 func decrement_def(amount: int):
 	def -= amount
 	if def < 1: def = 1
+	
+func gain_candy():
+	candy_ui.position.x = 100
+	var tween = create_tween()
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.set_trans(Tween.TRANS_EXPO)
+	tween.tween_property(candy_ui, "position:x", -216, 0.5)
+	tween.parallel().tween_property(candy_ui, "modulate:g", 255, 0.5)
+	tween.tween_callback(_reset_candy_ui)
+	candy_ui.visible = true
+
+func lose_candy():
+	candy_ui.position.x = -216
+	var tween = create_tween()
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.set_trans(Tween.TRANS_EXPO)
+	tween.tween_property(candy_ui, "position:x", 100, 0.5)
+	tween.parallel().tween_property(candy_ui, "modulate:r", 255, 0.5)
+	tween.tween_callback(_reset_candy_ui)
+	candy_ui.visible = true
+
+func _reset_candy_ui():
+	candy_ui.visible = false
+	candy_ui.modulate.r = 0
+	candy_ui.modulate.g = 0
+	candy_ui.modulate.b = 0
 
 func _reset_square_up_opp():
 	opp.animation = "square_up"
