@@ -170,6 +170,8 @@ func end_squabble():
 
 @rpc("any_peer", "call_local", "reliable")
 func edit_candy(candy: int):
+	if candy < 0 and PlayerGlobals.candy_count <= 0:
+		return
 	if candy < 0:
 		get_parent().get_node("Squabble").lose_candy()
 	elif candy > 0:
@@ -256,12 +258,13 @@ func _check_hit(punch_direction: String):
 	squabble.decrement_def(6)
 	squabble.play_pop(2)
 	
-	edit_candy(-1)
-	opponent.get_node("PlayerSyncComponent").play_pop_rpc.rpc_id(opponent.input_multiplayer_authority, 2)
-	squabble.grunt.play()
-	squabble.play_pop(2)
-	opponent.get_node("PlayerSyncComponent").edit_candy.rpc_id(opponent.input_multiplayer_authority, 1)
-	opponent.get_node("PlayerSyncComponent").play_pop_rpc.rpc_id(opponent.input_multiplayer_authority, 2)
+	if PlayerGlobals.candy_count > 0:
+		edit_candy(-1)
+		opponent.get_node("PlayerSyncComponent").play_pop_rpc.rpc_id(opponent.input_multiplayer_authority, 2)
+		squabble.grunt.play()
+		squabble.play_pop(2)
+		opponent.get_node("PlayerSyncComponent").edit_candy.rpc_id(opponent.input_multiplayer_authority, 1)
+		opponent.get_node("PlayerSyncComponent").play_pop_rpc.rpc_id(opponent.input_multiplayer_authority, 2)
 	opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, squabble.def, squabble.gas)
 	calc_damage = 1 + (squabble.dmg_coefficient / squabble.def)
 	parent.take_damage(calc_damage)
