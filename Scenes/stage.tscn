@@ -117,6 +117,7 @@ position = Vector2(2922, 176.5)
 shape = SubResource("RectangleShape2D_sr6x0")
 
 [node name="Ground" type="StaticBody2D" parent="Background"]
+collision_mask = 3
 
 [node name="StreetLeft" type="Sprite2D" parent="Background/Ground"]
 texture_filter = 1

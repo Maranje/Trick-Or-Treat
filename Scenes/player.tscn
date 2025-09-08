@@ -37,13 +37,13 @@ texture_filter = 1
 sprite_frames = ExtResource("2_fkybt")
 animation = &"squabble_right"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Body" type="CollisionShape2D" parent="."]
 position = Vector2(0, 16)
 shape = SubResource("RectangleShape2D_cvnsp")
 
 [node name="PersonalSpace" type="Area2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PersonalSpace"]
+[node name="Area" type="CollisionShape2D" parent="PersonalSpace"]
 position = Vector2(0, 22)
 scale = Vector2(1.5, 1.5)
 shape = SubResource("RectangleShape2D_fkybt")
