@@ -6,6 +6,7 @@ var candycorn: PackedScene = preload("uid://e1hrcf4p5may")
 var squabble: PackedScene = preload("uid://e1mwxdchlsyn")
 @onready var candy_spawner: MultiplayerSpawner = $MultiplayerSpawner
 @onready var player_sync_component: MultiplayerSynchronizer = $PlayerSyncComponent
+@onready var collision_body: CollisionShape2D = $Body
 @onready var player_sync: MultiplayerSynchronizer = $PlayerSync
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @onready var personal_space: Area2D = $PersonalSpace
@@ -127,12 +128,19 @@ func apply_damage(amount: int):
 		player_health = 0
 		player_active = false
 		personal_space.monitoring = false
+		collision_body.shape.size = Vector2(21, 16)
+		collision_body.position.y = 34
 
 func take_damage(amount: int):
 	if multiplayer.is_server():
 		apply_damage.rpc(amount)
 	else:
 		request_damage.rpc_id(1, amount)
+		
+func _player_reanimate():
+	player_health = 50
+	collision_body.shape.size = Vector2(21, 52)
+	collision_body.position.y = 16
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: int = 1000):
