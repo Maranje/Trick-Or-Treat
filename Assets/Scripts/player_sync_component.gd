@@ -194,6 +194,7 @@ func sync_stats(new_def: float, new_gas: float):
 @rpc("any_peer", "call_local", "reliable")
 func break_squabble():
 	if get_parent().has_node("Squabble"):
+		get_parent().ui.update_candies()
 		get_parent().get_node("Squabble").queue_free()
 
 @rpc("any_peer", "call_local", "reliable")
