@@ -96,13 +96,7 @@ func _host_pressed():
 	reset_multiplayer()
 	var error = peer.create_server(PORT)
 	if error != OK:
-		error_label.text = str("Failed to create server: ", error)
-		var timer = Timer.new()
-		add_child(timer)
-		timer.wait_time = 5
-		timer.one_shot = true
-		timer.timeout.connect(_reset_error_label)
-		timer.start()
+		update_error_label(str("Failed to create server: ", error))
 		return
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_on_connected_host)
@@ -117,13 +111,7 @@ func _join_pressed():
 	reset_multiplayer()
 	var error = peer.create_client(address.text, PORT)
 	if error != OK:
-		error_label.text = str("Failed to create client: ", error)
-		var timer = Timer.new()
-		add_child(timer)
-		timer.wait_time = 5
-		timer.one_shot = true
-		timer.timeout.connect(_reset_error_label)
-		timer.start()
+		update_error_label(str("Failed to create client: ", error))
 		return
 	multiplayer.multiplayer_peer = peer
 	multiplayer.connected_to_server.connect(_on_connected_client)
@@ -131,13 +119,7 @@ func _join_pressed():
 
 func _ready_pressed():
 	if not is_multiplayer_active():
-		error_label.text = "Cannot ready - multiplayer not active"
-		var timer = Timer.new()
-		add_child(timer)
-		timer.wait_time = 5
-		timer.one_shot = true
-		timer.timeout.connect(_reset_error_label)
-		timer.start()
+		update_error_label("Cannot ready - multiplayer not active")
 		return
 	var my_peer_id = multiplayer.get_unique_id()
 	if my_peer_id in peer_labels:
@@ -161,26 +143,14 @@ func _on_connected_client():
 	await get_tree().create_timer(0.7).timeout
 	var my_peer_id = multiplayer.get_unique_id()
 	if not peer_labels.has(my_peer_id):
-		error_label.text = "Server rejected connection - game already in progress"
-		var timer = Timer.new()
-		add_child(timer)
-		timer.wait_time = 5
-		timer.one_shot = true
-		timer.timeout.connect(_reset_error_label)
-		timer.start()
+		update_error_label("Server rejected connection - game already in progress")
 		_return_to_connection_screen()
 		return
 	print("Successfully connected to server")
 	_toggle_lobby()
 
 func _on_connection_failed():
-	error_label.text = "Failed to connect to server"
-	var timer = Timer.new()
-	add_child(timer)
-	timer.wait_time = 5
-	timer.one_shot = true
-	timer.timeout.connect(_reset_error_label)
-	timer.start()
+	update_error_label("Failed to connect to server")
 	
 	_return_to_connection_screen()
 
@@ -237,6 +207,15 @@ func _on_label_spawned(node):
 	var peer_id = node.input_multiplayer_authority
 	if peer_id == multiplayer.get_unique_id():
 		node.label_sync_component.gather_input(PlayerGlobals.user_name)
+
+func update_error_label(message: String):
+	error_label.text = message
+	var timer = Timer.new()
+	add_child(timer)
+	timer.wait_time = 5
+	timer.one_shot = true
+	timer.timeout.connect(_reset_error_label)
+	timer.start()
 
 @rpc("any_peer", "call_local", "reliable")
 func peer_ready():

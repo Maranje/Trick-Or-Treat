@@ -1,12 +1,16 @@
-[gd_scene load_steps=6 format=3 uid="uid://0j1e8st2dc5g"]
+[gd_scene load_steps=8 format=3 uid="uid://0j1e8st2dc5g"]
 
 [ext_resource type="Texture2D" uid="uid://dy4klbmljkruj" path="res://Assets/Sprites/Backgrounds/Splash/Costumes.png" id="1_0dhp8"]
 [ext_resource type="Script" uid="uid://cgyhnw7elrer3" path="res://Assets/Scripts/costume_select.gd" id="1_xkiyl"]
 [ext_resource type="Texture2D" uid="uid://bqt5mxfcrxohf" path="res://Assets/Sprites/Backgrounds/Splash/SelectArrowLeft.png" id="2_xkiyl"]
 [ext_resource type="Texture2D" uid="uid://bcpq63wldbqus" path="res://Assets/Sprites/Backgrounds/Splash/SelectArrowRight.png" id="3_24ean"]
+[ext_resource type="Texture2D" uid="uid://cjf67sh4d63xl" path="res://Assets/Sprites/Stuff/Candies.png" id="5_24ean"]
 
 [sub_resource type="Theme" id="Theme_xkiyl"]
 default_font_size = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_24ean"]
+font_color = Color(0, 0, 0, 1)
 
 [node name="CostumeSelect" type="Node2D"]
 scale = Vector2(2, 2)
@@ -36,11 +40,26 @@ offset_bottom = 47.0
 icon = ExtResource("3_24ean")
 flat = true
 
-[node name="Button" type="Button" parent="."]
-offset_left = 14.5
+[node name="BuyButton" type="Button" parent="."]
+offset_left = 18.0
 offset_top = 35.0
-offset_right = 38.5
+offset_right = 42.0
 offset_bottom = 55.0
 scale = Vector2(0.4, 0.4)
 theme = SubResource("Theme_xkiyl")
 text = "BUY"
+
+[node name="Sprite2D" type="Sprite2D" parent="BuyButton"]
+position = Vector2(36.25, 15)
+scale = Vector2(0.26, 0.26)
+texture = ExtResource("5_24ean")
+vframes = 2
+
+[node name="Label" type="Label" parent="BuyButton"]
+layout_mode = 0
+offset_left = 29.0
+offset_right = 57.0
+offset_bottom = 23.0
+scale = Vector2(0.5, 0.5)
+text = "100"
+label_settings = SubResource("LabelSettings_24ean")
