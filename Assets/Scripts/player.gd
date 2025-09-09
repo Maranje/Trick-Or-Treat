@@ -4,7 +4,9 @@ extends CharacterBody2D
 var doorbell: PackedScene = preload("uid://bx542d0joldxk")
 var candycorn: PackedScene = preload("uid://e1hrcf4p5may")
 var squabble: PackedScene = preload("uid://e1mwxdchlsyn")
-@onready var candy_spawner: MultiplayerSpawner = $MultiplayerSpawner
+var loot: PackedScene = preload("uid://cn7qqf8r4561v")
+@onready var candy_spawner: MultiplayerSpawner = $CandyCornBulletSpawner
+@onready var loot_spawner: MultiplayerSpawner = $LootSpawner
 @onready var player_sync_component: MultiplayerSynchronizer = $PlayerSyncComponent
 @onready var collision_body: CollisionShape2D = $Body
 @onready var ko_collision_body: CollisionShape2D = $KOBody
@@ -56,6 +58,10 @@ func _ready() -> void:
 		else:
 			candy_corn.position.x += 25
 		return candy_corn
+	loot_spawner.spawn_function = func(data):
+		var new_loot = loot.instantiate()
+		new_loot.frame = data.frame
+		return new_loot
 
 func setup_individuals():
 	camera_2d.enabled = false
@@ -145,14 +151,26 @@ func apply_damage(amount: int):
 		player_health = 0
 		player_active = false
 		personal_space.monitoring = false
-		ko_collision_body.disabled = false
-		collision_body.disabled = true
+		ko_collision_body.call_deferred("set_disabled", false)
+		collision_body.call_deferred("set_disabled", true)
+		call_deferred("drop_loot", PlayerGlobals.candy_corn, PlayerGlobals.candy_count)
 
 func take_damage(amount: int):
 	if multiplayer.is_server():
 		apply_damage.rpc(amount)
 	else:
 		request_damage.rpc_id(1, amount)
+
+@rpc("authority", "call_local", "reliable")
+func drop_loot(corn_count: int, candy_count: int):
+	if not multiplayer.is_server():
+		return
+	for i in corn_count:
+		loot_spawner.spawn({"frame": 1})
+	for i in candy_count:
+		loot_spawner.spawn({"frame": 0})
+	PlayerGlobals.candy_corn = 0
+	PlayerGlobals.candy_count = 0
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: int = 1000):

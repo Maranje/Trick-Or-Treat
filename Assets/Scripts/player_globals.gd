@@ -29,6 +29,7 @@ const SAVE_FILE = "user://gamedata.save"
 
 func _ready():
 	load_data()
+	candy_count = 0
 	if new_game:
 		_new_game()
 		new_game = false

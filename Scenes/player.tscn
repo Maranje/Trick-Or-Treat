@@ -30,6 +30,9 @@ properties/3/replication_mode = 1
 properties/4/path = NodePath(".:player_health")
 properties/4/spawn = true
 properties/4/replication_mode = 1
+properties/5/path = NodePath(".:player_active")
+properties/5/spawn = true
+properties/5/replication_mode = 1
 
 [node name="Player" type="CharacterBody2D"]
 scale = Vector2(2, 2)
@@ -82,7 +85,10 @@ text = "test_username"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+[node name="CandyCornBulletSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("..")
+
+[node name="LootSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("..")
 
 [node name="UI" parent="." instance=ExtResource("5_fkybt")]
