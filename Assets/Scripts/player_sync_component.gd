@@ -252,7 +252,7 @@ func _check_hit(punch_direction: String):
 	if not get_parent().has_node("Squabble"): return
 	var squabble = parent.get_node("Squabble")
 	var opponent = squabble.opponent
-	var calc_damage = 1 + (squabble.dmg_coefficient / squabble.def)
+	var calc_damage: float
 	if not opponent or not \
 		is_instance_valid(opponent) or not \
 		opponent.has_node("PlayerSyncComponent") or not \
@@ -263,6 +263,7 @@ func _check_hit(punch_direction: String):
 		(punch_direction == "punch_right" and squabble.blocking_left): 
 			squabble.play_pop(1)
 			opponent.get_node("PlayerSyncComponent").play_pop_rpc.rpc_id(opponent.input_multiplayer_authority, 0)
+			calc_damage = 1 + (squabble.dmg_coefficient / squabble.def)
 			parent.dmg_blocked += calc_damage
 			return
 	squabble.decrement_def(6)
@@ -276,6 +277,7 @@ func _check_hit(punch_direction: String):
 		opponent.get_node("PlayerSyncComponent").edit_candy.rpc_id(opponent.input_multiplayer_authority, 1)
 		opponent.get_node("PlayerSyncComponent").play_pop_rpc.rpc_id(opponent.input_multiplayer_authority, 2)
 	opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, squabble.def, squabble.gas)
+	calc_damage = 1 + (squabble.dmg_coefficient / squabble.def)
 	parent.dmg_received += calc_damage
 	opponent.get_node("PlayerSyncComponent").report_dmg_dealt.rpc_id(opponent.input_multiplayer_authority, calc_damage)
 	parent.take_damage(calc_damage)
