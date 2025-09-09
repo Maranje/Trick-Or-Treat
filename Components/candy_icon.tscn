@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://m3tp0beqghuw"]
+
+[ext_resource type="Texture2D" uid="uid://cjf67sh4d63xl" path="res://Assets/Sprites/Stuff/Candies.png" id="1_kbm5w"]
+[ext_resource type="Script" uid="uid://llmd5v43mobk" path="res://Assets/Scripts/candy_icon.gd" id="2_tf7x1"]
+
+[node name="CandyIcon" type="Sprite2D"]
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("1_kbm5w")
+vframes = 2
+script = ExtResource("2_tf7x1")

@@ -5,8 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://bqt5mxfcrxohf" path="res://Assets/Sprites/Backgrounds/Splash/SelectArrowLeft.png" id="2_xkiyl"]
 [ext_resource type="Texture2D" uid="uid://bcpq63wldbqus" path="res://Assets/Sprites/Backgrounds/Splash/SelectArrowRight.png" id="3_24ean"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_xkiyl"]
-font_size = 11
+[sub_resource type="Theme" id="Theme_xkiyl"]
+default_font_size = 8
 
 [node name="CostumeSelect" type="Node2D"]
 scale = Vector2(2, 2)
@@ -36,10 +36,11 @@ offset_bottom = 47.0
 icon = ExtResource("3_24ean")
 flat = true
 
-[node name="Label" type="Label" parent="."]
-offset_left = -38.0
-offset_top = 31.0
-offset_right = -18.0
-offset_bottom = 47.0
-text = "100"
-label_settings = SubResource("LabelSettings_xkiyl")
+[node name="Button" type="Button" parent="."]
+offset_left = 14.5
+offset_top = 35.0
+offset_right = 38.5
+offset_bottom = 55.0
+scale = Vector2(0.4, 0.4)
+theme = SubResource("Theme_xkiyl")
+text = "BUY"

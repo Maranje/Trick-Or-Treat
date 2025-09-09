@@ -87,18 +87,17 @@ func _process(delta: float) -> void:
 func trick_or_treat():
 	var doorbell_instance = doorbell.instantiate()
 	if door_number not in doors_hit[sprite_frames]:
-		PlayerGlobals.edit_candy_corn(10)
-		PlayerGlobals.edit_candy(1)
-		doorbell_instance.candy = true
-		doorbell_instance.candy_corn = true
+		doorbell_instance.candy = 10
+		doorbell_instance.candy_corn = 10
 		doors_hit[sprite_frames].append(door_number)
 		candy_corn_gathered += 10
-		candy_gathered += 1
+		candy_gathered += 10
 		houses_hit += 1
 	else:
-		PlayerGlobals.edit_candy_corn(1)
-		doorbell_instance.candy_corn = true
-		candy_corn_gathered += 1
+		doorbell_instance.candy = 1
+		doorbell_instance.candy_corn = 10
+		candy_corn_gathered += 10
+		candy_gathered += 1
 		houses_revisited += 1
 	add_child(doorbell_instance)
 

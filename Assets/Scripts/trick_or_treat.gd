@@ -4,8 +4,8 @@ extends Node2D
 @onready var doorbell: Sprite2D = $Doorbell
 @onready var ding: AudioStreamPlayer2D = $Ding
 
-var candy: bool = false
-var candy_corn: bool = false
+var candy: int = 0
+var candy_corn: int = 0
 var static_center_pos: int = 340
 
 func _ready() -> void:
