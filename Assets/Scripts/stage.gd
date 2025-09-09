@@ -118,6 +118,7 @@ func _stage_play_finished():
 	var my_peer_id = multiplayer.get_unique_id()
 	var my_player = get_node_or_null(str(my_peer_id))
 	my_player.player_active = false
+	PlayerGlobals.save_data()
 
 func _level_fade():
 	wind_down.play()
