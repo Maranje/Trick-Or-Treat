@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://cul6kxi3csn08"]
+[gd_scene load_steps=26 format=3 uid="uid://cul6kxi3csn08"]
 
 [ext_resource type="Texture2D" uid="uid://bknstvfikbog5" path="res://Assets/Sprites/Backgrounds/Sky/Sky.png" id="1_gdy8p"]
 [ext_resource type="Script" uid="uid://ieqnwsbd8cua" path="res://Assets/Scripts/stage.gd" id="1_gvphh"]
@@ -29,6 +29,9 @@ size = Vector2(7200, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ohi65"]
 size = Vector2(20, 444)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_105mv"]
+size = Vector2(44, 20)
 
 [node name="Stage" type="Node"]
 script = ExtResource("1_gvphh")
@@ -146,17 +149,32 @@ scale = Vector2(2, 2)
 texture = ExtResource("9_hyud0")
 centered = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Background/Ground"]
+[node name="Floor" type="CollisionShape2D" parent="Background/Ground"]
 position = Vector2(3600, 434)
 shape = SubResource("RectangleShape2D_gvphh")
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="Background/Ground"]
+[node name="LeftBoundary" type="CollisionShape2D" parent="Background/Ground"]
 position = Vector2(-10, 222)
 shape = SubResource("RectangleShape2D_ohi65")
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="Background/Ground"]
+[node name="RightBoundary" type="CollisionShape2D" parent="Background/Ground"]
 position = Vector2(7210, 222)
 shape = SubResource("RectangleShape2D_ohi65")
+
+[node name="LampPlatform" type="CollisionShape2D" parent="Background/Ground"]
+position = Vector2(1854, 250)
+shape = SubResource("RectangleShape2D_105mv")
+one_way_collision = true
+
+[node name="LampPlatform2" type="CollisionShape2D" parent="Background/Ground"]
+position = Vector2(5054, 250)
+shape = SubResource("RectangleShape2D_105mv")
+one_way_collision = true
+
+[node name="LampPlatform3" type="CollisionShape2D" parent="Background/Ground"]
+position = Vector2(3454, 250)
+shape = SubResource("RectangleShape2D_105mv")
+one_way_collision = true
 
 [node name="TruckRight" type="Sprite2D" parent="Background/Ground"]
 texture_filter = 1
@@ -194,6 +212,74 @@ centered = false
 visible = false
 texture = ExtResource("13_462mf")
 centered = false
+
+[node name="Stats" type="Node2D" parent="."]
+
+[node name="CandyGathered" type="Label" parent="Stats"]
+offset_left = -230.0
+offset_top = -313.0
+offset_right = -190.0
+offset_bottom = -290.0
+
+[node name="CandyRobbed" type="Label" parent="Stats"]
+offset_left = 1882.0
+offset_top = -389.0
+offset_right = 1922.0
+offset_bottom = -366.0
+
+[node name="CandyLost" type="Label" parent="Stats"]
+offset_left = 2106.0
+offset_top = 583.0
+offset_right = 2146.0
+offset_bottom = 606.0
+
+[node name="CandyCornGathered" type="Label" parent="Stats"]
+offset_left = -1040.0
+offset_top = 1369.0
+offset_right = -1000.0
+offset_bottom = 1392.0
+
+[node name="CandyCornThrown" type="Label" parent="Stats"]
+offset_left = 7986.0
+offset_top = 4049.0
+offset_right = 8026.0
+offset_bottom = 4072.0
+
+[node name="HousesHit" type="Label" parent="Stats"]
+offset_left = -4267.0
+offset_top = 1874.0
+offset_right = -4227.0
+offset_bottom = 1897.0
+
+[node name="HousesRevisited" type="Label" parent="Stats"]
+offset_left = 17389.0
+offset_top = -3780.0
+offset_right = 17429.0
+offset_bottom = -3757.0
+
+[node name="Jumps" type="Label" parent="Stats"]
+offset_left = 2556.0
+offset_top = 2483.0
+offset_right = 2596.0
+offset_bottom = 2506.0
+
+[node name="DMGDealt" type="Label" parent="Stats"]
+offset_left = 2905.0
+offset_top = -2297.0
+offset_right = 2945.0
+offset_bottom = -2274.0
+
+[node name="DMGReceived" type="Label" parent="Stats"]
+offset_left = 9389.0
+offset_top = 1992.0
+offset_right = 9429.0
+offset_bottom = 2015.0
+
+[node name="DMGBlocked" type="Label" parent="Stats"]
+offset_left = 5370.0
+offset_top = -1125.0
+offset_right = 5410.0
+offset_bottom = -1102.0
 
 [node name="Audio" type="Node" parent="."]
 

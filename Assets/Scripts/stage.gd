@@ -21,6 +21,20 @@ var splash_scene: PackedScene
 @onready var curtains_1: Sprite2D = $Curtains1
 @onready var curtains_2: Sprite2D = $Curtains2
 @onready var title_card: Node2D = $TitleCard
+
+@onready var candy_gathered: Label = $Stats/CandyGathered
+@onready var candy_robbed: Label = $Stats/CandyRobbed
+@onready var candy_lost: Label = $Stats/CandyLost
+@onready var candy_corn_gathered: Label = $Stats/CandyCornGathered
+@onready var candy_corn_thrown: Label = $Stats/CandyCornThrown
+@onready var houses_hit: Label = $Stats/HousesHit
+@onready var houses_revisited: Label = $Stats/HousesRevisited
+@onready var jumps: Label = $Stats/Jumps
+@onready var dmg_dealt: Label = $Stats/DMGDealt
+@onready var dmg_received: Label = $Stats/DMGReceived
+@onready var dmg_blocked: Label = $Stats/DMGBlocked
+
+
 var players: Dictionary = {}
 var stage_ended: bool = false
 
@@ -118,6 +132,30 @@ func _level_fade():
 	tween.tween_property(curtains_1, "modulate:a", 1.0, 6.27)
 
 func _start_tally():
+	var player =  players[str(multiplayer.get_unique_id())]
+	var tween = create_tween()
+	candy_gathered.text = str("candy gathered: ", player.candy_gathered)
+	candy_robbed.text = str("candy robbed: ", player.candy_robbed)
+	candy_lost.text = str("candy lost: ", player.candy_lost)
+	candy_corn_gathered.text = str("candy corn gathered: ", player.candy_corn_gathered)
+	candy_corn_thrown.text = str("candy corn thrown: ", player.candy_corn_thrown)
+	houses_hit.text = str("houses hit: ", player.houses_hit)
+	houses_revisited.text = str("houses revisited: ", player.houses_revisited)
+	jumps.text = str("jumps: ", player.jumps)
+	dmg_dealt.text = str("damage dealt: ", player.dmg_dealt)
+	dmg_received.text = str("damage received: ", player.dmg_received)
+	dmg_blocked.text = str("damage blocked: ", player.dmg_blocked)
+	tween.tween_property(candy_gathered, "position", Vector2(player.position.x - 300, player.position.y - 250), 1)
+	tween.parallel().tween_property(candy_robbed, "position", Vector2(player.position.x - 300, player.position.y - 230), 1.5)
+	tween.parallel().tween_property(candy_lost, "position", Vector2(player.position.x - 300, player.position.y - 210), 2)
+	tween.parallel().tween_property(candy_corn_gathered, "position", Vector2(player.position.x - 300, player.position.y - 190), 2.5)
+	tween.parallel().tween_property(candy_corn_thrown, "position", Vector2(player.position.x - 300, player.position.y - 170), 3)
+	tween.parallel().tween_property(houses_hit, "position", Vector2(player.position.x - 300, player.position.y - 150), 3.5)
+	tween.parallel().tween_property(houses_revisited, "position", Vector2(player.position.x - 300, player.position.y - 130), 4)
+	tween.parallel().tween_property(jumps, "position", Vector2(player.position.x - 300, player.position.y - 110), 4.5)
+	tween.parallel().tween_property(dmg_dealt, "position", Vector2(player.position.x - 300, player.position.y - 90), 5)
+	tween.parallel().tween_property(dmg_received, "position", Vector2(player.position.x - 300, player.position.y - 70), 5.5)
+	tween.parallel().tween_property(dmg_blocked, "position", Vector2(player.position.x - 300, player.position.y - 50), 6)
 	tally.play()
 
 func _blast():
