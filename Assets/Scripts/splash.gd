@@ -11,6 +11,8 @@ var stage_scene: PackedScene = preload("uid://cul6kxi3csn08")
 @onready var connect_disp: Node2D = $Connect
 @onready var lobby_disp: Node2D = $Lobby
 @onready var splash_theme: AudioStreamPlayer2D = $SplashTheme
+@onready var error_label: Label = $ErrorLabel
+
 var transitioning_to_stage = false
 
 const PORT = 4139
@@ -59,6 +61,8 @@ func check_all_players_ready() -> bool:
 func cleanup_and_change_scene():
 	await get_tree().process_frame
 	if multiplayer.is_server():
+		if multiplayer.multiplayer_peer is ENetMultiplayerPeer:
+			multiplayer.multiplayer_peer.refuse_new_connections = true  
 
 		for label in peer_labels.values():
 			if is_instance_valid(label):
@@ -92,7 +96,13 @@ func _host_pressed():
 	reset_multiplayer()
 	var error = peer.create_server(PORT)
 	if error != OK:
-		print("Failed to create server: ", error)
+		error_label.text = str("Failed to create server: ", error)
+		var timer = Timer.new()
+		add_child(timer)
+		timer.wait_time = 5
+		timer.one_shot = true
+		timer.timeout.connect(_reset_error_label)
+		timer.start()
 		return
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_on_connected_host)
@@ -107,7 +117,13 @@ func _join_pressed():
 	reset_multiplayer()
 	var error = peer.create_client(address.text, PORT)
 	if error != OK:
-		print("Failed to create client: ", error)
+		error_label.text = str("Failed to create client: ", error)
+		var timer = Timer.new()
+		add_child(timer)
+		timer.wait_time = 5
+		timer.one_shot = true
+		timer.timeout.connect(_reset_error_label)
+		timer.start()
 		return
 	multiplayer.multiplayer_peer = peer
 	multiplayer.connected_to_server.connect(_on_connected_client)
@@ -115,7 +131,13 @@ func _join_pressed():
 
 func _ready_pressed():
 	if not is_multiplayer_active():
-		print("Cannot ready - multiplayer not active")
+		error_label.text = "Cannot ready - multiplayer not active"
+		var timer = Timer.new()
+		add_child(timer)
+		timer.wait_time = 5
+		timer.one_shot = true
+		timer.timeout.connect(_reset_error_label)
+		timer.start()
 		return
 	var my_peer_id = multiplayer.get_unique_id()
 	if my_peer_id in peer_labels:
@@ -135,12 +157,31 @@ func _on_connected_host(id):
 	print("Peer %s connected to server" % id)
 
 func _on_connected_client():
-	print("Successfully connected to server")
 	peer_ready.rpc_id(1)
+	await get_tree().create_timer(0.7).timeout
+	var my_peer_id = multiplayer.get_unique_id()
+	if not peer_labels.has(my_peer_id):
+		error_label.text = "Server rejected connection - game already in progress"
+		var timer = Timer.new()
+		add_child(timer)
+		timer.wait_time = 5
+		timer.one_shot = true
+		timer.timeout.connect(_reset_error_label)
+		timer.start()
+		_return_to_connection_screen()
+		return
+	print("Successfully connected to server")
 	_toggle_lobby()
 
 func _on_connection_failed():
-	print("Failed to connect to server")
+	error_label.text = "Failed to connect to server"
+	var timer = Timer.new()
+	add_child(timer)
+	timer.wait_time = 5
+	timer.one_shot = true
+	timer.timeout.connect(_reset_error_label)
+	timer.start()
+	
 	_return_to_connection_screen()
 
 func _on_splash_theme_finished():
@@ -157,7 +198,6 @@ func reposition_all_labels():
 	for i in range(valid_labels.size()):
 		valid_labels[i].position.y = i * 20 - 141
 	label_y_offset = valid_labels.size() * 20
-	print("Repositioned %d labels" % valid_labels.size())
 
 func _on_peer_disconnected(id):
 	print("Peer ", id, " disconnected")
@@ -180,8 +220,6 @@ func _return_to_connection_screen():
 	peer_labels.clear()
 	multiplayer.multiplayer_peer = null
 	peer = ENetMultiplayerPeer.new()
-	
-	print("Returned to connection screen")
 
 func _toggle_lobby():
 	lobby_disp.visible = true
@@ -191,7 +229,10 @@ func _return_to_lobby():
 	peer_ready.rpc_id(1)
 	lobby_disp.visible = true
 	connect_disp.visible = false
-	
+
+func _reset_error_label():
+	error_label.text = ""
+
 func _on_label_spawned(node):
 	var peer_id = node.input_multiplayer_authority
 	if peer_id == multiplayer.get_unique_id():
