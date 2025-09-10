@@ -88,7 +88,14 @@ func _process(_delta: float) -> void:
 	var my_peer_id = multiplayer.get_unique_id()
 	var my_player = get_node_or_null(str(my_peer_id))
 	if my_player and is_instance_valid(my_player):
-		if my_player.player_health < 50: print("!")
+		if my_player.player_health <= 0 and PlayerGlobals.candy_count > 0:
+			spawn_loot_on_ko.rpc_id(1, my_player.position, 0)
+			PlayerGlobals.candy_count -= 1
+			my_player.ui.update_candies()
+		if my_player.player_health <= 0 and PlayerGlobals.candy_corn > 0:
+			spawn_loot_on_ko.rpc_id(1, my_player.position, 1)
+			PlayerGlobals.candy_corn -= 1
+			my_player.ui.update_candies()
 		var player_pos = my_player.global_position
 		sky.position.x = player_pos.x - 400
 		moon.position.x = player_pos.x - 400
@@ -184,6 +191,13 @@ func _blast():
 func _end_run():
 	if multiplayer.is_server():
 		_change_scene.rpc()
+
+@rpc("any_peer", "call_local", "reliable")
+func spawn_loot_on_ko(position: Vector2, frame: int):
+	if multiplayer.is_server():
+		var random_x_initial_inertia = (randi() % 200) - 100
+		var random_y_initial_inertia = (randi() % 100) - 500
+		loot_spawner.spawn({"position": position, "rix": random_x_initial_inertia, "riy": random_y_initial_inertia, "frame": frame})
 
 @rpc("authority", "call_local", "reliable")
 func _find_safe_spawn_position() -> float:

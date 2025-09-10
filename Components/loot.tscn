@@ -1,9 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://cn7qqf8r4561v"]
+[gd_scene load_steps=5 format=3 uid="uid://cn7qqf8r4561v"]
 
 [ext_resource type="Script" uid="uid://bpyelnhgcqeat" path="res://Assets/Scripts/loot.gd" id="1_e547a"]
 [ext_resource type="Texture2D" uid="uid://cjf67sh4d63xl" path="res://Assets/Sprites/Stuff/Candies.png" id="1_joivg"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_m0gsf"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_y3oq7"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
 
 [node name="Loot" type="RigidBody2D"]
 collision_layer = 4
@@ -15,3 +23,6 @@ vframes = 2
 
 [node name="LootBody" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_m0gsf")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_y3oq7")

@@ -22,6 +22,11 @@ func update_candies():
 	candy_label.text = str(PlayerGlobals.candy_count)
 	candy_corn_label.text = str(PlayerGlobals.candy_corn)
 
+@rpc("any_peer", "call_remote", "reliable")
+func update_loot():
+	candy_label.text = str(PlayerGlobals.candy_count)
+	candy_corn_label.text = str(PlayerGlobals.candy_corn)
+
 func run_notificon(candy: int, candy_corn: int):
 	for i in range(candy):
 		notificons[str("candy",i)] = icon.instantiate()

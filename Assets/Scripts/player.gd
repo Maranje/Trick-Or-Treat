@@ -17,7 +17,7 @@ var squabble: PackedScene = preload("uid://e1mwxdchlsyn")
 @onready var ui: Node2D = $UI
 var player_active: bool = true
 var squabbling: bool = false
-var player_health: int = 50
+var player_health: int = 5
 var sprite_frames: int = 0
 var total_costumes: int = 0
 var user_name: String
@@ -101,6 +101,14 @@ func trick_or_treat():
 		candy_gathered += 1
 		houses_revisited += 1
 	add_child(doorbell_instance)
+
+@rpc("any_peer", "call_remote", "reliable")
+func add_candy():
+	PlayerGlobals.candy_count += 1
+
+@rpc("any_peer", "call_remote", "reliable")
+func add_candy_corn():
+	PlayerGlobals.candy_corn += 1
 
 func _on_player_collision(body):
 	if opponent: return
