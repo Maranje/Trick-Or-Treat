@@ -31,7 +31,7 @@ size = Vector2(7200, 20)
 size = Vector2(20, 444)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_105mv"]
-size = Vector2(44, 20)
+size = Vector2(12, 20)
 
 [node name="Stage" type="Node"]
 script = ExtResource("1_gvphh")
