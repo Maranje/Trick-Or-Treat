@@ -5,7 +5,6 @@ var user_name: String = ""
 var candy_count: int = 0
 var candy_corn: int = 0
 var costume_count: int = 12
-var doors_hit: Array[Array] = []
 var costumes_owned: Array = [0]
 var current_costume: int = 0
 var new_game: bool = true
@@ -46,7 +45,6 @@ func save_data():
 			"candy_count": candy_count,
 			"candy_corn": candy_corn,
 			"costume_count": costume_count,
-			"doors_hit": doors_hit,
 			"current_costume": current_costume,
 			"costumes_owned": costumes_owned
 		}
@@ -70,13 +68,6 @@ func load_data():
 				candy_count = loaded_data.get("candy_count", 0)
 				candy_corn = loaded_data.get("candy_corn", 0)
 				costume_count = loaded_data.get("costume_count", 12)
-				var loaded_doors = loaded_data.get("doors_hit", [])
-				doors_hit = []
-				for door_array in loaded_doors:
-					var int_door_array: Array[int] = []
-					for door_number in door_array:
-						int_door_array.append(int(door_number))
-					doors_hit.append(int_door_array)
 				current_costume = loaded_data.get("current_costume", 0)
 				var loaded_costumes = loaded_data.get("costumes_owned", [0])
 				costumes_owned = []
@@ -89,7 +80,6 @@ func _new_game():
 	candy_count = 0
 	candy_corn = 0
 	costume_count = 12
-	doors_hit = []
 	costumes_owned = [0]
 	current_costume = 0
 	new_game = true

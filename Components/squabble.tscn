@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://e1mwxdchlsyn"]
+[gd_scene load_steps=64 format=3 uid="uid://e1mwxdchlsyn"]
 
 [ext_resource type="Texture2D" uid="uid://da7dana04kqs" path="res://Assets/Sprites/Backgrounds/Scrap/BlockL.png" id="1_q186e"]
 [ext_resource type="Script" uid="uid://bod85oet4fqc3" path="res://Assets/Scripts/squabble.gd" id="1_xdh4n"]
@@ -19,7 +19,8 @@
 [ext_resource type="AudioStream" uid="uid://ch5bdpl8m7bl4" path="res://Assets/Audio/Effects/grunt.mp3" id="11_oup5n"]
 [ext_resource type="Texture2D" uid="uid://cjf67sh4d63xl" path="res://Assets/Sprites/Stuff/Candies.png" id="12_tqipc"]
 [ext_resource type="Texture2D" uid="uid://d365eohy3s1a6" path="res://Assets/Sprites/Backgrounds/Scrap/PunchRight.png" id="12_xm3m4"]
-[ext_resource type="Texture2D" uid="uid://eoq5f4cde3vg" path="res://Assets/Sprites/Backgrounds/Scrap/Blank.png" id="15_7feas"]
+[ext_resource type="Texture2D" uid="uid://bca17ofunn76a" path="res://Assets/Sprites/Backgrounds/Scrap/PunchLeftPre.png" id="13_k4ofr"]
+[ext_resource type="Texture2D" uid="uid://b2tmhvcgkycac" path="res://Assets/Sprites/Backgrounds/Scrap/PunchRightPre.png" id="15_7feas"]
 [ext_resource type="Texture2D" uid="uid://b64prl6dq1prc" path="res://Assets/Sprites/Backgrounds/Scrap/SquareUpPOV.png" id="17_tqipc"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_chpe4"]
@@ -239,11 +240,15 @@ atlas = ExtResource("10_prdyc")
 region = Rect2(0, 0, 400, 240)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bkq3v"]
-atlas = ExtResource("15_7feas")
-region = Rect2(0, 0, 100, 60)
+atlas = ExtResource("13_k4ofr")
+region = Rect2(0, 0, 400, 240)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_aoe6d"]
 atlas = ExtResource("11_dncye")
+region = Rect2(0, 0, 400, 240)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q7st4"]
+atlas = ExtResource("15_7feas")
 region = Rect2(0, 0, 400, 240)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_thgep"]
@@ -297,7 +302,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_bkq3v")
+"texture": SubResource("AtlasTexture_q7st4")
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_thgep")
@@ -450,7 +455,8 @@ vframes = 2
 
 [node name="POV" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_oup5n")
-animation = &"punch_left"
+animation = &"square_up"
+frame_progress = 0.477502
 
 [node name="Audio" type="Node2D" parent="."]
 
