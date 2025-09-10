@@ -31,8 +31,6 @@ func _ready():
 	if new_game:
 		_new_game()
 		new_game = false
-		for i in range(costumes.size()):
-			houses_hit.append([])
 		save_data()
 		return
 
@@ -89,4 +87,6 @@ func _new_game():
 	costumes_owned = [0]
 	current_costume = 0
 	houses_hit = []
+	for i in range(costumes.size()):
+		houses_hit.append([])
 	new_game = true
