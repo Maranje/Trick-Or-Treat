@@ -26,14 +26,14 @@ func update_ui():
 	
 func _costume_button_left_pressed():
 	costume_number -= 1
-	if costume_number < 0: costume_number = PlayerGlobals.costume_count - 1
+	if costume_number < 0: costume_number = PlayerGlobals.costumes.size() - 1
 	costume.frame = costume_number
 	PlayerGlobals.current_costume = costume_number
 	update_ui()
 	
 func _costume_button_right_pressed():
 	costume_number += 1
-	costume_number = costume_number % PlayerGlobals.costume_count
+	costume_number = costume_number % PlayerGlobals.costumes.size()
 	costume.frame = costume_number
 	PlayerGlobals.current_costume = costume_number
 	update_ui()

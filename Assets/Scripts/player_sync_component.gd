@@ -76,7 +76,7 @@ func _set_throw(impulse: int, animation1: String, animation2: String):
 	var parent = get_parent()
 	movement = Vector2.ZERO
 	throwing = true
-	PlayerGlobals.edit_candy_corn(-1)
+	PlayerGlobals.candy_corn -= 1
 	parent.shoot_candy_corn.rpc_id(1, impulse)
 	parent.ui.update_candies()
 	parent.candy_corn_thrown += 1
@@ -180,7 +180,7 @@ func edit_candy(candy: int):
 	elif candy > 0:
 		get_parent().get_node("Squabble").gain_candy()
 		get_parent().candy_robbed += 1
-	PlayerGlobals.edit_candy(candy)
+	PlayerGlobals.candy_count += candy
 
 @rpc("any_peer", "call_local", "reliable")
 func play_pop_rpc(frame: int):

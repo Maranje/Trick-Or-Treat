@@ -177,6 +177,7 @@ func _start_tally():
 	tween.parallel().tween_property(dmg_received, "position", Vector2(player.position.x - 300, stats.position.y - 70), 5.5)
 	tween.parallel().tween_property(dmg_blocked, "position", Vector2(player.position.x - 300, stats.position.y - 50), 6)
 	tally.play()
+	PlayerGlobals.save_data()
 
 func _blast():
 	blast.play()

@@ -27,26 +27,23 @@ var speed: int = 500
 var jump: int = -1000
 var gravity: int = 2500
 var door_number: int
-var doors_hit: Array[Array]
 var opponent: Node2D = null
 
 #run stats
-var candy_gathered: int#
-var candy_robbed: int#
-var candy_lost: int#
-var candy_corn_gathered: int#
-var candy_corn_thrown: int#
-var houses_hit: int#
-var houses_revisited: int#
-var jumps: int#
-var dmg_dealt: float#
-var dmg_received: float#
-var dmg_blocked: float#
+var candy_gathered: int
+var candy_robbed: int
+var candy_lost: int
+var candy_corn_gathered: int
+var candy_corn_thrown: int
+var houses_hit: int
+var houses_revisited: int
+var jumps: int
+var dmg_dealt: float
+var dmg_received: float
+var dmg_blocked: float
 
 func _ready() -> void:
 	player_sync_component.set_multiplayer_authority(input_multiplayer_authority)
-	for i in range(PlayerGlobals.costume_count):
-		doors_hit.append([])
 	setup_individuals()
 	personal_space.body_entered.connect(_on_player_collision)
 	personal_space.body_exited.connect(_collision_reset)
@@ -87,10 +84,10 @@ func _process(delta: float) -> void:
 
 func trick_or_treat():
 	var doorbell_instance = doorbell.instantiate()
-	if door_number not in doors_hit[sprite_frames]:
+	if door_number not in PlayerGlobals.houses_hit[sprite_frames]:
 		doorbell_instance.candy = 10
 		doorbell_instance.candy_corn = 10
-		doors_hit[sprite_frames].append(door_number)
+		PlayerGlobals.houses_hit[sprite_frames].append(door_number)
 		candy_corn_gathered += 10
 		candy_gathered += 10
 		houses_hit += 1
@@ -139,9 +136,6 @@ func player_squabble(opp: Player):
 		animated_sprite_2d.animation = "squabble_left"
 		player_sync_component.animation_select = "squabble_left"
 	prev_anim = animated_sprite_2d.animation
-
-func player_edit_candy(amount: int):
-	PlayerGlobals.edit_candy(amount)
 
 @rpc("any_peer", "call_remote", "reliable")
 func request_damage(amount: int):

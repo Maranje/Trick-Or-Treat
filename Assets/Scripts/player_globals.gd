@@ -4,9 +4,9 @@ var recent_ip: String = ""
 var user_name: String = ""
 var candy_count: int = 0
 var candy_corn: int = 0
-var costume_count: int = 12
 var costumes_owned: Array = [0]
 var current_costume: int = 0
+var houses_hit: Array[Array] = []
 var new_game: bool = true
 
 var costumes = [
@@ -31,6 +31,8 @@ func _ready():
 	if new_game:
 		_new_game()
 		new_game = false
+		for i in range(costumes.size()):
+			houses_hit.append([])
 		save_data()
 		return
 
@@ -43,9 +45,9 @@ func save_data():
 			"user_name": user_name,
 			"candy_count": candy_count,
 			"candy_corn": candy_corn,
-			"costume_count": costume_count,
 			"current_costume": current_costume,
-			"costumes_owned": costumes_owned
+			"costumes_owned": costumes_owned,
+			"houses_hit": houses_hit
 		}
 		file.store_string(JSON.stringify(save_dict))
 		file.close()
@@ -66,28 +68,25 @@ func load_data():
 				user_name = loaded_data.get("user_name", "")
 				candy_count = loaded_data.get("candy_count", 0)
 				candy_corn = loaded_data.get("candy_corn", 0)
-				costume_count = loaded_data.get("costume_count", 12)
 				current_costume = loaded_data.get("current_costume", 0)
 				var loaded_costumes = loaded_data.get("costumes_owned", [0])
 				costumes_owned = []
 				for costume_id in loaded_costumes:
 					costumes_owned.append(int(costume_id))
+				var loaded_houses = loaded_data.get("houses_hit", [])
+				houses_hit = []
+				for row in loaded_houses:
+					var new_row: Array = []
+					for item in row:
+						new_row.append(int(item))
+					houses_hit.append(new_row)
 
 func _new_game():
 	recent_ip = ""
 	user_name = ""
 	candy_count = 0
 	candy_corn = 0
-	costume_count = 12
 	costumes_owned = [0]
 	current_costume = 0
+	houses_hit = []
 	new_game = true
-
-# Convenience functions to update and save immediately
-func edit_candy(amount: int):
-	candy_count += amount
-	save_data()
-
-func edit_candy_corn(amount: int):
-	candy_corn += amount
-	save_data()
