@@ -14,16 +14,3 @@ func _ready() -> void:
 
 func _on_body_entered(body):
 	if not multiplayer.is_server(): return
-	if not body is Player: return
-	if body.player_health > 0:
-		if body.player_sync_component.scrapping: return
-		pickup_loot.rpc(body.input_multiplayer_authority, frame)
-
-@rpc("authority", "call_local", "reliable")
-func pickup_loot(player_id: int, loot_frame: int):
-	if multiplayer.get_unique_id() == player_id:
-		if loot_frame == 0:
-			PlayerGlobals.candy_count += 1
-		elif loot_frame == 1:
-			PlayerGlobals.candy_corn += 1
-		queue_free()
