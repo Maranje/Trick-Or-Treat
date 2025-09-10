@@ -93,10 +93,14 @@ func reset_multiplayer():
 	label_y_offset = 0
 
 func _host_pressed():
+	join_button.disabled = true
+	host_button.disabled = true
 	reset_multiplayer()
 	var error = peer.create_server(PORT)
 	if error != OK:
-		update_error_label(str("Failed to create server: ", error))
+		update_error_label(str("Failed to create server. error: ", error))
+		join_button.disabled = false
+		host_button.disabled = false
 		return
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_on_connected_host)
@@ -112,6 +116,8 @@ func _join_pressed():
 	var error = peer.create_client(address.text, PORT)
 	if error != OK:
 		update_error_label(str("Failed to create client: ", error))
+		join_button.disabled = false
+		host_button.disabled = false
 		return
 	multiplayer.multiplayer_peer = peer
 	multiplayer.connected_to_server.connect(_on_connected_client)
@@ -139,11 +145,15 @@ func _on_connected_host(id):
 	print("Peer %s connected to server" % id)
 
 func _on_connected_client():
+	join_button.disabled = true
+	host_button.disabled = true
 	peer_ready.rpc_id(1)
 	await get_tree().create_timer(0.7).timeout
 	var my_peer_id = multiplayer.get_unique_id()
 	if not peer_labels.has(my_peer_id):
 		update_error_label("Server rejected connection - game already in progress")
+		join_button.disabled = false
+		host_button.disabled = false
 		_return_to_connection_screen()
 		return
 	print("Successfully connected to server")
@@ -151,7 +161,6 @@ func _on_connected_client():
 
 func _on_connection_failed():
 	update_error_label("Failed to connect to server")
-	
 	_return_to_connection_screen()
 
 func _on_splash_theme_finished():
@@ -184,6 +193,8 @@ func _on_server_disconnected():
 func _return_to_connection_screen():
 	lobby_disp.visible = false
 	connect_disp.visible = true
+	join_button.disabled = false
+	host_button.disabled = false
 	for label in peer_labels.values():
 		if is_instance_valid(label):
 			label.queue_free()
@@ -199,6 +210,8 @@ func _return_to_lobby():
 	peer_ready.rpc_id(1)
 	lobby_disp.visible = true
 	connect_disp.visible = false
+	join_button.disabled = false
+	host_button.disabled = false
 
 func _reset_error_label():
 	error_label.text = ""
