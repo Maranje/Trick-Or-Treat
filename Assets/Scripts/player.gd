@@ -99,11 +99,11 @@ func trick_or_treat():
 		houses_revisited += 1
 	add_child(doorbell_instance)
 
-@rpc("any_peer", "call_remote", "reliable")
+@rpc("any_peer", "call_local", "reliable")
 func add_candy():
 	PlayerGlobals.candy_count += 1
 
-@rpc("any_peer", "call_remote", "reliable")
+@rpc("any_peer", "call_local", "reliable")
 func add_candy_corn():
 	PlayerGlobals.candy_corn += 1
 

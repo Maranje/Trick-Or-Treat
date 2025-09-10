@@ -22,7 +22,7 @@ func update_candies():
 	candy_label.text = str(PlayerGlobals.candy_count)
 	candy_corn_label.text = str(PlayerGlobals.candy_corn)
 
-@rpc("any_peer", "call_remote", "reliable")
+@rpc("any_peer", "call_local", "reliable")
 func update_loot():
 	candy_label.text = str(PlayerGlobals.candy_count)
 	candy_corn_label.text = str(PlayerGlobals.candy_corn)
