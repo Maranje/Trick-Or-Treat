@@ -17,7 +17,7 @@ var squabble: PackedScene = preload("uid://e1mwxdchlsyn")
 @onready var ui: Node2D = $UI
 var player_active: bool = true
 var squabbling: bool = false
-var player_health: int = 5
+var player_health: int = 50
 var sprite_frames: int = 0
 var total_costumes: int = 0
 var user_name: String
