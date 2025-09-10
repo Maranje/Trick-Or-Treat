@@ -8,6 +8,7 @@ var costumes_owned: Array = [0]
 var current_costume: int = 0
 var houses_hit: Array[Array] = []
 var new_game: bool = true
+var is_server: bool = false
 
 var costumes = [
 	preload("res://Assets/SpriteFrames/player_frames.tres"),

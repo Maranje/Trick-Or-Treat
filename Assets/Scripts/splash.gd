@@ -8,6 +8,7 @@ var stage_scene: PackedScene = preload("uid://cul6kxi3csn08")
 @onready var join_button: Button = $Connect/HBoxContainer/Join
 @onready var ready_button: Button = $Lobby/Ready
 @onready var user_name: LineEdit = $Lobby/UserName
+@onready var bg: Node2D = $Background
 @onready var connect_disp: Node2D = $Connect
 @onready var lobby_disp: Node2D = $Lobby
 @onready var splash_theme: AudioStreamPlayer2D = $SplashTheme
@@ -21,6 +22,10 @@ var label_y_offset = 0
 var peer_labels: Dictionary = {}
 
 func _ready() -> void:
+	if OS.has_feature("server"):
+		PlayerGlobals.is_server = true
+		_run_as_server()
+	
 	user_name.text = PlayerGlobals.user_name
 	address.text = PlayerGlobals.recent_ip
 	host_button.pressed.connect(_host_pressed)
@@ -91,6 +96,9 @@ func reset_multiplayer():
 			label.queue_free()
 	peer_labels.clear()
 	label_y_offset = 0
+	
+func _run_as_server():
+	bg.visible = false
 
 func _host_pressed():
 	join_button.disabled = true
@@ -106,8 +114,8 @@ func _host_pressed():
 	multiplayer.peer_connected.connect(_on_connected_host)
 	print("Server started on port ", PORT)
 	peer_ready.rpc_id(1) #comment out for no host player
-	_toggle_lobby()
 	peer_labels[1].label_sync_component.gather_input(PlayerGlobals.user_name) #comment out for no host player
+	_toggle_lobby()
 
 func _join_pressed():
 	if address.text.is_empty():
