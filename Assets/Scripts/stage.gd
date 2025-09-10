@@ -2,8 +2,9 @@ extends Node
 
 var disconnect_scene: PackedScene = preload("uid://ctmuv3sgstkfa")
 var player_scene: PackedScene = preload("uid://df8j72jtyei4v")
+var loot: PackedScene = preload("uid://cn7qqf8r4561v")
 var splash_scene: PackedScene
-
+@onready var loot_spawner: MultiplayerSpawner = $LootSpawner
 @onready var player_spawner: MultiplayerSpawner = $PlayerSpawner
 @onready var bg: Node2D = $Background
 @onready var sky: Sprite2D = $Background/Sky
@@ -45,6 +46,7 @@ func _ready() -> void:
 	tally.max_distance = INF
 	blast.max_distance = INF
 	end.max_distance = INF
+	
 	player_spawner.spawn_function = func(data):
 		var new_player = player_scene.instantiate() as Player
 		new_player.position.x = _find_safe_spawn_position()
@@ -56,6 +58,15 @@ func _ready() -> void:
 			new_player.user_name = data.user_name
 		players[new_player.name] = new_player
 		return new_player
+		
+	loot_spawner.spawn_function = func(data):
+		var new_loot = loot.instantiate()
+		new_loot.position = data.position
+		new_loot.rix = data.rix
+		new_loot.riy = data.riy
+		new_loot.frame = data.frame
+		return new_loot
+	
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 	theme.finished.connect(_stage_play_finished)
@@ -77,6 +88,7 @@ func _process(_delta: float) -> void:
 	var my_peer_id = multiplayer.get_unique_id()
 	var my_player = get_node_or_null(str(my_peer_id))
 	if my_player and is_instance_valid(my_player):
+		if my_player.player_health < 50: print("!")
 		var player_pos = my_player.global_position
 		sky.position.x = player_pos.x - 400
 		moon.position.x = player_pos.x - 400

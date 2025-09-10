@@ -39,6 +39,9 @@ script = ExtResource("1_gvphh")
 [node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("..")
 
+[node name="LootSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("..")
+
 [node name="Background" type="Node2D" parent="."]
 
 [node name="Sky" type="Sprite2D" parent="Background"]

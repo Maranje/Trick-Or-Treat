@@ -14,3 +14,6 @@ func _ready() -> void:
 
 func _on_body_entered(body):
 	if not multiplayer.is_server(): return
+	if not body is Player: return
+	if body.player_health <= 0: return
+	if body.player_sync_component.scrapping: return
