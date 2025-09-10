@@ -134,9 +134,8 @@ func _on_server_disconnected():
 
 func _stage_play_finished():
 	buzzer.play()
-	var my_peer_id = multiplayer.get_unique_id()
-	var my_player = get_node_or_null(str(my_peer_id))
-	my_player.player_active = false
+	for player in players.values():
+		player.player_active = false
 
 func _level_fade():
 	wind_down.play()
