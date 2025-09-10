@@ -25,10 +25,10 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sr6x0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gvphh"]
-size = Vector2(7200, 20)
+size = Vector2(8800, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ohi65"]
-size = Vector2(20, 444)
+size = Vector2(265, 303)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_105mv"]
 size = Vector2(12, 20)
@@ -147,7 +147,7 @@ centered = false
 
 [node name="TruckLeft" type="Sprite2D" parent="Background/Ground"]
 texture_filter = 1
-position = Vector2(-276, -4)
+position = Vector2(-276, 0)
 scale = Vector2(2, 2)
 texture = ExtResource("9_hyud0")
 centered = false
@@ -157,11 +157,11 @@ position = Vector2(3600, 434)
 shape = SubResource("RectangleShape2D_gvphh")
 
 [node name="LeftBoundary" type="CollisionShape2D" parent="Background/Ground"]
-position = Vector2(-10, 222)
+position = Vector2(-132.5, 271.5)
 shape = SubResource("RectangleShape2D_ohi65")
 
 [node name="RightBoundary" type="CollisionShape2D" parent="Background/Ground"]
-position = Vector2(7210, 222)
+position = Vector2(7333, 271.5)
 shape = SubResource("RectangleShape2D_ohi65")
 
 [node name="LampPlatform" type="CollisionShape2D" parent="Background/Ground"]
@@ -181,7 +181,7 @@ one_way_collision = true
 
 [node name="TruckRight" type="Sprite2D" parent="Background/Ground"]
 texture_filter = 1
-position = Vector2(7188, -4)
+position = Vector2(7188, 0)
 scale = Vector2(2, 2)
 texture = ExtResource("9_hyud0")
 centered = false
