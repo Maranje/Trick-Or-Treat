@@ -22,20 +22,6 @@ var label_y_offset = 0
 var peer_labels: Dictionary = {}
 
 func _ready() -> void:
-	if OS.has_feature("server"):
-		PlayerGlobals.is_server = true
-		_run_as_server()
-	
-	user_name.text = PlayerGlobals.user_name
-	address.text = PlayerGlobals.recent_ip
-	host_button.pressed.connect(_host_pressed)
-	join_button.pressed.connect(_join_pressed)
-	ready_button.pressed.connect(_ready_pressed)
-	user_name.text_changed.connect(_user_name_edit)
-	splash_theme.finished.connect(_on_splash_theme_finished)
-	label_spawner.spawned.connect(_on_label_spawned)
-	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
-	multiplayer.server_disconnected.connect(_on_server_disconnected)
 	label_spawner.spawn_function = func(data):
 		var new_label = label_scene.instantiate() as UserLabel
 		new_label.position.y += label_y_offset
@@ -44,6 +30,21 @@ func _ready() -> void:
 		new_label.name = str(data.peer_id)
 		peer_labels[data.peer_id] = new_label
 		return new_label
+		
+	splash_theme.finished.connect(_on_splash_theme_finished)
+	label_spawner.spawned.connect(_on_label_spawned)
+	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
+	multiplayer.server_disconnected.connect(_on_server_disconnected)
+		
+	if OS.has_feature("server"):
+		PlayerGlobals.is_server = true
+		_run_as_server()
+	user_name.text = PlayerGlobals.user_name
+	address.text = PlayerGlobals.recent_ip
+	user_name.text_changed.connect(_user_name_edit)
+	host_button.pressed.connect(_host_pressed)
+	join_button.pressed.connect(_join_pressed)
+	ready_button.pressed.connect(_ready_pressed)
 
 func _process(_delta: float) -> void:
 	if not transitioning_to_stage and check_all_players_ready():
@@ -53,6 +54,7 @@ func _process(_delta: float) -> void:
 
 func check_all_players_ready() -> bool:
 	if not peer_labels: return false
+	if peer_labels.size() < 2: return false
 	var all_ready = true
 	for label in peer_labels.values():
 		if not is_instance_valid(label):
@@ -99,6 +101,15 @@ func reset_multiplayer():
 	
 func _run_as_server():
 	bg.visible = false
+	reset_multiplayer()
+	var error = peer.create_server(PORT)
+	if error != OK:
+		print(str("Failed to create server. error: ", error))
+		return
+	multiplayer.multiplayer_peer = peer
+	multiplayer.peer_connected.connect(_on_connected_host)
+	print("Server started on port ", PORT)
+	PlayerGlobals.is_server = true
 
 func _host_pressed():
 	join_button.disabled = true
@@ -116,6 +127,7 @@ func _host_pressed():
 	peer_ready.rpc_id(1) #comment out for no host player
 	peer_labels[1].label_sync_component.gather_input(PlayerGlobals.user_name) #comment out for no host player
 	_toggle_lobby()
+	PlayerGlobals.is_server = false
 
 func _join_pressed():
 	if address.text.is_empty():
@@ -134,6 +146,9 @@ func _join_pressed():
 func _ready_pressed():
 	if not is_multiplayer_active():
 		update_error_label("Cannot ready - multiplayer not active")
+		return
+	if peer_labels.size() < 2:
+		update_error_label("Too few players in lobby")
 		return
 	var my_peer_id = multiplayer.get_unique_id()
 	if my_peer_id in peer_labels:
