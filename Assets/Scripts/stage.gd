@@ -85,6 +85,7 @@ func _load_stage():
 	scene_loaded.rpc_id(1, PlayerGlobals.current_costume, PlayerGlobals.user_name)
 
 func _process(_delta: float) -> void:
+	if PlayerGlobals.is_server: return
 	var my_peer_id = multiplayer.get_unique_id()
 	var my_player = get_node_or_null(str(my_peer_id))
 	if my_player and is_instance_valid(my_player):
@@ -109,7 +110,7 @@ func scene_loaded(costume_data: int = 0, user_name_data: String = ""):
 	if not multiplayer.is_server():
 		return
 	var peer_id = multiplayer.get_remote_sender_id()
-	
+	if peer_id == 1: return
 	if players.has(str(peer_id)):
 		return
 		
@@ -150,33 +151,35 @@ func _level_fade():
 	tween.tween_property(curtains_1, "modulate:a", 1.0, 6.27)
 
 func _start_tally():
-	var player =  players[str(multiplayer.get_unique_id())]
-	var tween = create_tween()
-	stats.global_position.y = static_center_pos
-	candy_gathered.text = str("candy gathered: ", player.candy_gathered)
-	candy_robbed.text = str("candy robbed: ", player.candy_robbed)
-	candy_lost.text = str("candy lost: ", player.candy_lost)
-	candy_corn_gathered.text = str("candy corn gathered: ", player.candy_corn_gathered)
-	candy_corn_thrown.text = str("candy corn thrown: ", player.candy_corn_thrown)
-	houses_hit.text = str("houses hit: ", player.houses_hit)
-	houses_revisited.text = str("houses revisited: ", player.houses_revisited)
-	jumps.text = str("jumps: ", player.jumps)
-	dmg_dealt.text = str("damage dealt: ", "%.4f" % player.dmg_dealt)
-	dmg_received.text = str("damage received: ", "%.4f" % player.dmg_received)
-	dmg_blocked.text = str("damage blocked: ", "%.4f" % player.dmg_blocked)
-	tween.tween_property(candy_gathered, "position", Vector2(player.position.x - 300, stats.position.y - 250), 1)
-	tween.parallel().tween_property(candy_robbed, "position", Vector2(player.position.x - 300, stats.position.y - 230), 1.5)
-	tween.parallel().tween_property(candy_lost, "position", Vector2(player.position.x - 300, stats.position.y - 210), 2)
-	tween.parallel().tween_property(candy_corn_gathered, "position", Vector2(player.position.x - 300, stats.position.y - 190), 2.5)
-	tween.parallel().tween_property(candy_corn_thrown, "position", Vector2(player.position.x - 300, stats.position.y - 170), 3)
-	tween.parallel().tween_property(houses_hit, "position", Vector2(player.position.x - 300, stats.position.y - 150), 3.5)
-	tween.parallel().tween_property(houses_revisited, "position", Vector2(player.position.x - 300, stats.position.y - 130), 4)
-	tween.parallel().tween_property(jumps, "position", Vector2(player.position.x - 300, stats.position.y - 110), 4.5)
-	tween.parallel().tween_property(dmg_dealt, "position", Vector2(player.position.x - 300, stats.position.y - 90), 5)
-	tween.parallel().tween_property(dmg_received, "position", Vector2(player.position.x - 300, stats.position.y - 70), 5.5)
-	tween.parallel().tween_property(dmg_blocked, "position", Vector2(player.position.x - 300, stats.position.y - 50), 6)
+	var peer_id = multiplayer.get_unique_id()
+	if peer_id != 1:
+		var player =  players[str(peer_id)]
+		var tween = create_tween()
+		stats.global_position.y = static_center_pos
+		candy_gathered.text = str("candy gathered: ", player.candy_gathered)
+		candy_robbed.text = str("candy robbed: ", player.candy_robbed)
+		candy_lost.text = str("candy lost: ", player.candy_lost)
+		candy_corn_gathered.text = str("candy corn gathered: ", player.candy_corn_gathered)
+		candy_corn_thrown.text = str("candy corn thrown: ", player.candy_corn_thrown)
+		houses_hit.text = str("houses hit: ", player.houses_hit)
+		houses_revisited.text = str("houses revisited: ", player.houses_revisited)
+		jumps.text = str("jumps: ", player.jumps)
+		dmg_dealt.text = str("damage dealt: ", "%.4f" % player.dmg_dealt)
+		dmg_received.text = str("damage received: ", "%.4f" % player.dmg_received)
+		dmg_blocked.text = str("damage blocked: ", "%.4f" % player.dmg_blocked)
+		tween.tween_property(candy_gathered, "position", Vector2(player.position.x - 300, stats.position.y - 250), 1)
+		tween.parallel().tween_property(candy_robbed, "position", Vector2(player.position.x - 300, stats.position.y - 230), 1.5)
+		tween.parallel().tween_property(candy_lost, "position", Vector2(player.position.x - 300, stats.position.y - 210), 2)
+		tween.parallel().tween_property(candy_corn_gathered, "position", Vector2(player.position.x - 300, stats.position.y - 190), 2.5)
+		tween.parallel().tween_property(candy_corn_thrown, "position", Vector2(player.position.x - 300, stats.position.y - 170), 3)
+		tween.parallel().tween_property(houses_hit, "position", Vector2(player.position.x - 300, stats.position.y - 150), 3.5)
+		tween.parallel().tween_property(houses_revisited, "position", Vector2(player.position.x - 300, stats.position.y - 130), 4)
+		tween.parallel().tween_property(jumps, "position", Vector2(player.position.x - 300, stats.position.y - 110), 4.5)
+		tween.parallel().tween_property(dmg_dealt, "position", Vector2(player.position.x - 300, stats.position.y - 90), 5)
+		tween.parallel().tween_property(dmg_received, "position", Vector2(player.position.x - 300, stats.position.y - 70), 5.5)
+		tween.parallel().tween_property(dmg_blocked, "position", Vector2(player.position.x - 300, stats.position.y - 50), 6)
+		PlayerGlobals.save_data()
 	tally.play()
-	PlayerGlobals.save_data()
 
 func _blast():
 	blast.play()

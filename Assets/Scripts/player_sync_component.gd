@@ -174,10 +174,10 @@ func end_squabble():
 func edit_candy(candy: int):
 	if candy < 0 and PlayerGlobals.candy_count <= 0:
 		return
-	if candy < 0:
+	if get_parent().has_node("Squabble") and candy < 0:
 		get_parent().get_node("Squabble").lose_candy()
 		get_parent().candy_lost += 1
-	elif candy > 0:
+	elif get_parent().has_node("Squabble") and candy > 0:
 		get_parent().get_node("Squabble").gain_candy()
 		get_parent().candy_robbed += 1
 	PlayerGlobals.candy_count += candy

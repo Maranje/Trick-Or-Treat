@@ -6,6 +6,7 @@ var stage_scene: PackedScene = preload("uid://cul6kxi3csn08")
 @onready var address: LineEdit = $Connect/Address
 @onready var host_button: Button = $Connect/HBoxContainer/Host
 @onready var join_button: Button = $Connect/HBoxContainer/Join
+@onready var server_button: Button = $Connect/Server
 @onready var ready_button: Button = $Lobby/Ready
 @onready var user_name: LineEdit = $Lobby/UserName
 @onready var bg: Node2D = $Background
@@ -36,15 +37,13 @@ func _ready() -> void:
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
 		
-	if OS.has_feature("server"):
-		PlayerGlobals.is_server = true
-		_run_as_server()
 	user_name.text = PlayerGlobals.user_name
 	address.text = PlayerGlobals.recent_ip
 	user_name.text_changed.connect(_user_name_edit)
 	host_button.pressed.connect(_host_pressed)
 	join_button.pressed.connect(_join_pressed)
 	ready_button.pressed.connect(_ready_pressed)
+	server_button.pressed.connect(_run_as_server)
 
 func _process(_delta: float) -> void:
 	if not transitioning_to_stage and check_all_players_ready():
@@ -100,16 +99,24 @@ func reset_multiplayer():
 	label_y_offset = 0
 	
 func _run_as_server():
+	PlayerGlobals.is_server = true
 	bg.visible = false
+	server_button.disabled = true
+	host_button.disabled = true
+	join_button.disabled = true
 	reset_multiplayer()
 	var error = peer.create_server(PORT)
 	if error != OK:
 		print(str("Failed to create server. error: ", error))
+		update_error_label(str("Failed to start server. Error: ", error))
+		server_button.disabled = false
+		host_button.disabled = false
+		join_button.disabled = false
 		return
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_on_connected_host)
 	print("Server started on port ", PORT)
-	PlayerGlobals.is_server = true
+	update_error_label("Server running on port " + str(PORT))
 
 func _host_pressed():
 	join_button.disabled = true
