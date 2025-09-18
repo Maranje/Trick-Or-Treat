@@ -69,13 +69,14 @@ func setup_individuals():
 	ui.update_health(player_health)
 	
 func _set_costume_power():
-	match PlayerGlobals.current_costume:
+	match sprite_frames:
 		0:
 			return
 		1:
 			return
 		2: 
-			return
+			speed = 5000
+			print("!")
 		3:
 			return
 		4:
@@ -94,7 +95,6 @@ func _set_costume_power():
 			return
 		11: 
 			return
-	pass
 
 func _process(delta: float) -> void:
 	if squabbling and not has_node("Squabbling"): squabbling = false #sometimes this shit just sucks. idk.

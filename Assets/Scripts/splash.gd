@@ -43,6 +43,7 @@ func _ready() -> void:
 	host_button.pressed.connect(_host_pressed)
 	join_button.pressed.connect(_join_pressed)
 	ready_button.pressed.connect(_ready_pressed)
+	
 	#connect_disp.visible = false
 	#_run_as_server()
 
