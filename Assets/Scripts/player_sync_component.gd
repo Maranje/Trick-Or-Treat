@@ -104,7 +104,7 @@ func _scrap_routine(delta: float):
 	var parent = get_parent()
 	if not parent.has_node("Squabble"): return
 	var opponent = parent.get_node("Squabble").opponent
-	if Input.is_action_pressed("ui_esc") or parent.player_health == 0 or opponent.player_health == 0:
+	if Input.is_action_pressed("ui_run") or parent.player_health == 0 or opponent.player_health == 0:
 		if scrapping: end_squabble()
 		scrapping = false
 		return
