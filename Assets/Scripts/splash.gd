@@ -11,6 +11,7 @@ var stage_scene: PackedScene = preload("uid://cul6kxi3csn08")
 @onready var bg: Node2D = $Background
 @onready var connect_disp: Node2D = $Connect
 @onready var lobby_disp: Node2D = $Lobby
+@onready var costume_sel: Node2D = $Lobby/CostumeSelect
 @onready var splash_theme: AudioStreamPlayer2D = $SplashTheme
 @onready var error_label: Label = $ErrorLabel
 
@@ -161,6 +162,8 @@ func _ready_pressed():
 		PlayerGlobals.user_name = peer_labels[my_peer_id].text
 		PlayerGlobals.recent_ip = address.text
 		PlayerGlobals.save_data()
+		costume_sel.button_left.disabled = true
+		costume_sel.button_right.disabled = true
 
 func _user_name_edit(text):
 	if not is_multiplayer_active():
