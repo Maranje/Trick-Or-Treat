@@ -62,10 +62,39 @@ func setup_individuals():
 		ui.top_right.visible = true
 		camera_2d.enabled = true
 		camera_2d.make_current()
+		_set_costume_power()
 	tag.text = user_name
 	animated_sprite_2d.sprite_frames = PlayerGlobals.costumes[sprite_frames]
 	animated_sprite_2d.play()
 	ui.update_health(player_health)
+	
+func _set_costume_power():
+	match PlayerGlobals.current_costume:
+		0:
+			return
+		1:
+			return
+		2: 
+			return
+		3:
+			return
+		4:
+			return
+		5:
+			return
+		6:
+			return
+		7:
+			return
+		8:
+			return
+		9:
+			return
+		10:
+			return
+		11: 
+			return
+	pass
 
 func _process(delta: float) -> void:
 	if squabbling and not has_node("Squabbling"): squabbling = false #sometimes this shit just sucks. idk.

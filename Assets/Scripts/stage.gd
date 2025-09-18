@@ -124,7 +124,7 @@ func scene_loaded(costume_data: int = 0, user_name_data: String = ""):
 	if not multiplayer.is_server():
 		return
 	var peer_id = multiplayer.get_remote_sender_id()
-	if peer_id == 1: return
+	if PlayerGlobals.is_server and peer_id == 1: return
 	if players.has(str(peer_id)):
 		return
 		
