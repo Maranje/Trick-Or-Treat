@@ -80,6 +80,20 @@ func _ready() -> void:
 	timer.one_shot = true
 	timer.timeout.connect(_load_stage)
 	timer.start()
+	if PlayerGlobals.is_server:
+		get_viewport().size = Vector2(1920, 1080)  # Server viewport size
+		var camera = Camera2D.new()
+		camera.zoom = Vector2(0.1, 0.1)  # Zoomed out view for server
+		camera.position = Vector2(177.0 * 40.0 / 2.0, 0)  # Center of stage (map_width / 2)
+		camera.enabled = true
+		add_child(camera)
+		# Hide background elements for server view
+		sky.visible = false
+		trees.visible = false
+		houses.visible = false
+		if clouds:
+			clouds.visible = false
+		moon.visible = false
 
 func _load_stage():
 	scene_loaded.rpc_id(1, PlayerGlobals.current_costume, PlayerGlobals.user_name)
