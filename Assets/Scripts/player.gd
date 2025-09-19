@@ -33,6 +33,7 @@ var gravity: int = 13
 var door_number: int
 var opponent: Node2D = null
 var sfx_stream = 0
+var power: int = 0
 
 #run stats
 var candy_gathered: int
@@ -152,6 +153,15 @@ func player_squabble(opp: Player):
 		player_sync_component.animation_select = "squabble_left"
 	prev_anim = animated_sprite_2d.animation
 
+@rpc("any_peer", "call_local", "reliable")
+func player_teleport(distance: int):
+	if position.x + distance < 30:
+		position.x = 30
+	elif position.x + distance > 7170:
+		position.x = 7170
+	else:
+		position.x += distance
+
 @rpc("any_peer", "call_remote", "reliable")
 func request_damage(amount: int):
 	if multiplayer.is_server():
@@ -211,7 +221,8 @@ func _set_costume_power_remote():
 		9:
 			return
 		10:
-			return
+			power = 1
+			sfx_stream = 3
 		11: 
 			return
 func _set_costume_power_local():
@@ -237,6 +248,7 @@ func _set_costume_power_local():
 		9:
 			return
 		10:
-			return
+			power = 1
+			sfx_stream = 3
 		11: 
 			return

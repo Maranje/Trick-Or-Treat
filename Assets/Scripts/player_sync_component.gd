@@ -37,14 +37,31 @@ func _gather_input(delta: float):
 	_set_animation()
 	_check_throw()
 	_check_door()
-	_check_sfx()
+	_check_power()
 
 func toggle_at_door():
 	at_door = !at_door
 	
-func _check_sfx():
+func _check_power():
 	if Input.is_action_just_pressed("ui_down"):
-		get_parent().sfx_all.rpc_id(1)
+		var parent = get_parent()
+		parent.sfx_all.rpc_id(1)
+	elif Input.is_action_just_pressed("shift_left"):
+		var parent = get_parent()
+		match parent.power: 
+			0:
+				return
+			1:
+				parent.player_teleport.rpc_id(1, -413)
+				parent.sfx_all.rpc_id(1)
+	elif Input.is_action_just_pressed("shift_right"):
+		var parent = get_parent()
+		match parent.power: 
+			0:
+				return
+			1:
+				parent.player_teleport.rpc_id(1, 413)
+				parent.sfx_all.rpc_id(1)
 	
 func _check_door():
 	if not at_door: return
