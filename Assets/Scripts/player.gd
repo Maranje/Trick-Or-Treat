@@ -61,7 +61,6 @@ func _ready() -> void:
 		return candy_corn
 	sfx_spawner.spawn_function = func(data):
 		var new_sfx = sfx_scene.instantiate()
-		new_sfx.position = position
 		new_sfx.stream = data.sfx_stream
 		return new_sfx
 
