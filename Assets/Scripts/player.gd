@@ -85,6 +85,7 @@ func _process(_delta: float) -> void:
 		animated_sprite_2d.animation = player_sync_component.animation_select
 		prev_anim = animated_sprite_2d.animation
 	move_and_slide()
+	
 
 func trick_or_treat():
 	var doorbell_instance = doorbell.instantiate()
