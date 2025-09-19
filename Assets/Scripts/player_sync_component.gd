@@ -81,12 +81,6 @@ func _check_throw():
 
 func _set_throw(impulse: int, animation1: String, animation2: String):
 	var parent = get_parent()
-	movement = Vector2.ZERO
-	throwing = true
-	PlayerGlobals.candy_corn -= 1
-	parent.shoot_candy_corn.rpc_id(1, impulse)
-	parent.ui.update_candies()
-	parent.candy_corn_thrown += 1
 	if parent.player_active:
 		if chuck_anim:
 			animation_select = animation1
@@ -94,6 +88,14 @@ func _set_throw(impulse: int, animation1: String, animation2: String):
 		else:
 			animation_select = animation2
 			chuck_anim = true
+	else:
+		pass
+	movement = Vector2.ZERO
+	throwing = true
+	PlayerGlobals.candy_corn -= 1
+	parent.shoot_candy_corn.rpc_id(1, impulse)
+	parent.ui.update_candies()
+	parent.candy_corn_thrown += 1
 	throw_timer = Timer.new()
 	add_child(throw_timer)
 	throw_timer.wait_time = 0.15
