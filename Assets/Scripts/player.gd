@@ -94,6 +94,8 @@ func _process(_delta: float) -> void:
 	
 @rpc("any_peer", "call_local", "reliable")
 func _sfx_all():
+	if not multiplayer.is_server():
+		return
 	sfx_spawner.spawn({"sfx_stream": sfx_stream})
 
 func trick_or_treat():
