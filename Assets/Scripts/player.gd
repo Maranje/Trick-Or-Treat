@@ -59,10 +59,8 @@ func _ready() -> void:
 		else:
 			candy_corn.position.x += 25
 		return candy_corn
-	sfx_spawner.spawn_function = func(data):
+	sfx_spawner.spawn_function = func(_data):
 		var new_sfx = sfx_scene.instantiate()
-		print(data.sfx_stream)
-		new_sfx.stream = data.sfx_stream
 		return new_sfx
 
 func setup_individuals():
@@ -173,7 +171,7 @@ func take_damage(amount: int):
 func sfx_all():
 	if not multiplayer.is_server():
 		return
-	sfx_spawner.spawn({"sfx_stream": sfx_stream})
+	sfx_spawner.spawn()
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: int = 1000):
