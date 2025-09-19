@@ -2,6 +2,7 @@ class_name Player
 extends CharacterBody2D
 
 var doorbell: PackedScene = preload("uid://bx542d0joldxk")
+var sfx_scene: PackedScene = preload("uid://bm31hjx2b6okg")
 var candycorn: PackedScene = preload("uid://e1hrcf4p5may")
 var squabble: PackedScene = preload("uid://e1mwxdchlsyn")
 
@@ -11,7 +12,6 @@ var squabble: PackedScene = preload("uid://e1mwxdchlsyn")
 @onready var ko_collision_body: CollisionShape2D = $KOBody
 @onready var player_sync: MultiplayerSynchronizer = $PlayerSync
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
-@onready var sfx: AudioStreamPlayer2D = $SFX
 @onready var personal_space: Area2D = $PersonalSpace
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var tag: Label = $tag
@@ -29,6 +29,7 @@ var jump: int = -1000
 var gravity: int = 13
 var door_number: int
 var opponent: Node2D = null
+var sfx_stream = null
 
 #run stats
 var candy_gathered: int
@@ -58,7 +59,6 @@ func _ready() -> void:
 		return candy_corn
 
 func setup_individuals():
-	sfx.max_distance = INF
 	camera_2d.enabled = false
 	if input_multiplayer_authority == multiplayer.get_unique_id():
 		ui.top_right.visible = true
@@ -73,7 +73,10 @@ func setup_individuals():
 func _process(_delta: float) -> void:
 	if squabbling and not has_node("Squabbling"): squabbling = false #sometimes this shit just sucks. idk.
 	ui.update_health(player_health)
-	if player_sync_component.movement.y > 0: sfx.play()
+	if player_sync_component.movement.y > 0: 
+		var new_sfx = sfx_scene.instantiate()
+		new_sfx.stream = sfx_stream
+		add_child(new_sfx)
 	if not animated_sprite_2d.is_playing(): animated_sprite_2d.play()
 	if not is_multiplayer_authority(): return
 	if not is_on_floor():
@@ -85,7 +88,6 @@ func _process(_delta: float) -> void:
 		animated_sprite_2d.animation = player_sync_component.animation_select
 		prev_anim = animated_sprite_2d.animation
 	move_and_slide()
-	
 
 func trick_or_treat():
 	var doorbell_instance = doorbell.instantiate()
@@ -175,7 +177,7 @@ func _set_costume_power():
 		0:
 			return
 		1:
-			sfx.stream = load("uid://b45fg0kwyq6yb")
+			sfx_stream = load("uid://b45fg0kwyq6yb")
 		2: 
 			speed = 5000
 		3:

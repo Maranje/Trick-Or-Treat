@@ -33,9 +33,6 @@ properties/4/replication_mode = 1
 properties/5/path = NodePath(".:player_active")
 properties/5/spawn = true
 properties/5/replication_mode = 1
-properties/6/path = NodePath("SFX:playing")
-properties/6/spawn = true
-properties/6/replication_mode = 1
 
 [node name="Player" type="CharacterBody2D"]
 scale = Vector2(2, 2)
@@ -96,5 +93,3 @@ spawn_path = NodePath("..")
 
 [node name="UI" parent="." instance=ExtResource("5_fkybt")]
 position = Vector2(0, -31.5)
-
-[node name="SFX" type="AudioStreamPlayer2D" parent="."]
