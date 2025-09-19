@@ -208,8 +208,8 @@ func _end_run():
 @rpc("any_peer", "call_local", "reliable")
 func spawn_loot_on_ko(position: Vector2, frame: int):
 	if multiplayer.is_server():
-		var random_x_initial_inertia = (randi() % 200) - 100
-		var random_y_initial_inertia = (randi() % 100) - 500
+		var random_x_initial_inertia = (randi() % 200) - 200
+		var random_y_initial_inertia = (randi() % 100) - 700
 		loot_spawner.spawn({"position": position, "rix": random_x_initial_inertia, "riy": random_y_initial_inertia, "frame": frame})
 
 @rpc("authority", "call_local", "reliable")

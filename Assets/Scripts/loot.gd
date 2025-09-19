@@ -8,7 +8,7 @@ var riy: int
 func _ready() -> void:
 	loot_sprite.frame = frame
 	contact_monitor = true
-	max_contacts_reported = 10
+	max_contacts_reported = 2
 	apply_impulse(Vector2(rix, riy))
 	body_entered.connect(_on_body_entered)
 
