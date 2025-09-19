@@ -16,6 +16,8 @@ var squabble: PackedScene = preload("uid://e1mwxdchlsyn")
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var tag: Label = $tag
 @onready var ui: Node2D = $UI
+@onready var sfx: AudioStreamPlayer2D = $SFX
+
 var player_active: bool = true
 var squabbling: bool = false
 var player_health: int = 50
@@ -87,9 +89,11 @@ func _process(_delta: float) -> void:
 	move_and_slide()
 
 func play_sfx():
-	var new_sfx = sfx_scene.instantiate()
-	new_sfx.stream = sfx_stream
-	add_child(new_sfx)
+	sfx.play()
+	print("!@")
+	#var new_sfx = sfx_scene.instantiate()
+	#new_sfx.stream = sfx_stream
+	#add_child(new_sfx)
 
 func trick_or_treat():
 	var doorbell_instance = doorbell.instantiate()
@@ -179,7 +183,7 @@ func _set_costume_power_remote():
 		0:
 			return
 		1:
-			sfx_stream = load("uid://b45fg0kwyq6yb")
+			sfx.stream = load("uid://b45fg0kwyq6yb")
 		2: 
 			speed = 5000
 		3:
@@ -206,7 +210,7 @@ func _set_costume_power_local():
 		0:
 			return
 		1:
-			sfx_stream = load("uid://b45fg0kwyq6yb")
+			sfx.stream = load("uid://b45fg0kwyq6yb")
 		2: 
 			speed = 5000
 		3:
