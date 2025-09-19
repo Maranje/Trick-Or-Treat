@@ -8,6 +8,7 @@ var at_door: bool = false
 var chuck_anim: bool = false
 var throwing: bool = false
 var scrapping: bool = false
+var using_power: bool = false
 var throw_timer: Timer
 
 @onready var tag: String = PlayerGlobals.user_name
@@ -41,28 +42,7 @@ func _gather_input(delta: float):
 
 func toggle_at_door():
 	at_door = !at_door
-	
-func _check_power():
-	if Input.is_action_just_pressed("ui_down"):
-		var parent = get_parent()
-		parent.sfx_all.rpc_id(1)
-	elif Input.is_action_just_pressed("shift_left"):
-		var parent = get_parent()
-		match parent.power: 
-			0:
-				return
-			1:
-				parent.player_teleport.rpc_id(1, -413)
-				parent.sfx_all.rpc_id(1)
-	elif Input.is_action_just_pressed("shift_right"):
-		var parent = get_parent()
-		match parent.power: 
-			0:
-				return
-			1:
-				parent.player_teleport.rpc_id(1, 413)
-				parent.sfx_all.rpc_id(1)
-	
+
 func _check_door():
 	if not at_door: return
 	if get_parent().has_node("TrickOrTreat"): return
@@ -70,7 +50,9 @@ func _check_door():
 		get_parent().trick_or_treat()
 	
 func _set_animation():
-	if get_parent().velocity.y:
+	if animation_select == "teleport" and get_parent().animated_sprite_2d.is_playing():
+		pass
+	elif get_parent().velocity.y:
 		jump = false
 		if direction == "left":
 			animation_select = "left_jump"
@@ -308,3 +290,37 @@ func _check_hit(punch_direction: String):
 	parent.dmg_received += calc_damage
 	opponent.get_node("PlayerSyncComponent").report_dmg_dealt.rpc_id(opponent.input_multiplayer_authority, calc_damage)
 	parent.take_damage(calc_damage)
+
+func _check_power():
+	if animation_select == "teleport": return
+	if Input.is_action_just_pressed("ui_down"):
+		var parent = get_parent()
+		parent.sfx_all.rpc_id(1)
+	elif Input.is_action_just_pressed("shift_left"):
+		var parent = get_parent()
+		match parent.power: 
+			0:
+				return
+			1:
+				parent.sfx_all.rpc_id(1)
+				var teleport_timer = Timer.new()
+				add_child(teleport_timer)
+				teleport_timer.wait_time = 0.16
+				teleport_timer.one_shot = true
+				teleport_timer.timeout.connect(func(): parent.player_teleport.rpc_id(1, -413))
+				teleport_timer.start()
+				animation_select = "teleport"
+	elif Input.is_action_just_pressed("shift_right"):
+		var parent = get_parent()
+		match parent.power: 
+			0:
+				return
+			1:
+				parent.sfx_all.rpc_id(1)
+				var teleport_timer = Timer.new()
+				add_child(teleport_timer)
+				teleport_timer.wait_time = 0.16
+				teleport_timer.one_shot = true
+				teleport_timer.timeout.connect(func(): parent.player_teleport.rpc_id(1, 413))
+				teleport_timer.start()
+				animation_select = "teleport"
