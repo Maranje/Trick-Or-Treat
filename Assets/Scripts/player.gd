@@ -26,7 +26,7 @@ var input_multiplayer_authority: int
 var prev_anim: String
 var speed: int = 500
 var jump: int = -1000
-var gravity: int = 2500
+var gravity: int = 13
 var door_number: int
 var opponent: Node2D = null
 
@@ -69,45 +69,17 @@ func setup_individuals():
 	animated_sprite_2d.sprite_frames = PlayerGlobals.costumes[sprite_frames]
 	animated_sprite_2d.play()
 	ui.update_health(player_health)
-	
-@rpc("any_peer", "call_local", "reliable")
-func _set_costume_power():
-	match sprite_frames:
-		0:
-			return
-		1:
-			sfx.stream = load("uid://b45fg0kwyq6yb")
-		2: 
-			speed = 5000
-		3:
-			return
-		4:
-			return
-		5:
-			return
-		6:
-			return
-		7:
-			return
-		8:
-			return
-		9:
-			return
-		10:
-			return
-		11: 
-			return
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if squabbling and not has_node("Squabbling"): squabbling = false #sometimes this shit just sucks. idk.
 	ui.update_health(player_health)
 	if not animated_sprite_2d.is_playing(): animated_sprite_2d.play()
 	if not is_multiplayer_authority(): return
 	if not is_on_floor():
-		velocity.y += gravity * delta
+		velocity.y += gravity
 	elif player_sync_component.jump:
 		velocity.y = jump
-	velocity.x = player_sync_component.movement.x * speed
+	velocity.x = int(sign(player_sync_component.movement.x)) * ceil(abs(player_sync_component.movement.x)) * speed
 	if player_sync_component.movement.y > 0: sfx.play()
 	if prev_anim != player_sync_component.animation_select:
 		animated_sprite_2d.animation = player_sync_component.animation_select
@@ -195,3 +167,31 @@ func shoot_candy_corn(direction: int = 1000):
 	if not multiplayer.is_server():
 		return
 	candy_spawner.spawn({"direction": direction})
+
+@rpc("any_peer", "call_local", "reliable")
+func _set_costume_power():
+	match sprite_frames:
+		0:
+			return
+		1:
+			sfx.stream = load("uid://b45fg0kwyq6yb")
+		2: 
+			speed = 5000
+		3:
+			return
+		4:
+			return
+		5:
+			return
+		6:
+			return
+		7:
+			return
+		8:
+			return
+		9:
+			return
+		10:
+			return
+		11: 
+			return
