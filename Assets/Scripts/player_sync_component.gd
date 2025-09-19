@@ -40,6 +40,10 @@ func _gather_input(delta: float):
 func toggle_at_door():
 	at_door = !at_door
 	
+func _check_sfx():
+	if movement.y > 0:
+		get_parent().play_sfx()
+	
 func _check_door():
 	if not at_door: return
 	if get_parent().has_node("TrickOrTreat"): return

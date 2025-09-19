@@ -73,10 +73,6 @@ func setup_individuals():
 func _process(_delta: float) -> void:
 	if squabbling and not has_node("Squabbling"): squabbling = false #sometimes this shit just sucks. idk.
 	ui.update_health(player_health)
-	if player_sync_component.movement.y > 0: 
-		var new_sfx = sfx_scene.instantiate()
-		new_sfx.stream = sfx_stream
-		add_child(new_sfx)
 	if not animated_sprite_2d.is_playing(): animated_sprite_2d.play()
 	if not is_multiplayer_authority(): return
 	if not is_on_floor():
@@ -88,6 +84,11 @@ func _process(_delta: float) -> void:
 		animated_sprite_2d.animation = player_sync_component.animation_select
 		prev_anim = animated_sprite_2d.animation
 	move_and_slide()
+
+func play_sfx():
+	var new_sfx = sfx_scene.instantiate()
+	new_sfx.stream = sfx_stream
+	add_child(new_sfx)
 
 func trick_or_treat():
 	var doorbell_instance = doorbell.instantiate()
