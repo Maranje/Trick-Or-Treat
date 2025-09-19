@@ -11,6 +11,7 @@ var squabble: PackedScene = preload("uid://e1mwxdchlsyn")
 @onready var ko_collision_body: CollisionShape2D = $KOBody
 @onready var player_sync: MultiplayerSynchronizer = $PlayerSync
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
+@onready var sfx: AudioStreamPlayer2D = $SFX
 @onready var personal_space: Area2D = $PersonalSpace
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var tag: Label = $tag
@@ -57,26 +58,27 @@ func _ready() -> void:
 		return candy_corn
 
 func setup_individuals():
+	sfx.max_distance = INF
 	camera_2d.enabled = false
 	if input_multiplayer_authority == multiplayer.get_unique_id():
 		ui.top_right.visible = true
 		camera_2d.enabled = true
 		camera_2d.make_current()
-		_set_costume_power()
+		_set_costume_power.rpc_id(1)
 	tag.text = user_name
 	animated_sprite_2d.sprite_frames = PlayerGlobals.costumes[sprite_frames]
 	animated_sprite_2d.play()
 	ui.update_health(player_health)
 	
+@rpc("any_peer", "call_local", "reliable")
 func _set_costume_power():
 	match sprite_frames:
 		0:
 			return
 		1:
-			return
+			sfx.stream = load("uid://b45fg0kwyq6yb")
 		2: 
 			speed = 5000
-			print("!")
 		3:
 			return
 		4:
@@ -106,6 +108,7 @@ func _process(delta: float) -> void:
 	elif player_sync_component.jump:
 		velocity.y = jump
 	velocity.x = player_sync_component.movement.x * speed
+	if player_sync_component.movement.y > 0: sfx.play()
 	if prev_anim != player_sync_component.animation_select:
 		animated_sprite_2d.animation = player_sync_component.animation_select
 		prev_anim = animated_sprite_2d.animation

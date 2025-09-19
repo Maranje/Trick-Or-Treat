@@ -15,19 +15,20 @@ var throw_timer: Timer
 func _process(delta: float) -> void:
 	if is_multiplayer_authority():
 		_gather_input(delta)
-		
+
 func _gather_input(delta: float):
-	if get_parent().has_node("Squabble"):
+	var parent = get_parent()
+	if parent.has_node("Squabble"):
 		_static_situation(animation_select)
 		_scrap_routine(delta)
 		return
-	if get_parent().player_health == 0:
+	if parent.player_health == 0:
 		_static_situation("ko")
 		return
-	if not get_parent().player_active:
+	if not parent.player_active:
 		_static_situation("idle")
 		return
-	if get_parent().has_node("TrickOrTreat"):
+	if parent.has_node("TrickOrTreat"):
 		_static_situation("back")
 		return
 	if throwing: return
