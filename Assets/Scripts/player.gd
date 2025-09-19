@@ -2,7 +2,7 @@ class_name Player
 extends CharacterBody2D
 
 var doorbell: PackedScene = preload("uid://bx542d0joldxk")
-var sfx_scene: PackedScene = preload("uid://bm31hjx2b6okg")
+var sfx_scene: PackedScene = preload("uid://bu74wfrxbow13")
 var candycorn: PackedScene = preload("uid://e1hrcf4p5may")
 var squabble: PackedScene = preload("uid://e1mwxdchlsyn")
 
@@ -91,12 +91,6 @@ func _process(_delta: float) -> void:
 		animated_sprite_2d.animation = player_sync_component.animation_select
 		prev_anim = animated_sprite_2d.animation
 	move_and_slide()
-	
-@rpc("any_peer", "call_local", "reliable")
-func sfx_all():
-	if not multiplayer.is_server():
-		return
-	sfx_spawner.spawn({"sfx_stream": sfx_stream})
 
 func trick_or_treat():
 	var doorbell_instance = doorbell.instantiate()
@@ -173,6 +167,12 @@ func take_damage(amount: int):
 		apply_damage.rpc(amount)
 	else:
 		request_damage.rpc_id(1, amount)
+
+@rpc("any_peer", "call_local", "reliable")
+func sfx_all():
+	if not multiplayer.is_server():
+		return
+	sfx_spawner.spawn({"sfx_stream": sfx_stream})
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: int = 1000):

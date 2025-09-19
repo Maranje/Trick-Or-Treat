@@ -1,10 +1,10 @@
-extends AudioStreamPlayer2D
+extends Node2D
+@onready var sfx: AudioStreamPlayer2D = $SFX
 
 func _ready() -> void:
-	max_distance = INF
-	play()
-	finished.connect(_self_destruct)
+	sfx.max_distance = INF
+	sfx.play()
+	sfx.finished.connect(_self_destruct)
 
 func _self_destruct():
-	print("?")
 	queue_free()
