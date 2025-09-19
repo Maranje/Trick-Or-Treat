@@ -177,6 +177,8 @@ func take_damage(amount: int):
 func sfx_all():
 	if not multiplayer.is_server():
 		return
+	if has_node("PlayerSFX"): 
+		return
 	sfx_spawner.spawn({"stream": sfx_stream})
 
 @rpc("any_peer", "call_local", "reliable")
@@ -212,7 +214,6 @@ func _set_costume_power_remote():
 			return
 		11: 
 			return
-
 func _set_costume_power_local():
 	match sprite_frames:
 		0:
