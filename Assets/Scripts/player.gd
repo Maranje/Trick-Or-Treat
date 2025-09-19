@@ -90,10 +90,11 @@ func _process(_delta: float) -> void:
 
 func play_sfx():
 	sfx.play()
-	print("!@")
-	#var new_sfx = sfx_scene.instantiate()
-	#new_sfx.stream = sfx_stream
-	#add_child(new_sfx)
+	_sfx_all.rpc()
+	
+@rpc("any_peer", "call_local", "reliable")
+func _sfx_all():
+	sfx.play()
 
 func trick_or_treat():
 	var doorbell_instance = doorbell.instantiate()
