@@ -66,8 +66,8 @@ func setup_individuals():
 		ui.top_right.visible = true
 		camera_2d.enabled = true
 		camera_2d.make_current()
-		_set_costume_power_remote.rpc_id(1)
-		_set_costume_power_local()
+		_set_costume_power_remote.rpc_id(input_multiplayer_authority)
+		#_set_costume_power_local()
 	tag.text = user_name
 	animated_sprite_2d.sprite_frames = PlayerGlobals.costumes[sprite_frames]
 	animated_sprite_2d.play()
@@ -206,29 +206,29 @@ func _set_costume_power_remote():
 		11: 
 			return
 
-func _set_costume_power_local():
-	match sprite_frames:
-		0:
-			return
-		1:
-			sfx.stream = load("uid://b45fg0kwyq6yb")
-		2: 
-			speed = 5000
-		3:
-			return
-		4:
-			return
-		5:
-			return
-		6:
-			return
-		7:
-			return
-		8:
-			return
-		9:
-			return
-		10:
-			return
-		11: 
-			return
+#func _set_costume_power_local():
+	#match sprite_frames:
+		#0:
+			#return
+		#1:
+			#sfx.stream = load("uid://b45fg0kwyq6yb")
+		#2: 
+			#speed = 5000
+		#3:
+			#return
+		#4:
+			#return
+		#5:
+			#return
+		#6:
+			#return
+		#7:
+			#return
+		#8:
+			#return
+		#9:
+			#return
+		#10:
+			#return
+		#11: 
+			#return
