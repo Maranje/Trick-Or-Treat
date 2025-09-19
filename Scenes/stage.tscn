@@ -72,6 +72,7 @@ centered = false
 
 [node name="HouseBody" type="Area2D" parent="Background/Houses"]
 collision_layer = 0
+collision_mask = 3
 script = ExtResource("7_sr6x0")
 
 [node name="DoorTrigger" type="CollisionShape2D" parent="Background/Houses/HouseBody"]
@@ -123,6 +124,7 @@ position = Vector2(2922, 176.5)
 shape = SubResource("RectangleShape2D_sr6x0")
 
 [node name="Ground" type="StaticBody2D" parent="Background"]
+collision_layer = 8
 collision_mask = 3
 
 [node name="StreetLeft" type="Sprite2D" parent="Background/Ground"]

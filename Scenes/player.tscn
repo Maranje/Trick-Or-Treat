@@ -36,6 +36,7 @@ properties/5/replication_mode = 1
 
 [node name="Player" type="CharacterBody2D"]
 scale = Vector2(2, 2)
+collision_mask = 11
 script = ExtResource("1_6t5aa")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -53,6 +54,7 @@ shape = SubResource("RectangleShape2D_x3wgy")
 disabled = true
 
 [node name="PersonalSpace" type="Area2D" parent="."]
+collision_mask = 3
 
 [node name="Area" type="CollisionShape2D" parent="PersonalSpace"]
 position = Vector2(0, 22)

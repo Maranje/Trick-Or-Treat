@@ -200,7 +200,7 @@ func _set_costume_power_remote():
 		7:
 			return
 		8:
-			return
+			collision_layer = 2
 		9:
 			return
 		10:
@@ -227,7 +227,7 @@ func _set_costume_power_local():
 		7:
 			return
 		8:
-			return
+			collision_layer = 2
 		9:
 			return
 		10:
