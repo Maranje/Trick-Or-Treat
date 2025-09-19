@@ -20,6 +20,7 @@ var squabble: PackedScene = preload("uid://e1mwxdchlsyn")
 
 var player_active: bool = true
 var squabbling: bool = false
+var identifiable: bool = true
 var player_health: int = 50
 var sprite_frames: int = 0
 var total_costumes: int = 0
@@ -96,16 +97,20 @@ func trick_or_treat():
 	var doorbell_instance = doorbell.instantiate()
 	if door_number not in PlayerGlobals.houses_hit[sprite_frames]:
 		doorbell_instance.candy = 10
-		doorbell_instance.candy_corn = 10
-		PlayerGlobals.houses_hit[sprite_frames].append(door_number)
-		candy_corn_gathered += 10
 		candy_gathered += 10
+		doorbell_instance.candy_corn = 10
+		candy_corn_gathered += 10
+		PlayerGlobals.houses_hit[sprite_frames].append(door_number)
 		houses_hit += 1
 	else:
-		doorbell_instance.candy = 1
+		if identifiable:
+			doorbell_instance.candy = 1
+			candy_gathered += 1
+		else:
+			doorbell_instance.candy = 10
+			candy_gathered += 10
 		doorbell_instance.candy_corn = 10
 		candy_corn_gathered += 10
-		candy_gathered += 1
 		houses_revisited += 1
 	add_child(doorbell_instance)
 
@@ -196,7 +201,7 @@ func _set_costume_power_remote():
 		5:
 			return
 		6:
-			return
+			identifiable = false
 		7:
 			return
 		8:
@@ -223,7 +228,7 @@ func _set_costume_power_local():
 		5:
 			return
 		6:
-			return
+			identifiable = false
 		7:
 			return
 		8:
