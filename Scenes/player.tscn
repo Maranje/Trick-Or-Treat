@@ -91,7 +91,8 @@ spawn_path = NodePath("..")
 [node name="LootSpawner" type="MultiplayerSpawner" parent="."]
 spawn_path = NodePath("..")
 
+[node name="SFXSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("..")
+
 [node name="UI" parent="." instance=ExtResource("5_fkybt")]
 position = Vector2(0, -31.5)
-
-[node name="SFX" type="AudioStreamPlayer2D" parent="."]

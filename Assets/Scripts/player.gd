@@ -7,6 +7,7 @@ var candycorn: PackedScene = preload("uid://e1hrcf4p5may")
 var squabble: PackedScene = preload("uid://e1mwxdchlsyn")
 
 @onready var candy_spawner: MultiplayerSpawner = $CandyCornBulletSpawner
+@onready var sfx_spawner: MultiplayerSpawner = $SFXSpawner
 @onready var player_sync_component: MultiplayerSynchronizer = $PlayerSyncComponent
 @onready var collision_body: CollisionShape2D = $Body
 @onready var ko_collision_body: CollisionShape2D = $KOBody
@@ -16,7 +17,6 @@ var squabble: PackedScene = preload("uid://e1mwxdchlsyn")
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var tag: Label = $tag
 @onready var ui: Node2D = $UI
-@onready var sfx: AudioStreamPlayer2D = $SFX
 
 var player_active: bool = true
 var squabbling: bool = false
@@ -59,6 +59,11 @@ func _ready() -> void:
 		else:
 			candy_corn.position.x += 25
 		return candy_corn
+	sfx_spawner.spawn_function = func(data):
+		var new_sfx = sfx_scene.instantiate()
+		new_sfx.position = position
+		new_sfx.stream = data.sfx_stream
+		return new_sfx
 
 func setup_individuals():
 	camera_2d.enabled = false
@@ -87,14 +92,10 @@ func _process(_delta: float) -> void:
 		animated_sprite_2d.animation = player_sync_component.animation_select
 		prev_anim = animated_sprite_2d.animation
 	move_and_slide()
-
-func play_sfx():
-	sfx.play()
-	_sfx_all.rpc()
 	
 @rpc("any_peer", "call_local", "reliable")
 func _sfx_all():
-	sfx.play()
+	sfx_spawner.spawn({"sfx_stream": sfx_stream})
 
 func trick_or_treat():
 	var doorbell_instance = doorbell.instantiate()
@@ -184,7 +185,7 @@ func _set_costume_power_remote():
 		0:
 			return
 		1:
-			sfx.stream = load("uid://b45fg0kwyq6yb")
+			sfx_stream = load("uid://b45fg0kwyq6yb")
 		2: 
 			speed = 5000
 		3:
@@ -211,7 +212,7 @@ func _set_costume_power_local():
 		0:
 			return
 		1:
-			sfx.stream = load("uid://b45fg0kwyq6yb")
+			sfx_stream = load("uid://b45fg0kwyq6yb")
 		2: 
 			speed = 5000
 		3:
