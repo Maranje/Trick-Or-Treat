@@ -93,7 +93,7 @@ func _process(_delta: float) -> void:
 	move_and_slide()
 	
 @rpc("any_peer", "call_local", "reliable")
-func _sfx_all():
+func sfx_all():
 	if not multiplayer.is_server():
 		return
 	sfx_spawner.spawn({"sfx_stream": sfx_stream})

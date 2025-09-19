@@ -2,10 +2,8 @@ extends RigidBody2D
 var direction: int = 1000
 
 @onready var candy_corn: Sprite2D = $CandyCorn
-@onready var audio_stream_player_2d: AudioStreamPlayer2D = $AudioStreamPlayer2D
 
 func _ready() -> void:
-	audio_stream_player_2d.play()
 	contact_monitor = true
 	max_contacts_reported = 10
 	candy_corn.rotation = randi() % 360
