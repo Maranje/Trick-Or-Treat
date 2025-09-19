@@ -107,10 +107,6 @@ func _process(_delta: float) -> void:
 			spawn_loot_on_ko.rpc_id(1, my_player.position, 0)
 			PlayerGlobals.candy_count -= 1
 			my_player.ui.update_candies()
-		if my_player.player_health <= 0 and PlayerGlobals.candy_corn > 0:
-			spawn_loot_on_ko.rpc_id(1, my_player.position, 1)
-			PlayerGlobals.candy_corn -= 1
-			my_player.ui.update_candies()
 		var player_pos = my_player.global_position
 		sky.position.x = player_pos.x - 400
 		moon.position.x = player_pos.x - 400

@@ -24,6 +24,7 @@ func _gather_input(delta: float):
 		return
 	if parent.player_health == 0:
 		_static_situation("ko")
+		_check_throw()
 		return
 	if not parent.player_active:
 		_static_situation("idle")
@@ -86,12 +87,13 @@ func _set_throw(impulse: int, animation1: String, animation2: String):
 	parent.shoot_candy_corn.rpc_id(1, impulse)
 	parent.ui.update_candies()
 	parent.candy_corn_thrown += 1
-	if chuck_anim:
-		animation_select = animation1
-		chuck_anim = false
-	else:
-		animation_select = animation2
-		chuck_anim = true
+	if parent.player_active:
+		if chuck_anim:
+			animation_select = animation1
+			chuck_anim = false
+		else:
+			animation_select = animation2
+			chuck_anim = true
 	throw_timer = Timer.new()
 	add_child(throw_timer)
 	throw_timer.wait_time = 0.15
