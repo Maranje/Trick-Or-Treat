@@ -29,7 +29,7 @@ var input_multiplayer_authority: int
 var prev_anim: String
 var speed: int = 500
 var jump: int = -1000
-var gravity: int = 13
+var gravity: int = 2500
 var door_number: int
 var opponent: Node2D = null
 var sfx_stream = 0
@@ -79,13 +79,13 @@ func setup_individuals():
 	animated_sprite_2d.play()
 	ui.update_health(player_health)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if squabbling and not has_node("Squabbling"): squabbling = false #sometimes this shit just sucks. idk.
 	ui.update_health(player_health)
 	if not animated_sprite_2d.is_playing(): animated_sprite_2d.play()
 	if not is_multiplayer_authority(): return
 	if not is_on_floor():
-		velocity.y += gravity
+		velocity.y += gravity * delta
 	elif player_sync_component.jump:
 		velocity.y = jump
 	velocity.x = int(sign(player_sync_component.movement.x)) * ceil(abs(player_sync_component.movement.x)) * speed

@@ -15,4 +15,5 @@ func _ready() -> void:
 	sfx.finished.connect(_self_destruct)
 
 func _self_destruct():
-	queue_free()
+	if is_multiplayer_authority():
+		queue_free()
