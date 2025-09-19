@@ -42,7 +42,8 @@ func toggle_at_door():
 	at_door = !at_door
 	
 func _check_sfx():
-	if movement.y > 0:
+	if get_parent().has_node("SFX"): return
+	if Input.is_action_just_pressed("ui_down"):
 		get_parent().play_sfx()
 	
 func _check_door():

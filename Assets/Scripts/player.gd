@@ -64,7 +64,8 @@ func setup_individuals():
 		ui.top_right.visible = true
 		camera_2d.enabled = true
 		camera_2d.make_current()
-		_set_costume_power.rpc_id(1)
+		_set_costume_power_remote.rpc()
+		#_set_costume_power_local()
 	tag.text = user_name
 	animated_sprite_2d.sprite_frames = PlayerGlobals.costumes[sprite_frames]
 	animated_sprite_2d.play()
@@ -173,7 +174,7 @@ func shoot_candy_corn(direction: int = 1000):
 	candy_spawner.spawn({"direction": direction})
 
 @rpc("any_peer", "call_local", "reliable")
-func _set_costume_power():
+func _set_costume_power_remote():
 	match sprite_frames:
 		0:
 			return
@@ -199,3 +200,30 @@ func _set_costume_power():
 			return
 		11: 
 			return
+
+#func _set_costume_power_local():
+	#match sprite_frames:
+		#0:
+			#return
+		#1:
+			#sfx_stream = load("uid://b45fg0kwyq6yb")
+		#2: 
+			#speed = 5000
+		#3:
+			#return
+		#4:
+			#return
+		#5:
+			#return
+		#6:
+			#return
+		#7:
+			#return
+		#8:
+			#return
+		#9:
+			#return
+		#10:
+			#return
+		#11: 
+			#return
