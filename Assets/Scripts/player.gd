@@ -92,7 +92,7 @@ func _process(_delta: float) -> void:
 		prev_anim = animated_sprite_2d.animation
 	move_and_slide()
 	
-@rpc("any_peer", "call_local", "reliable")
+@rpc("any_peer", "call_remote", "reliable")
 func _sfx_all():
 	sfx_spawner.spawn({"sfx_stream": sfx_stream})
 
