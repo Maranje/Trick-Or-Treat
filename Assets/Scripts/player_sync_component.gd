@@ -43,7 +43,7 @@ func toggle_at_door():
 	
 func _check_sfx():
 	if Input.is_action_just_pressed("ui_down"):
-		get_parent()._sfx_all.rpc()
+		get_parent()._sfx_all.rpc_id(1)
 	
 func _check_door():
 	if not at_door: return
