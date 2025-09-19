@@ -73,6 +73,7 @@ func setup_individuals():
 func _process(_delta: float) -> void:
 	if squabbling and not has_node("Squabbling"): squabbling = false #sometimes this shit just sucks. idk.
 	ui.update_health(player_health)
+	if player_sync_component.movement.y > 0: sfx.play()
 	if not animated_sprite_2d.is_playing(): animated_sprite_2d.play()
 	if not is_multiplayer_authority(): return
 	if not is_on_floor():
@@ -80,7 +81,6 @@ func _process(_delta: float) -> void:
 	elif player_sync_component.jump:
 		velocity.y = jump
 	velocity.x = int(sign(player_sync_component.movement.x)) * ceil(abs(player_sync_component.movement.x)) * speed
-	if player_sync_component.movement.y > 0: sfx.play()
 	if prev_anim != player_sync_component.animation_select:
 		animated_sprite_2d.animation = player_sync_component.animation_select
 		prev_anim = animated_sprite_2d.animation
