@@ -31,7 +31,7 @@ var jump: int = -1000
 var gravity: int = 13
 var door_number: int
 var opponent: Node2D = null
-var sfx_stream = null
+var sfx_stream = 0
 
 #run stats
 var candy_gathered: int
@@ -59,8 +59,9 @@ func _ready() -> void:
 		else:
 			candy_corn.position.x += 25
 		return candy_corn
-	sfx_spawner.spawn_function = func(_data):
+	sfx_spawner.spawn_function = func(data):
 		var new_sfx = sfx_scene.instantiate()
+		new_sfx.stream = data.stream
 		return new_sfx
 
 func setup_individuals():
@@ -171,7 +172,7 @@ func take_damage(amount: int):
 func sfx_all():
 	if not multiplayer.is_server():
 		return
-	sfx_spawner.spawn()
+	sfx_spawner.spawn({"stream": sfx_stream})
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: int = 1000):
@@ -185,7 +186,7 @@ func _set_costume_power_remote():
 		0:
 			return
 		1:
-			sfx_stream = load("uid://b45fg0kwyq6yb")
+			sfx_stream = 1
 		2: 
 			speed = 5000
 		3:
@@ -212,7 +213,7 @@ func _set_costume_power_local():
 		0:
 			return
 		1:
-			sfx_stream = load("uid://b45fg0kwyq6yb")
+			sfx_stream = 1
 		2: 
 			speed = 5000
 		3:
