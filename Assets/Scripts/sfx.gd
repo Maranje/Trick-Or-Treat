@@ -6,4 +6,5 @@ func _ready() -> void:
 	finished.connect(_self_destruct)
 
 func _self_destruct():
+	print("?")
 	queue_free()
