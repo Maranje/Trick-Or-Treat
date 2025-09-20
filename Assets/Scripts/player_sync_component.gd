@@ -24,7 +24,7 @@ func _gather_input(delta: float):
 		_scrap_routine(delta)
 		return
 	if parent.player_health == 0:
-		_static_situation("ko")
+		if not throwing: _static_situation("ko")
 		_check_throw()
 		return
 	if not parent.player_active:
@@ -74,33 +74,54 @@ func _set_animation():
 func _check_throw():
 	if PlayerGlobals.candy_corn <= 0: return 
 	if Input.is_action_just_pressed("shoot_left"):
-		_set_throw(-1500.0, "chuck_left_1", "chuck_left_2")
+		_set_throw(-1500.0, "chuck_left_1", "chuck_left_2", "ko_throw_left")
 	elif Input.is_action_just_pressed("shoot_right"):
-		_set_throw(1500.0, "chuck_right_1", "chuck_right_2")
+		_set_throw(1500.0, "chuck_right_1", "chuck_right_2", "ko_throw_right")
 
-func _set_throw(impulse: float, animation1: String, animation2: String):
+func _set_throw(impulse: float, animation1: String, animation2: String, animation3: String):
 	var parent = get_parent()
+	var timer_wait_time: float
 	if parent.player_active:
+		timer_wait_time = 0.15
+		parent.shoot_candy_corn.rpc_id(1, impulse)
 		if chuck_anim:
 			animation_select = animation1
 			chuck_anim = false
 		else:
 			animation_select = animation2
 			chuck_anim = true
-	else:
+		movement = Vector2.ZERO
+		throwing = true
+		PlayerGlobals.candy_corn -= 1
+		parent.ui.update_candies()
+		parent.candy_corn_thrown += 1
+		throw_timer = Timer.new()
+		add_child(throw_timer)
+		throw_timer.wait_time = timer_wait_time
+		throw_timer.one_shot = true
+		throw_timer.timeout.connect(_toggle_throwing_false)
+		throw_timer.start()
+	elif not throwing:
+		timer_wait_time = 0.34
+		animation_select = animation3
 		impulse = impulse * 0.3
-	movement = Vector2.ZERO
-	throwing = true
-	PlayerGlobals.candy_corn -= 1
-	parent.shoot_candy_corn.rpc_id(1, impulse)
-	parent.ui.update_candies()
-	parent.candy_corn_thrown += 1
-	throw_timer = Timer.new()
-	add_child(throw_timer)
-	throw_timer.wait_time = 0.15
-	throw_timer.one_shot = true
-	throw_timer.timeout.connect(_toggle_throwing_false)
-	throw_timer.start()
+		var delayed_throw = Timer.new()
+		add_child(delayed_throw)
+		delayed_throw.wait_time = timer_wait_time / 2.0
+		delayed_throw.one_shot = true
+		delayed_throw.timeout.connect(func(): parent.shoot_candy_corn.rpc_id(1, impulse))
+		delayed_throw.start()
+		movement = Vector2.ZERO
+		throwing = true
+		PlayerGlobals.candy_corn -= 1
+		parent.ui.update_candies()
+		parent.candy_corn_thrown += 1
+		throw_timer = Timer.new()
+		add_child(throw_timer)
+		throw_timer.wait_time = timer_wait_time
+		throw_timer.one_shot = true
+		throw_timer.timeout.connect(_toggle_throwing_false)
+		throw_timer.start()
 
 func _static_situation(Anim: String):
 	movement = Vector2.ZERO
