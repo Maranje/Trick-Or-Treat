@@ -206,6 +206,7 @@ func _set_costume_power_remote():
 			sfx_stream = 1
 		2: 
 			speed = 5000
+			power = 2
 		3:
 			return
 		4:
@@ -233,6 +234,7 @@ func _set_costume_power_local():
 			sfx_stream = 1
 		2: 
 			speed = 5000
+			power = 2
 		3:
 			return
 		4:

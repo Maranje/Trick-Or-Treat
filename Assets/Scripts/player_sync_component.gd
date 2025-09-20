@@ -314,34 +314,27 @@ func _check_hit(punch_direction: String):
 
 func _check_power():
 	if animation_select == "teleport": return
-	if Input.is_action_just_pressed("ui_down"):
-		var parent = get_parent()
-		parent.sfx_all.rpc_id(1)
 	elif Input.is_action_just_pressed("shift_left"):
-		var parent = get_parent()
-		match parent.power: 
-			0:
-				return
-			1:
-				parent.sfx_all.rpc_id(1)
-				var teleport_timer = Timer.new()
-				add_child(teleport_timer)
-				teleport_timer.wait_time = 0.16
-				teleport_timer.one_shot = true
-				teleport_timer.timeout.connect(func(): parent.player_teleport.rpc_id(1, -413))
-				teleport_timer.start()
-				animation_select = "teleport"
+		_use_power(1)
 	elif Input.is_action_just_pressed("shift_right"):
-		var parent = get_parent()
-		match parent.power: 
-			0:
-				return
-			1:
-				parent.sfx_all.rpc_id(1)
-				var teleport_timer = Timer.new()
-				add_child(teleport_timer)
-				teleport_timer.wait_time = 0.16
-				teleport_timer.one_shot = true
-				teleport_timer.timeout.connect(func(): parent.player_teleport.rpc_id(1, 413))
-				teleport_timer.start()
-				animation_select = "teleport"
+		_use_power(-1)
+
+func _use_power(shift_dir: int):
+	var parent = get_parent()
+	match parent.power: 
+		0:
+			parent.sfx_all.rpc_id(1)
+		1:
+			parent.sfx_all.rpc_id(1)
+			var teleport_timer = Timer.new()
+			add_child(teleport_timer)
+			teleport_timer.wait_time = 0.16
+			teleport_timer.one_shot = true
+			teleport_timer.timeout.connect(func(): parent.player_teleport.rpc_id(1, 413 * shift_dir))
+			teleport_timer.start()
+			animation_select = "teleport"
+		2:
+			if shift_dir < 0: 
+				parent.speed = 500
+			elif shift_dir > 0:
+				parent.speed = 5000
