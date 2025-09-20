@@ -6,6 +6,8 @@ var rix: int
 var riy: int
 
 func _ready() -> void:
+	scale = Vector2.ZERO
+	angular_velocity = (randi() % 200 - 100) / 10.0
 	loot_sprite.frame = frame
 	contact_monitor = true
 	max_contacts_reported = 2

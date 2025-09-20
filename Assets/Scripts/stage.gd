@@ -62,6 +62,7 @@ func _ready() -> void:
 	loot_spawner.spawn_function = func(data):
 		var new_loot = loot.instantiate()
 		new_loot.position = data.position
+		new_loot.position.y -= 40
 		new_loot.rix = data.rix
 		new_loot.riy = data.riy
 		new_loot.frame = data.frame
