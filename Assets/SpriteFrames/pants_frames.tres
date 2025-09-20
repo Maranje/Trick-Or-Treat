@@ -827,7 +827,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"whip_left",
-"speed": 12.0
+"speed": 15.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -856,5 +856,5 @@ animations = [{
 }],
 "loop": false,
 "name": &"whip_right",
-"speed": 12.0
+"speed": 15.0
 }]

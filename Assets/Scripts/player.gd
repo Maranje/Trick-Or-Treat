@@ -14,12 +14,16 @@ var squabble: PackedScene = preload("uid://e1mwxdchlsyn")
 @onready var player_sync: MultiplayerSynchronizer = $PlayerSync
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @onready var personal_space: Area2D = $PersonalSpace
+@onready var meelee_attack: Area2D = $MeeleeAttack
+@onready var meelee_attack_shape_right: CollisionShape2D = $MeeleeAttack/right_area
+@onready var meelee_attack_shape_left: CollisionShape2D = $MeeleeAttack/left_area
 @onready var camera_2d: Camera2D = $Camera2D
 @onready var tag: Label = $tag
 @onready var ui: Node2D = $UI
 
 var player_active: bool = true
 var squabbling: bool = false
+var rattled: bool = false
 var identifiable: bool = true
 var player_health: int = 50
 var sprite_frames: int = 0
@@ -53,6 +57,7 @@ func _ready() -> void:
 	setup_individuals()
 	personal_space.body_entered.connect(_on_player_collision)
 	personal_space.body_exited.connect(_collision_reset)
+	meelee_attack.body_entered.connect(_inflict_meelee_damage)
 	candy_spawner.spawn_function = func(data):
 		var candy_corn = candycorn.instantiate()
 		candy_corn.direction = data.direction - velocity.x
@@ -141,6 +146,11 @@ func _collision_reset(body):
 	if has_node("Squabble"):
 		get_node("Squabble").queue_free()
 
+func _inflict_meelee_damage(body):
+	if "player_health" in body and body.player_health > 0:
+		body.apply_damage.rpc_id(1, 2)
+		body.set_rattled.rpc()
+
 func player_squabble(opp: Player):
 	var squabble_instance = squabble.instantiate()
 	squabble_instance.opponent = opp
@@ -167,7 +177,11 @@ func request_damage(amount: int):
 	if multiplayer.is_server():
 		apply_damage.rpc(amount)
 
-@rpc("authority", "call_local", "reliable") 
+@rpc("any_peer", "call_local", "reliable") 
+func set_rattled():
+	rattled = true
+
+@rpc("any_peer", "call_local", "reliable") 
 func apply_damage(amount: int):
 	player_health -= amount
 	if player_health <= 0:
@@ -210,7 +224,8 @@ func _set_costume_power_remote():
 		3:
 			return
 		4:
-			return
+			power = 3
+			sfx_stream = 4
 		5:
 			return
 		6:
@@ -238,7 +253,8 @@ func _set_costume_power_local():
 		3:
 			return
 		4:
-			return
+			power = 3
+			sfx_stream = 4
 		5:
 			return
 		6:

@@ -50,7 +50,7 @@ func _check_door():
 		get_parent().trick_or_treat()
 	
 func _set_animation():
-	if animation_select == "teleport" and get_parent().animated_sprite_2d.is_playing():
+	if _check_current_anim():
 		pass
 	elif get_parent().velocity.y:
 		jump = false
@@ -70,7 +70,16 @@ func _set_animation():
 	elif at_door:
 		animation_select = "back"
 	else: animation_select = "idle"
-	
+
+func _check_current_anim():
+	if animation_select == "teleport" and get_parent().animated_sprite_2d.is_playing():
+		return true
+	if animation_select == "whip_left" and get_parent().animated_sprite_2d.is_playing():
+		return true
+	if animation_select == "whip_right" and get_parent().animated_sprite_2d.is_playing():
+		return true
+	return false
+
 func _check_throw():
 	if PlayerGlobals.candy_corn <= 0: return 
 	if Input.is_action_just_pressed("shoot_left"):
@@ -313,7 +322,10 @@ func _check_hit(punch_direction: String):
 	parent.take_damage(calc_damage)
 
 func _check_power():
-	if animation_select == "teleport": return
+	if animation_select == "teleport" or\
+		animation_select == "whip_left" or\
+		animation_select == "whip_right": 
+			return
 	elif Input.is_action_just_pressed("shift_left"):
 		_use_power(1)
 	elif Input.is_action_just_pressed("shift_right"):
@@ -338,3 +350,31 @@ func _use_power(shift_dir: int):
 				parent.speed = 500
 			elif shift_dir > 0:
 				parent.speed = 5000
+		3:
+			parent.sfx_all.rpc_id(1)
+			var whip_timer_start = Timer.new()
+			var whip_timer_stop = Timer.new()
+			add_child(whip_timer_start)
+			add_child(whip_timer_stop)
+			whip_timer_start.wait_time = 0.33
+			whip_timer_stop.wait_time = 0.4
+			whip_timer_start.one_shot = true
+			whip_timer_stop.one_shot = true
+			if shift_dir < 0:
+				animation_select = "whip_right"
+				whip_timer_start.timeout.connect(func(): parent.meelee_attack_shape_right.disabled = false)
+				whip_timer_stop.timeout.connect(func(): parent.meelee_attack_shape_right.disabled = true)
+			elif shift_dir > 0:
+				animation_select = "whip_left"
+				whip_timer_start.timeout.connect(func(): parent.meelee_attack_shape_left.disabled = false)
+				whip_timer_stop.timeout.connect(func(): parent.meelee_attack_shape_left.disabled = true)
+			movement = Vector2.ZERO
+			throwing = true
+			throw_timer = Timer.new()
+			add_child(throw_timer)
+			throw_timer.wait_time = 0.5
+			throw_timer.one_shot = true
+			throw_timer.timeout.connect(_toggle_throwing_false)
+			throw_timer.start()
+			whip_timer_start.start()
+			whip_timer_stop.start()

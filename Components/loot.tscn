@@ -14,15 +14,18 @@ properties/1/spawn = true
 properties/1/replication_mode = 1
 
 [node name="Loot" type="RigidBody2D"]
+scale = Vector2(1e-05, 1e-05)
 collision_layer = 4
 collision_mask = 11
 script = ExtResource("1_e547a")
 
 [node name="LootSprite" type="Sprite2D" parent="."]
+position = Vector2(0, -40)
 texture = ExtResource("1_joivg")
 vframes = 2
 
 [node name="LootBody" type="CollisionShape2D" parent="."]
+position = Vector2(0, -40)
 shape = SubResource("CircleShape2D_m0gsf")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
