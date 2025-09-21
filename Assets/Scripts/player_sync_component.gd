@@ -327,9 +327,9 @@ func _check_power():
 		animation_select == "whip_right": 
 			return
 	elif Input.is_action_just_pressed("shift_left"):
-		_use_power(1)
-	elif Input.is_action_just_pressed("shift_right"):
 		_use_power(-1)
+	elif Input.is_action_just_pressed("shift_right"):
+		_use_power(1)
 
 func _use_power(shift_dir: int):
 	var parent = get_parent()
@@ -346,9 +346,9 @@ func _use_power(shift_dir: int):
 			teleport_timer.start()
 			animation_select = "teleport"
 		2:
-			if shift_dir < 0: 
+			if shift_dir > 0: 
 				parent.speed = 500
-			elif shift_dir > 0:
+			elif shift_dir < 0:
 				parent.speed = 5000
 		3:
 			parent.sfx_all.rpc_id(1)
@@ -360,11 +360,11 @@ func _use_power(shift_dir: int):
 			whip_timer_stop.wait_time = 0.4
 			whip_timer_start.one_shot = true
 			whip_timer_stop.one_shot = true
-			if shift_dir < 0:
+			if shift_dir > 0:
 				animation_select = "whip_right"
 				whip_timer_start.timeout.connect(func(): parent.meelee_attack_shape_right.disabled = false)
 				whip_timer_stop.timeout.connect(func(): parent.meelee_attack_shape_right.disabled = true)
-			elif shift_dir > 0:
+			elif shift_dir < 0:
 				animation_select = "whip_left"
 				whip_timer_start.timeout.connect(func(): parent.meelee_attack_shape_left.disabled = false)
 				whip_timer_stop.timeout.connect(func(): parent.meelee_attack_shape_left.disabled = true)
