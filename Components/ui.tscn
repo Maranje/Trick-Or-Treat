@@ -71,3 +71,6 @@ label_settings = SubResource("LabelSettings_kh4jv")
 horizontal_alignment = 1
 
 [node name="Notificon" type="Node2D" parent="."]
+
+[node name="Obstruction" type="Sprite2D" parent="."]
+visible = false

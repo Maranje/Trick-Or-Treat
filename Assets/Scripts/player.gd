@@ -240,7 +240,9 @@ func _set_costume_power_remote():
 			power = 1
 			sfx_stream = 3
 		11: 
-			return
+			ui.obstruction.visible = true
+			ui.obstruction.texture = load("uid://baa0kxu64qnkv")
+
 func _set_costume_power_local():
 	match sprite_frames:
 		0:
@@ -269,4 +271,5 @@ func _set_costume_power_local():
 			power = 1
 			sfx_stream = 3
 		11: 
-			return
+			ui.obstruction.visible = true
+			ui.obstruction.texture = load("uid://baa0kxu64qnkv")

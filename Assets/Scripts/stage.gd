@@ -58,7 +58,7 @@ func _ready() -> void:
 			new_player.user_name = data.user_name
 		players[new_player.name] = new_player
 		return new_player
-		
+
 	loot_spawner.spawn_function = func(data):
 		var new_loot = loot.instantiate()
 		new_loot.position = data.position
