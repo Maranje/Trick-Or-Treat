@@ -9,6 +9,8 @@ var chuck_anim: bool = false
 var throwing: bool = false
 var scrapping: bool = false
 var using_power: bool = false
+var flying: bool = false
+var mounted: bool = false
 var throw_timer: Timer
 
 @onready var tag: String = PlayerGlobals.user_name
@@ -52,11 +54,16 @@ func _check_door():
 func _set_animation():
 	if _check_current_anim():
 		pass
+	elif flying:
+		if mounted and direction == "left" and not animation_select == "flying_left":
+			animation_select = "flying_left"
+		elif mounted and direction == "right" and not animation_select == "flying_right":
+			animation_select = "flying_right"
 	elif get_parent().velocity.y:
 		jump = false
-		if direction == "left":
+		if direction == "left" and not animation_select == "left_jump":
 			animation_select = "left_jump"
-		elif direction == "right":
+		elif direction == "right" and not animation_select == "right_jump":
 			animation_select = "right_jump"
 	elif Input.is_action_just_pressed("ui_accept"):
 		get_parent().jumps += 1
@@ -70,6 +77,11 @@ func _set_animation():
 	elif at_door:
 		animation_select = "back"
 	else: animation_select = "idle"
+	
+	if movement.x < 0:
+		direction = "left"
+	elif movement.x > 0:
+		direction = "right"
 
 func _check_current_anim():
 	if animation_select == "teleport" and get_parent().animated_sprite_2d.is_playing():
@@ -331,6 +343,11 @@ func _check_power():
 	elif Input.is_action_just_pressed("shift_right"):
 		_use_power(1)
 
+func _reset_power():
+	flying = false
+	mounted = false
+	get_parent().set_gravity.rpc_id(1, 2500)
+
 func _use_power(shift_dir: int):
 	var parent = get_parent()
 	match parent.power: 
@@ -378,3 +395,19 @@ func _use_power(shift_dir: int):
 			throw_timer.start()
 			whip_timer_start.start()
 			whip_timer_stop.start()
+		4:
+			if flying:
+				_reset_power()
+			else:
+				flying = true
+				parent.set_gravity.rpc_id(1, 0)
+				parent.set_y_velocity.rpc_id(1, 0)
+				if direction == "left": animation_select = "fly_left"
+				elif direction == "right": animation_select = "fly_right"
+				var mount_timer = Timer.new()
+				add_child(mount_timer)
+				mount_timer.one_shot = true
+				mount_timer.wait_time = 0.3
+				mount_timer.timeout.connect(func(): mounted = true)
+				mount_timer.start()
+			

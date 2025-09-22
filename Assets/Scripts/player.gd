@@ -146,6 +146,14 @@ func _collision_reset(body):
 	if has_node("Squabble"):
 		get_node("Squabble").queue_free()
 
+@rpc("any_peer", "call_local", "reliable") 
+func set_gravity(gravity_value: int):
+	gravity = gravity_value
+
+@rpc("any_peer", "call_local", "reliable") 
+func set_y_velocity(y_velocity_value: int):
+	velocity.y = y_velocity_value
+
 func _inflict_meelee_damage(body):
 	if "player_health" in body and body.player_health > 0:
 		body.apply_damage.rpc_id(1, 2)
@@ -242,6 +250,8 @@ func _set_costume_power_remote():
 		11: 
 			ui.obstruction.visible = true
 			ui.obstruction.texture = load("uid://baa0kxu64qnkv")
+		12:
+			power = 4
 
 func _set_costume_power_local():
 	match sprite_frames:
@@ -273,3 +283,5 @@ func _set_costume_power_local():
 		11: 
 			ui.obstruction.visible = true
 			ui.obstruction.texture = load("uid://baa0kxu64qnkv")
+		12: 
+			power = 4
