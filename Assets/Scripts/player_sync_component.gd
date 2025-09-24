@@ -9,6 +9,8 @@ var chuck_anim: bool = false
 var throwing: bool = false
 var scrapping: bool = false
 var using_power: bool = false
+var flying: bool = false
+var mounted: bool = false
 var throw_timer: Timer
 
 @onready var tag: String = PlayerGlobals.user_name
@@ -50,13 +52,18 @@ func _check_door():
 		get_parent().trick_or_treat()
 	
 func _set_animation():
-	if animation_select == "teleport" and get_parent().animated_sprite_2d.is_playing():
+	if _check_current_anim():
 		pass
+	elif flying:
+		if mounted and direction == "left" and not animation_select == "flying_left":
+			animation_select = "flying_left"
+		elif mounted and direction == "right" and not animation_select == "flying_right":
+			animation_select = "flying_right"
 	elif get_parent().velocity.y:
 		jump = false
-		if direction == "left":
+		if direction == "left" and not animation_select == "left_jump":
 			animation_select = "left_jump"
-		elif direction == "right":
+		elif direction == "right" and not animation_select == "right_jump":
 			animation_select = "right_jump"
 	elif Input.is_action_just_pressed("ui_accept"):
 		get_parent().jumps += 1
@@ -71,6 +78,20 @@ func _set_animation():
 		animation_select = "back"
 	else: animation_select = "idle"
 	
+	if movement.x < 0:
+		direction = "left"
+	elif movement.x > 0:
+		direction = "right"
+
+func _check_current_anim():
+	if animation_select == "teleport" and get_parent().animated_sprite_2d.is_playing():
+		return true
+	if animation_select == "whip_left" and get_parent().animated_sprite_2d.is_playing():
+		return true
+	if animation_select == "whip_right" and get_parent().animated_sprite_2d.is_playing():
+		return true
+	return false
+
 func _check_throw():
 	if PlayerGlobals.candy_corn <= 0: return 
 	if Input.is_action_just_pressed("shoot_left"):
@@ -313,11 +334,19 @@ func _check_hit(punch_direction: String):
 	parent.take_damage(calc_damage)
 
 func _check_power():
-	if animation_select == "teleport": return
+	if animation_select == "teleport" or\
+		animation_select == "whip_left" or\
+		animation_select == "whip_right": 
+			return
 	elif Input.is_action_just_pressed("shift_left"):
-		_use_power(1)
-	elif Input.is_action_just_pressed("shift_right"):
 		_use_power(-1)
+	elif Input.is_action_just_pressed("shift_right"):
+		_use_power(1)
+
+func _reset_power():
+	flying = false
+	mounted = false
+	get_parent().set_gravity.rpc_id(1, 2500)
 
 func _use_power(shift_dir: int):
 	var parent = get_parent()
@@ -333,8 +362,57 @@ func _use_power(shift_dir: int):
 			teleport_timer.timeout.connect(func(): parent.player_teleport.rpc_id(1, 413 * shift_dir))
 			teleport_timer.start()
 			animation_select = "teleport"
+<<<<<<< HEAD
 		2:	#speed powerup for cape
 			if shift_dir < 0: 
+=======
+		2:
+			if shift_dir > 0: 
+>>>>>>> c8448229da80bc7767e7c7a6de736a8242ed28dd
 				parent.speed = 500
-			elif shift_dir > 0:
+			elif shift_dir < 0:
 				parent.speed = 5000
+		3:
+			parent.sfx_all.rpc_id(1)
+			var whip_timer_start = Timer.new()
+			var whip_timer_stop = Timer.new()
+			add_child(whip_timer_start)
+			add_child(whip_timer_stop)
+			whip_timer_start.wait_time = 0.33
+			whip_timer_stop.wait_time = 0.4
+			whip_timer_start.one_shot = true
+			whip_timer_stop.one_shot = true
+			if shift_dir > 0:
+				animation_select = "whip_right"
+				whip_timer_start.timeout.connect(func(): parent.meelee_attack_shape_right.disabled = false)
+				whip_timer_stop.timeout.connect(func(): parent.meelee_attack_shape_right.disabled = true)
+			elif shift_dir < 0:
+				animation_select = "whip_left"
+				whip_timer_start.timeout.connect(func(): parent.meelee_attack_shape_left.disabled = false)
+				whip_timer_stop.timeout.connect(func(): parent.meelee_attack_shape_left.disabled = true)
+			movement = Vector2.ZERO
+			throwing = true
+			throw_timer = Timer.new()
+			add_child(throw_timer)
+			throw_timer.wait_time = 0.5
+			throw_timer.one_shot = true
+			throw_timer.timeout.connect(_toggle_throwing_false)
+			throw_timer.start()
+			whip_timer_start.start()
+			whip_timer_stop.start()
+		4:
+			if flying:
+				_reset_power()
+			else:
+				flying = true
+				parent.set_gravity.rpc_id(1, 0)
+				parent.set_y_velocity.rpc_id(1, 0)
+				if direction == "left": animation_select = "fly_left"
+				elif direction == "right": animation_select = "fly_right"
+				var mount_timer = Timer.new()
+				add_child(mount_timer)
+				mount_timer.one_shot = true
+				mount_timer.wait_time = 0.3
+				mount_timer.timeout.connect(func(): mounted = true)
+				mount_timer.start()
+			

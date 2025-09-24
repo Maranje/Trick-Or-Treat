@@ -6,11 +6,15 @@ var rix: int
 var riy: int
 
 func _ready() -> void:
+	scale = Vector2.ZERO
+	angular_velocity = (randi() % 200 - 100) / 10.0
 	loot_sprite.frame = frame
 	contact_monitor = true
 	max_contacts_reported = 2
 	apply_impulse(Vector2(rix, riy))
 	body_entered.connect(_on_body_entered)
+	var loot_tween = create_tween()
+	loot_tween.tween_property(self, "scale", Vector2(1, 1), 0.5)
 
 func _on_body_entered(body):
 	if not multiplayer.is_server(): return

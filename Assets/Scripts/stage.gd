@@ -58,10 +58,11 @@ func _ready() -> void:
 			new_player.user_name = data.user_name
 		players[new_player.name] = new_player
 		return new_player
-		
+
 	loot_spawner.spawn_function = func(data):
 		var new_loot = loot.instantiate()
 		new_loot.position = data.position
+		new_loot.position.y -= 40
 		new_loot.rix = data.rix
 		new_loot.riy = data.riy
 		new_loot.frame = data.frame
@@ -104,9 +105,14 @@ func _process(_delta: float) -> void:
 	var my_player = get_node_or_null(str(my_peer_id))
 	if my_player and is_instance_valid(my_player):
 		if my_player.player_health <= 0 and PlayerGlobals.candy_count > 0:
-			spawn_loot_on_ko.rpc_id(1, my_player.position, 0)
+			spawn_loot.rpc_id(1, my_player.position, 0)
 			PlayerGlobals.candy_count -= 1
 			my_player.ui.update_candies()
+		if my_player.rattled and PlayerGlobals.candy_count > 0:
+			spawn_loot.rpc_id(1, my_player.position, 0)
+			PlayerGlobals.candy_count -= 1
+			my_player.ui.update_candies()
+			my_player.rattled = false
 		var player_pos = my_player.global_position
 		sky.position.x = player_pos.x - 400
 		moon.position.x = player_pos.x - 400
@@ -206,7 +212,7 @@ func _end_run():
 		_change_scene.rpc()
 
 @rpc("any_peer", "call_local", "reliable")
-func spawn_loot_on_ko(position: Vector2, frame: int):
+func spawn_loot(position: Vector2, frame: int):
 	if multiplayer.is_server():
 		var random_x_initial_inertia = (randi() % 400) - 200
 		var random_y_initial_inertia = (randi() % 100) - 700

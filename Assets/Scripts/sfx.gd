@@ -5,12 +5,12 @@ var streams: Array = [
 	null,
 	load("uid://b45fg0kwyq6yb"),
 	load("uid://dlphsy8ed7j5d"),
-	load("uid://b2bjwqtqyj87n")
+	load("uid://b2bjwqtqyj87n"),
+	load("uid://b4m255bt02l0r")
 ]
 
 func _ready() -> void:
 	sfx.stream = streams[stream]
-	#sfx.max_distance = INF
 	sfx.play()
 	sfx.finished.connect(_self_destruct)
 
