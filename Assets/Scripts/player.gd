@@ -60,8 +60,8 @@ func _ready() -> void:
 	meelee_attack.body_entered.connect(_inflict_meelee_damage)
 	candy_spawner.spawn_function = func(data):
 		var candy_corn = candycorn.instantiate()
-		candy_corn.direction = data.direction - velocity.x
-		if data.direction < 0:
+		candy_corn.direction = data.direction
+		if data.direction.x < 0:
 			candy_corn.position.x -= 25
 		else:
 			candy_corn.position.x += 25
@@ -214,7 +214,7 @@ func sfx_all():
 	sfx_spawner.spawn({"stream": sfx_stream})
 
 @rpc("any_peer", "call_local", "reliable")
-func shoot_candy_corn(direction: int = 1000):
+func shoot_candy_corn(direction: Vector2):
 	if not multiplayer.is_server():
 		return
 	candy_spawner.spawn({"direction": direction})

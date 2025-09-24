@@ -94,23 +94,28 @@ func _check_current_anim():
 
 func _check_throw():
 	if PlayerGlobals.candy_corn <= 0: return 
-	if Input.is_action_just_pressed("shoot_left"):
-		_set_throw(-1500.0, "chuck_left_1", "chuck_left_2", "ko_throw_left")
+	if flying:
+		pass
+	elif Input.is_action_just_pressed("shoot_left"):
+		_set_throw(Vector2(1500.0, -100), "chuck_left_1", "chuck_left_2", "ko_throw_left")
 	elif Input.is_action_just_pressed("shoot_right"):
-		_set_throw(1500.0, "chuck_right_1", "chuck_right_2", "ko_throw_right")
+		_set_throw(Vector2(1500.0, -100), "chuck_right_1", "chuck_right_2", "ko_throw_right")
 
-func _set_throw(impulse: float, animation1: String, animation2: String, animation3: String):
+func _set_throw(impulse: Vector2, animation1: String, animation2: String, animation3: String):
 	var parent = get_parent()
 	var timer_wait_time: float
 	if parent.player_active:
-		timer_wait_time = 0.15
 		parent.shoot_candy_corn.rpc_id(1, impulse)
-		if chuck_anim:
-			animation_select = animation1
-			chuck_anim = false
+		if animation1 != "none" and animation2 != "none" and animation3 != " none":
+			timer_wait_time = 0.15
+			if chuck_anim:
+				animation_select = animation1
+				chuck_anim = false
+			else:
+				animation_select = animation2
+				chuck_anim = true
 		else:
-			animation_select = animation2
-			chuck_anim = true
+			timer_wait_time = 0.01
 		movement = Vector2.ZERO
 		throwing = true
 		PlayerGlobals.candy_corn -= 1
