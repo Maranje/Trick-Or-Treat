@@ -152,7 +152,8 @@ func _on_server_disconnected():
 func _stage_play_finished():
 	buzzer.play()
 	for player in players.values():
-		player.player_active = false
+		if player:
+			player.player_active = false
 
 func _level_fade():
 	wind_down.play()

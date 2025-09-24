@@ -362,13 +362,8 @@ func _use_power(shift_dir: int):
 			teleport_timer.timeout.connect(func(): parent.player_teleport.rpc_id(1, 413 * shift_dir))
 			teleport_timer.start()
 			animation_select = "teleport"
-<<<<<<< HEAD
-		2:	#speed powerup for cape
-			if shift_dir < 0: 
-=======
 		2:
 			if shift_dir > 0: 
->>>>>>> c8448229da80bc7767e7c7a6de736a8242ed28dd
 				parent.speed = 500
 			elif shift_dir < 0:
 				parent.speed = 5000
