@@ -368,10 +368,10 @@ func _use_power(shift_dir: int):
 			teleport_timer.start()
 			animation_select = "teleport"
 		2:
-			if shift_dir > 0: 
-				parent.speed = 500
-			elif shift_dir < 0:
-				parent.speed = 5000
+			if parent.speed == 500:
+				parent.set_speed.rpc_id(1, 5000)
+			elif parent.speed == 5000:
+				parent.set_speed.rpc_id(1, 500)
 		3:
 			parent.sfx_all.rpc_id(1)
 			var whip_timer_start = Timer.new()

@@ -214,6 +214,10 @@ func sfx_all():
 	sfx_spawner.spawn({"stream": sfx_stream})
 
 @rpc("any_peer", "call_local", "reliable")
+func set_speed(set_speed_val: int):
+	speed = set_speed_val
+
+@rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: Vector2):
 	if not multiplayer.is_server():
 		return
