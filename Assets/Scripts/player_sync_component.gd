@@ -97,7 +97,7 @@ func _check_throw():
 	if flying:
 		pass
 	elif Input.is_action_just_pressed("shoot_left"):
-		_set_throw(Vector2(1500.0, -100), "chuck_left_1", "chuck_left_2", "ko_throw_left")
+		_set_throw(Vector2(-1500.0, -100), "chuck_left_1", "chuck_left_2", "ko_throw_left")
 	elif Input.is_action_just_pressed("shoot_right"):
 		_set_throw(Vector2(1500.0, -100), "chuck_right_1", "chuck_right_2", "ko_throw_right")
 
