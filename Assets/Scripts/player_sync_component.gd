@@ -27,6 +27,7 @@ func _gather_input(delta: float):
 		return
 	if parent.player_health == 0:
 		if not throwing: _static_situation("ko")
+		if flying: _reset_power()
 		_check_throw()
 		return
 	if not parent.player_active:
