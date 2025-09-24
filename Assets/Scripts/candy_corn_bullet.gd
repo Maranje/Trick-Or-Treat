@@ -1,5 +1,5 @@
 extends RigidBody2D
-var direction: int = 1000
+var direction: Vector2
 
 @onready var candy_corn: Sprite2D = $CandyCorn
 
@@ -7,7 +7,7 @@ func _ready() -> void:
 	contact_monitor = true
 	max_contacts_reported = 10
 	candy_corn.rotation = randi() % 360
-	apply_impulse(Vector2(direction, -100))
+	apply_impulse(direction)
 	body_entered.connect(_on_body_entered)
 	
 func _process(_delta: float) -> void:
