@@ -322,9 +322,9 @@ func _check_power():
 func _use_power(shift_dir: int):
 	var parent = get_parent()
 	match parent.power: 
-		0:
+		0:	#just any sound effect
 			parent.sfx_all.rpc_id(1)
-		1:
+		1:	#teleporting powerup for static costume
 			parent.sfx_all.rpc_id(1)
 			var teleport_timer = Timer.new()
 			add_child(teleport_timer)
@@ -333,7 +333,7 @@ func _use_power(shift_dir: int):
 			teleport_timer.timeout.connect(func(): parent.player_teleport.rpc_id(1, 413 * shift_dir))
 			teleport_timer.start()
 			animation_select = "teleport"
-		2:
+		2:	#speed powerup for cape
 			if shift_dir < 0: 
 				parent.speed = 500
 			elif shift_dir > 0:

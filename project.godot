@@ -30,6 +30,10 @@ window/size/mode=2
 window/stretch/mode="canvas_items"
 window/stretch/scale_mode="integer"
 
+[editor]
+
+movie_writer/movie_file="/home/frank/dev/Trick-Or-Treat-Online/Trick-or-Treat_vcap1.avi"
+
 [input]
 
 shoot_left={
