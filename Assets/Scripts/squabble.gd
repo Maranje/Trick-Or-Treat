@@ -118,19 +118,14 @@ func play_pop(frame: int):
 	pops.position.x = position.x + (randi() % 100 - 100)
 	pops.position.y = position.y + (randi() % 100 - 100)
 	pops.frame = frame
-	var timer = Timer.new()
-	add_child(timer)
-	timer.one_shot = true
-	timer.wait_time = 0.5
-	timer.timeout.connect(_reset_pop)
-	timer.start()
+	TimerUtils.create_one_shot_timer(self, 0.5, _reset_pop)
 	
 func _reset_pop():
 	pops.frame = 3
 
 func _on_peer_disconnected(peer_id: int):
 	if opponent and opponent.input_multiplayer_authority == peer_id:
-		print("Opponent disconnected during squabble, breaking squabble gracefully")
+		# Opponent disconnected during squabble, breaking gracefully
 		var parent = get_parent() as Player
 		if parent.has_node("PlayerSyncComponent"):
 			parent.get_node("PlayerSyncComponent").break_squabble.rpc_id(parent.input_multiplayer_authority)

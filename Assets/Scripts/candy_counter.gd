@@ -10,7 +10,7 @@ func _ready() -> void:
 		text = str(value)
 	else:
 		text = "0"
-		print("'%s' not found in PlayerGlobals :(" % source_number)
+		# Property not found in PlayerGlobals
 
 func update():
 	var value = PlayerGlobals.get(source_number)
@@ -18,4 +18,4 @@ func update():
 		text = str(value)
 	else:
 		text = "0"
-		print("'%s' not found in PlayerGlobals :(" % source_number)
+		# Property not found in PlayerGlobals

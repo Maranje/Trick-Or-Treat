@@ -17,7 +17,12 @@ var stage_scene: PackedScene = preload("uid://cul6kxi3csn08")
 
 var transitioning_to_stage = false
 
-const PORT = 4139
+const PORT = GameConstants.NETWORK_PORT
+
+func set_connection_buttons_state(enabled: bool):
+	join_button.disabled = not enabled
+	host_button.disabled = not enabled
+
 var peer = ENetMultiplayerPeer.new()
 var label_y_offset = 0
 var peer_labels: Dictionary = {}
@@ -27,7 +32,7 @@ func _ready() -> void:
 		var new_label = label_scene.instantiate() as UserLabel
 		new_label.position.y += label_y_offset
 		new_label.input_multiplayer_authority = data.peer_id
-		label_y_offset += 20
+		label_y_offset += GameConstants.LABEL_Y_SPACING
 		new_label.name = str(data.peer_id)
 		peer_labels[data.peer_id] = new_label
 		return new_label
@@ -44,8 +49,6 @@ func _ready() -> void:
 	join_button.pressed.connect(_join_pressed)
 	ready_button.pressed.connect(_ready_pressed)
 	
-	#connect_disp.visible = false
-	#_run_as_server()
 
 func _process(_delta: float) -> void:
 	if not transitioning_to_stage and check_all_players_ready():
@@ -103,36 +106,29 @@ func reset_multiplayer():
 func _run_as_server():
 	PlayerGlobals.is_server = true
 	bg.visible = false
-	host_button.disabled = true
-	join_button.disabled = true
+	set_connection_buttons_state(false)
 	reset_multiplayer()
 	var error = peer.create_server(PORT)
 	if error != OK:
-		print(str("Failed to create server. error: ", error))
 		update_error_label(str("Failed to start server. Error: ", error))
-		host_button.disabled = false
-		join_button.disabled = false
+		set_connection_buttons_state(true)
 		return
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_on_connected_host)
-	print("Server started on port ", PORT)
 	update_error_label("Server running on port " + str(PORT))
 
 func _host_pressed():
-	join_button.disabled = true
-	host_button.disabled = true
+	set_connection_buttons_state(false)
 	reset_multiplayer()
 	var error = peer.create_server(PORT)
 	if error != OK:
 		update_error_label(str("Failed to create server. error: ", error))
-		join_button.disabled = false
-		host_button.disabled = false
+		set_connection_buttons_state(true)
 		return
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_on_connected_host)
-	print("Server started on port ", PORT)
-	peer_ready.rpc_id(1) #comment out for no host player
-	peer_labels[1].label_sync_component.gather_input(PlayerGlobals.user_name) #comment out for no host player
+	peer_ready.rpc_id(1)
+	peer_labels[1].label_sync_component.gather_input(PlayerGlobals.user_name)
 	_toggle_lobby()
 	PlayerGlobals.is_server = false
 
@@ -143,8 +139,7 @@ func _join_pressed():
 	var error = peer.create_client(address.text, PORT)
 	if error != OK:
 		update_error_label(str("Failed to create client: ", error))
-		join_button.disabled = false
-		host_button.disabled = false
+		set_connection_buttons_state(true)
 		return
 	multiplayer.multiplayer_peer = peer
 	multiplayer.connected_to_server.connect(_on_connected_client)
@@ -173,22 +168,19 @@ func _user_name_edit(text):
 	if my_peer_id in peer_labels:
 		peer_labels[my_peer_id].label_sync_component.gather_input(text)
 
-func _on_connected_host(id):
-	print("Peer %s connected to server" % id)
+func _on_connected_host(_id):
+	pass
 
 func _on_connected_client():
-	join_button.disabled = true
-	host_button.disabled = true
+	set_connection_buttons_state(false)
 	peer_ready.rpc_id(1)
 	await get_tree().create_timer(0.7).timeout
 	var my_peer_id = multiplayer.get_unique_id()
 	if not peer_labels.has(my_peer_id):
 		update_error_label("Server rejected connection - game already in progress")
-		join_button.disabled = false
-		host_button.disabled = false
+		set_connection_buttons_state(true)
 		_return_to_connection_screen()
 		return
-	print("Successfully connected to server")
 	_toggle_lobby()
 
 func _on_connection_failed():
@@ -207,11 +199,10 @@ func reposition_all_labels():
 			valid_labels.append(peer_labels[peer_id])
 	valid_labels.sort_custom(func(a, b): return a.position.y < b.position.y)
 	for i in range(valid_labels.size()):
-		valid_labels[i].position.y = i * 20 - 141
-	label_y_offset = valid_labels.size() * 20
+		valid_labels[i].position.y = i * GameConstants.LABEL_Y_SPACING + GameConstants.LABEL_Y_BASE
+	label_y_offset = valid_labels.size() * GameConstants.LABEL_Y_SPACING
 
 func _on_peer_disconnected(id):
-	print("Peer ", id, " disconnected")
 	if id in peer_labels:
 		if multiplayer.is_server() and is_instance_valid(peer_labels[id]):
 			peer_labels[id].queue_free()
@@ -219,14 +210,12 @@ func _on_peer_disconnected(id):
 		reposition_all_labels()
 
 func _on_server_disconnected():
-	print("Disconnected from server!")
 	_return_to_connection_screen()
 
 func _return_to_connection_screen():
 	lobby_disp.visible = false
 	connect_disp.visible = true
-	join_button.disabled = false
-	host_button.disabled = false
+	set_connection_buttons_state(true)
 	for label in peer_labels.values():
 		if is_instance_valid(label):
 			label.queue_free()
@@ -242,8 +231,7 @@ func _return_to_lobby():
 	peer_ready.rpc_id(1)
 	lobby_disp.visible = true
 	connect_disp.visible = false
-	join_button.disabled = false
-	host_button.disabled = false
+	set_connection_buttons_state(true)
 
 func _reset_error_label():
 	error_label.text = ""
@@ -255,12 +243,7 @@ func _on_label_spawned(node):
 
 func update_error_label(message: String):
 	error_label.text = message
-	var timer = Timer.new()
-	add_child(timer)
-	timer.wait_time = 5
-	timer.one_shot = true
-	timer.timeout.connect(_reset_error_label)
-	timer.start()
+	TimerUtils.create_one_shot_timer(self, 5.0, _reset_error_label)
 
 @rpc("any_peer", "call_local", "reliable")
 func peer_ready():

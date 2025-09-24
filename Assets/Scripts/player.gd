@@ -25,7 +25,7 @@ var player_active: bool = true
 var squabbling: bool = false
 var rattled: bool = false
 var identifiable: bool = true
-var player_health: int = 50
+var player_health: int = GameConstants.MAX_HEALTH
 var sprite_frames: int = 0
 var total_costumes: int = 0
 var user_name: String
@@ -215,7 +215,10 @@ func sfx_all():
 
 @rpc("any_peer", "call_local", "reliable")
 func set_speed(set_speed_val: int):
-	speed = set_speed_val
+	if speed == set_speed_val:
+		speed = 500
+	else:
+		speed = set_speed_val
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: Vector2):
@@ -262,8 +265,7 @@ func _set_costume_power_local():
 			return
 		1:
 			sfx_stream = 1
-		2: 
-			speed = 5000
+		2:
 			power = 2
 		3:
 			return

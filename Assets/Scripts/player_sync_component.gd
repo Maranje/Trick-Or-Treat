@@ -122,33 +122,18 @@ func _set_throw(impulse: Vector2, animation1: String, animation2: String, animat
 		PlayerGlobals.candy_corn -= 1
 		parent.ui.update_candies()
 		parent.candy_corn_thrown += 1
-		throw_timer = Timer.new()
-		add_child(throw_timer)
-		throw_timer.wait_time = timer_wait_time
-		throw_timer.one_shot = true
-		throw_timer.timeout.connect(_toggle_throwing_false)
-		throw_timer.start()
+		throw_timer = TimerUtils.create_one_shot_timer(self, timer_wait_time, _toggle_throwing_false)
 	elif not throwing:
 		timer_wait_time = 0.34
 		animation_select = animation3
 		impulse = impulse * 0.3
-		var delayed_throw = Timer.new()
-		add_child(delayed_throw)
-		delayed_throw.wait_time = timer_wait_time / 2.0
-		delayed_throw.one_shot = true
-		delayed_throw.timeout.connect(func(): parent.shoot_candy_corn.rpc_id(1, impulse))
-		delayed_throw.start()
+		TimerUtils.create_one_shot_timer(self, timer_wait_time / 2.0, func(): parent.shoot_candy_corn.rpc_id(1, impulse))
 		movement = Vector2.ZERO
 		throwing = true
 		PlayerGlobals.candy_corn -= 1
 		parent.ui.update_candies()
 		parent.candy_corn_thrown += 1
-		throw_timer = Timer.new()
-		add_child(throw_timer)
-		throw_timer.wait_time = timer_wait_time
-		throw_timer.one_shot = true
-		throw_timer.timeout.connect(_toggle_throwing_false)
-		throw_timer.start()
+		throw_timer = TimerUtils.create_one_shot_timer(self, timer_wait_time, _toggle_throwing_false)
 
 func _static_situation(Anim: String):
 	movement = Vector2.ZERO
@@ -361,46 +346,32 @@ func _use_power(shift_dir: int):
 			parent.sfx_all.rpc_id(1)
 		1:	#teleporting powerup for static costume
 			parent.sfx_all.rpc_id(1)
-			var teleport_timer = Timer.new()
-			add_child(teleport_timer)
-			teleport_timer.wait_time = 0.16
-			teleport_timer.one_shot = true
-			teleport_timer.timeout.connect(func(): parent.player_teleport.rpc_id(1, 413 * shift_dir))
-			teleport_timer.start()
+			TimerUtils.create_one_shot_timer(self, 0.16, func(): parent.player_teleport.rpc_id(1, 413 * shift_dir))
 			animation_select = "teleport"
 		2:
-			if parent.speed == 500:
-				parent.set_speed.rpc_id(1, 5000)
-			elif parent.speed == 5000:
-				parent.set_speed.rpc_id(1, 500)
+			parent.set_speed.rpc_id(1, 5000)
 		3:
 			parent.sfx_all.rpc_id(1)
-			var whip_timer_start = Timer.new()
-			var whip_timer_stop = Timer.new()
-			add_child(whip_timer_start)
-			add_child(whip_timer_stop)
-			whip_timer_start.wait_time = 0.33
-			whip_timer_stop.wait_time = 0.4
-			whip_timer_start.one_shot = true
-			whip_timer_stop.one_shot = true
+			var whip_timers: Array[Timer]
 			if shift_dir > 0:
 				animation_select = "whip_right"
-				whip_timer_start.timeout.connect(func(): parent.meelee_attack_shape_right.disabled = false)
-				whip_timer_stop.timeout.connect(func(): parent.meelee_attack_shape_right.disabled = true)
+				whip_timers = TimerUtils.create_start_stop_timers(
+					self, 0.33, 0.4,
+					func(): parent.meelee_attack_shape_right.disabled = false,
+					func(): parent.meelee_attack_shape_right.disabled = true
+				)
 			elif shift_dir < 0:
 				animation_select = "whip_left"
-				whip_timer_start.timeout.connect(func(): parent.meelee_attack_shape_left.disabled = false)
-				whip_timer_stop.timeout.connect(func(): parent.meelee_attack_shape_left.disabled = true)
+				whip_timers = TimerUtils.create_start_stop_timers(
+					self, 0.33, 0.4,
+					func(): parent.meelee_attack_shape_left.disabled = false,
+					func(): parent.meelee_attack_shape_left.disabled = true
+				)
 			movement = Vector2.ZERO
 			throwing = true
-			throw_timer = Timer.new()
-			add_child(throw_timer)
-			throw_timer.wait_time = 0.5
-			throw_timer.one_shot = true
-			throw_timer.timeout.connect(_toggle_throwing_false)
-			throw_timer.start()
-			whip_timer_start.start()
-			whip_timer_stop.start()
+			throw_timer = TimerUtils.create_one_shot_timer(self, 0.5, _toggle_throwing_false)
+			whip_timers[0].start()
+			whip_timers[1].start()
 		4:
 			if flying:
 				_reset_power()
@@ -410,10 +381,5 @@ func _use_power(shift_dir: int):
 				parent.set_y_velocity.rpc_id(1, 0)
 				if direction == "left": animation_select = "fly_left"
 				elif direction == "right": animation_select = "fly_right"
-				var mount_timer = Timer.new()
-				add_child(mount_timer)
-				mount_timer.one_shot = true
-				mount_timer.wait_time = 0.3
-				mount_timer.timeout.connect(func(): mounted = true)
-				mount_timer.start()
+				TimerUtils.create_one_shot_timer(self, 0.3, func(): mounted = true)
 			

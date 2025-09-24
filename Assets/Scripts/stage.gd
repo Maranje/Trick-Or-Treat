@@ -75,12 +75,7 @@ func _ready() -> void:
 	wind_down.finished.connect(_start_tally)
 	tally.finished.connect(_blast)
 	blast.finished.connect(_end_run)
-	var timer = Timer.new()
-	add_child(timer)
-	timer.wait_time = 0.1
-	timer.one_shot = true
-	timer.timeout.connect(_load_stage)
-	timer.start()
+	TimerUtils.create_one_shot_timer(self, 0.1, _load_stage)
 	if PlayerGlobals.is_server:
 		get_viewport().size = Vector2(1920, 1080)  # Server viewport size
 		var camera = Camera2D.new()
@@ -147,7 +142,8 @@ func _on_server_disconnected():
 	if splash_scene:
 		get_tree().change_scene_to_packed(splash_scene)
 	else:
-		print("Error: Failed to load splash scene")
+		# Failed to load splash scene
+		pass
 
 func _stage_play_finished():
 	buzzer.play()
@@ -257,4 +253,5 @@ func _change_scene():
 	if splash_scene:
 		get_tree().change_scene_to_packed(splash_scene)
 	else:
-		print("Error: Failed to load splash scene")
+		# Failed to load splash scene
+		pass
