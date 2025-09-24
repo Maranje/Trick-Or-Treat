@@ -231,7 +231,6 @@ func _set_costume_power_remote():
 		1:
 			sfx_stream = 1
 		2: 
-			speed = 5000
 			power = 2
 		3:
 			return
