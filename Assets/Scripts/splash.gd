@@ -102,6 +102,7 @@ func reset_multiplayer():
 	
 func _run_as_server():
 	PlayerGlobals.is_server = true
+	connect_disp.visible = false
 	bg.visible = false
 	host_button.disabled = true
 	join_button.disabled = true
