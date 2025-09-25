@@ -36,14 +36,14 @@ func _ready() -> void:
 		new_label.name = str(data.peer_id)
 		peer_labels[data.peer_id] = new_label
 		return new_label
-		
+	
+	user_name.text = PlayerGlobals.user_name
+	address.text = PlayerGlobals.recent_ip
+	
 	splash_theme.finished.connect(_on_splash_theme_finished)
 	label_spawner.spawned.connect(_on_label_spawned)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
-		
-	user_name.text = PlayerGlobals.user_name
-	address.text = PlayerGlobals.recent_ip
 	user_name.text_changed.connect(_user_name_edit)
 	host_button.pressed.connect(_host_pressed)
 	join_button.pressed.connect(_join_pressed)
