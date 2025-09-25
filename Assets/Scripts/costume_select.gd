@@ -39,9 +39,9 @@ func _costume_button_right_pressed():
 	update_ui()
 
 func _buy_pressed():
-	if PlayerGlobals.candy_count >= 100:
+	if PlayerGlobals.candy_count >= GameConstants.COSTUME_COST:
 		PlayerGlobals.costumes_owned.append(int(costume_number))
-		PlayerGlobals.candy_count -= 100
+		PlayerGlobals.candy_count -= GameConstants.COSTUME_COST
 		PlayerGlobals.save_data()
 		update_ui()
 		get_parent().get_node("CandyCounter").update()

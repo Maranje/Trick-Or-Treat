@@ -84,9 +84,7 @@ func cleanup_and_change_scene():
 	get_tree().change_scene_to_packed(stage_scene)
 
 func is_multiplayer_active() -> bool:
-	return multiplayer.has_multiplayer_peer() and \
-		   multiplayer.multiplayer_peer != null and \
-		   multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED
+	return ValidationUtils.is_multiplayer_active(multiplayer)
 
 func reset_multiplayer():
 	if multiplayer.connected_to_server.is_connected(_on_connected_client):

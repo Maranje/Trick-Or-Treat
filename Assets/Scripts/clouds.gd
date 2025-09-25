@@ -8,24 +8,24 @@ extends Node2D
 @onready var c6: Sprite2D = $Clouds6
 
 func _process(delta: float) -> void:
-	c1.position.x += delta * 1
-	c2.position.x += delta * 3
-	c3.position.x += delta * 5
-	c4.position.x += delta * 1
-	c5.position.x += delta * 3
-	c6.position.x += delta * 5
+	c1.position.x += delta * GameConstants.CLOUD_SPEED_SLOW
+	c2.position.x += delta * GameConstants.CLOUD_SPEED_MEDIUM
+	c3.position.x += delta * GameConstants.CLOUD_SPEED_FAST
+	c4.position.x += delta * GameConstants.CLOUD_SPEED_SLOW
+	c5.position.x += delta * GameConstants.CLOUD_SPEED_MEDIUM
+	c6.position.x += delta * GameConstants.CLOUD_SPEED_FAST
 	
-	if c1.position.x >= 800:
-		c1.position.x = -1600
-	elif c4.position.x >= 800:
-		c4.position.x = -1600
+	if c1.position.x >= GameConstants.CLOUD_RIGHT_BOUND:
+		c1.position.x = GameConstants.CLOUD_LEFT_BOUND
+	elif c4.position.x >= GameConstants.CLOUD_RIGHT_BOUND:
+		c4.position.x = GameConstants.CLOUD_LEFT_BOUND
 	
-	if c2.position.x >= 800:
-		c2.position.x = -1600
-	elif c5.position.x >= 800:
-		c5.position.x = -1600
+	if c2.position.x >= GameConstants.CLOUD_RIGHT_BOUND:
+		c2.position.x = GameConstants.CLOUD_LEFT_BOUND
+	elif c5.position.x >= GameConstants.CLOUD_RIGHT_BOUND:
+		c5.position.x = GameConstants.CLOUD_LEFT_BOUND
 		
-	if c3.position.x >= 800:
-		c3.position.x = -1600
-	elif c6.position.x >= 800:
-		c6.position.x = -1600
+	if c3.position.x >= GameConstants.CLOUD_RIGHT_BOUND:
+		c3.position.x = GameConstants.CLOUD_LEFT_BOUND
+	elif c6.position.x >= GameConstants.CLOUD_RIGHT_BOUND:
+		c6.position.x = GameConstants.CLOUD_LEFT_BOUND

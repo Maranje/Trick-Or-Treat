@@ -168,7 +168,7 @@ func _scrap_routine(delta: float):
 		stats_changed = true
 
 	if stats_changed:
-		if opponent and is_instance_valid(opponent) and opponent.has_node("PlayerSyncComponent"):
+		if ValidationUtils.is_valid_opponent(opponent):
 			opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, parent_squabble.def, parent_squabble.gas)
 	
 	_update_stats_displays()
@@ -178,7 +178,7 @@ func _update_stats_displays():
 	var parent = get_parent() as Player
 	var parent_squabble = parent.get_node("Squabble")
 	var opponent = parent_squabble.opponent
-	if opponent and is_instance_valid(opponent) and opponent.has_node("Squabble"):
+	if ValidationUtils.is_valid_node_with_component(opponent, "Squabble"):
 		parent_squabble.pov_hp.scale.y = 25 * (float(parent.player_health) / 50.0)
 		parent_squabble.pov_def.scale.y = 25 * (parent_squabble.def / 50.0)
 		parent_squabble.pov_gas.scale.y = 25 * (parent_squabble.gas / 50.0)
@@ -191,7 +191,7 @@ func _send_punch(animation: String):
 	if squabble.punching or squabble.gas < 10: return
 	squabble.punching = true
 	var opponent = squabble.opponent
-	if opponent and is_instance_valid(opponent) and opponent.has_node("PlayerSyncComponent"):
+	if ValidationUtils.is_valid_opponent(opponent):
 		opponent.get_node("PlayerSyncComponent").show_punch.rpc_id(opponent.input_multiplayer_authority, animation)
 	pov_punch.rpc_id(get_parent().input_multiplayer_authority, animation)
 
@@ -199,7 +199,7 @@ func _send_block(animation: String):
 	var squabble = get_parent().get_node("Squabble")
 	if squabble.punching: return
 	var opponent = squabble.opponent
-	if opponent and is_instance_valid(opponent) and opponent.has_node("PlayerSyncComponent"):
+	if ValidationUtils.is_valid_opponent(opponent):
 		opponent.get_node("PlayerSyncComponent").show_block.rpc_id(opponent.input_multiplayer_authority, animation)
 		pov_block.rpc_id(get_parent().input_multiplayer_authority, animation)
 	
@@ -208,7 +208,7 @@ func end_squabble():
 	var opponent = squabble.opponent
 	break_squabble.rpc_id(get_parent().input_multiplayer_authority)
 	break_squabble.rpc_id(opponent.input_multiplayer_authority)
-	if opponent and is_instance_valid(opponent) and opponent.has_node("PlayerSyncComponent"):
+	if ValidationUtils.is_valid_opponent(opponent):
 		opponent.get_node("PlayerSyncComponent").break_squabble.rpc_id(opponent.input_multiplayer_authority)
 		opponent.get_node("PlayerSyncComponent").break_squabble.rpc_id(get_parent().input_multiplayer_authority)
 
@@ -254,7 +254,7 @@ func pov_punch(animation: String):
 		squabble.punches.stream = squabble.punch_audio[randi() % 4]
 		squabble.punches.play()
 	var opponent = squabble.opponent
-	if opponent and is_instance_valid(opponent) and opponent.has_node("PlayerSyncComponent"):
+	if ValidationUtils.is_valid_opponent(opponent):
 		opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, squabble.def, squabble.gas)
 	
 @rpc("any_peer", "call_local", "reliable")
@@ -346,10 +346,10 @@ func _use_power(shift_dir: int):
 			parent.sfx_all.rpc_id(1)
 		1:	#teleporting powerup for static costume
 			parent.sfx_all.rpc_id(1)
-			TimerUtils.create_one_shot_timer(self, 0.16, func(): parent.player_teleport.rpc_id(1, 413 * shift_dir))
+			TimerUtils.create_one_shot_timer(self, 0.16, func(): parent.player_teleport.rpc_id(1, GameConstants.TELEPORT_DISTANCE * shift_dir))
 			animation_select = "teleport"
 		2:
-			parent.set_speed.rpc_id(1, 5000)
+			parent.set_speed.rpc_id(1, GameConstants.PLAYER_FAST_SPEED)
 		3:
 			parent.sfx_all.rpc_id(1)
 			var whip_timers: Array[Timer]
