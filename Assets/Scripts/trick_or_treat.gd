@@ -23,12 +23,7 @@ func _process(_delta: float) -> void:
 
 func _doorbell_pressed():
 	ding.play()
-	var timer = Timer.new()
-	add_child(timer)
-	timer.wait_time = 0.7
-	timer.one_shot = true
-	timer.timeout.connect(_remove_this_node)
-	timer.start()
+	TimerUtils.create_one_shot_timer(self, 0.7, _remove_this_node)
 	
 func _remove_this_node():
 	get_parent().ui.run_notificon(candy, candy_corn)

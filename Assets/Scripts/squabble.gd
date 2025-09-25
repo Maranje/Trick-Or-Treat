@@ -16,11 +16,11 @@ extends Node2D
 @onready var pops: Sprite2D = $UI/Pops
 @onready var candy_ui: Sprite2D = $UI/CandyUI
 @onready var y_pos = 240
-@onready var gas: float = 50
-@onready var def: float = 50
-@onready var gas_opp: float = 50
-@onready var def_opp: float = 50
-@onready var dmg_coefficient = 10
+@onready var gas: float = GameConstants.MAX_GAS
+@onready var def: float = GameConstants.MAX_DEFENSE
+@onready var gas_opp: float = GameConstants.MAX_GAS
+@onready var def_opp: float = GameConstants.MAX_DEFENSE
+@onready var dmg_coefficient = GameConstants.SQUABBLE_DMG_COEFFICIENT
 @onready var punch_audio = [
 	preload("uid://dtyqjjnfxvue0"),
 	preload("uid://gdsvuhydau47"),
@@ -64,38 +64,28 @@ func _process(_delta: float) -> void:
 		blocking_right = false
 	
 func _increment_gas(delta: float):
-	gas += 5 * delta
-	if gas > 50: gas = 50
+	gas += GameConstants.SQUABBLE_GAS_INCREMENT_RATE * delta
+	if gas > GameConstants.MAX_GAS: gas = GameConstants.MAX_GAS
 	
 func _increment_def(delta: float):
-	def += 3 * delta
-	if def > 50: def = 50
+	def += GameConstants.SQUABBLE_DEF_INCREMENT_RATE * delta
+	if def > GameConstants.MAX_DEFENSE: def = GameConstants.MAX_DEFENSE
 
 func decrememnt_gas():
-	gas -= 10
+	gas -= GameConstants.SQUABBLE_GAS_DECREMENT_PUNCH
 	if gas < 0: gas = 0
 	
 func decrement_def(amount: int):
 	def -= amount
-	if def < 1: def = 1
+	if def < GameConstants.SQUABBLE_MIN_DEF_VALUE: def = GameConstants.SQUABBLE_MIN_DEF_VALUE
 	
 func gain_candy():
-	candy_ui.position.x = 100
-	var tween = create_tween()
-	tween.set_ease(Tween.EASE_IN_OUT)
-	tween.set_trans(Tween.TRANS_EXPO)
-	tween.tween_property(candy_ui, "position:x", -216, 0.5)
-	tween.parallel().tween_property(candy_ui, "modulate:g", 255, 0.5)
+	var tween = TweenUtils.create_candy_ui_tween(candy_ui, 100, -216, "g")
 	tween.tween_callback(_reset_candy_ui)
 	candy_ui.visible = true
 
 func lose_candy():
-	candy_ui.position.x = -216
-	var tween = create_tween()
-	tween.set_ease(Tween.EASE_IN_OUT)
-	tween.set_trans(Tween.TRANS_EXPO)
-	tween.tween_property(candy_ui, "position:x", 100, 0.5)
-	tween.parallel().tween_property(candy_ui, "modulate:r", 255, 0.5)
+	var tween = TweenUtils.create_candy_ui_tween(candy_ui, -216, 100, "r")
 	tween.tween_callback(_reset_candy_ui)
 	candy_ui.visible = true
 
@@ -118,19 +108,14 @@ func play_pop(frame: int):
 	pops.position.x = position.x + (randi() % 100 - 100)
 	pops.position.y = position.y + (randi() % 100 - 100)
 	pops.frame = frame
-	var timer = Timer.new()
-	add_child(timer)
-	timer.one_shot = true
-	timer.wait_time = 0.5
-	timer.timeout.connect(_reset_pop)
-	timer.start()
+	TimerUtils.create_one_shot_timer(self, 0.5, _reset_pop)
 	
 func _reset_pop():
 	pops.frame = 3
 
 func _on_peer_disconnected(peer_id: int):
 	if opponent and opponent.input_multiplayer_authority == peer_id:
-		print("Opponent disconnected during squabble, breaking squabble gracefully")
+		# Opponent disconnected during squabble, breaking gracefully
 		var parent = get_parent() as Player
 		if parent.has_node("PlayerSyncComponent"):
 			parent.get_node("PlayerSyncComponent").break_squabble.rpc_id(parent.input_multiplayer_authority)

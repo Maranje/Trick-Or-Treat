@@ -25,15 +25,15 @@ var player_active: bool = true
 var squabbling: bool = false
 var rattled: bool = false
 var identifiable: bool = true
-var player_health: int = 50
+var player_health: int = GameConstants.MAX_HEALTH
 var sprite_frames: int = 0
 var total_costumes: int = 0
 var user_name: String
 var input_multiplayer_authority: int
 var prev_anim: String
-var speed: int = 500
-var jump: int = -1000
-var gravity: int = 2500
+var speed: int = GameConstants.PLAYER_BASE_SPEED
+var jump: int = GameConstants.PLAYER_JUMP_VELOCITY
+var gravity: int = GameConstants.PLAYER_GRAVITY
 var door_number: int
 var opponent: Node2D = null
 var sfx_stream = 0
@@ -215,7 +215,10 @@ func sfx_all():
 
 @rpc("any_peer", "call_local", "reliable")
 func set_speed(set_speed_val: int):
-	speed = set_speed_val
+	if speed == set_speed_val:
+		speed = GameConstants.PLAYER_BASE_SPEED
+	else:
+		speed = set_speed_val
 
 @rpc("any_peer", "call_local", "reliable")
 func shoot_candy_corn(direction: Vector2):
@@ -225,45 +228,18 @@ func shoot_candy_corn(direction: Vector2):
 
 @rpc("any_peer", "call_local", "reliable")
 func _set_costume_power_remote():
-	match sprite_frames:
-		0:
-			return
-		1:
-			sfx_stream = 1
-		2: 
-			power = 2
-		3:
-			return
-		4:
-			power = 3
-			sfx_stream = 4
-		5:
-			return
-		6:
-			identifiable = false
-		7:
-			return
-		8:
-			collision_layer = 2
-		9:
-			return
-		10:
-			power = 1
-			sfx_stream = 3
-		11: 
-			ui.obstruction.visible = true
-			ui.obstruction.texture = load("uid://baa0kxu64qnkv")
-		12:
-			power = 4
+	_set_costume_power_common()
 
 func _set_costume_power_local():
+	_set_costume_power_common()
+
+func _set_costume_power_common():
 	match sprite_frames:
 		0:
 			return
 		1:
 			sfx_stream = 1
-		2: 
-			speed = 5000
+		2:
 			power = 2
 		3:
 			return
@@ -283,8 +259,9 @@ func _set_costume_power_local():
 		10:
 			power = 1
 			sfx_stream = 3
-		11: 
-			ui.obstruction.visible = true
-			ui.obstruction.texture = load("uid://baa0kxu64qnkv")
-		12: 
+		11:
+			if multiplayer.get_unique_id() == input_multiplayer_authority:
+				ui.obstruction.visible = true
+				ui.obstruction.texture = load("uid://baa0kxu64qnkv")
+		12:
 			power = 4
