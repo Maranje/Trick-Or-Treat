@@ -16,8 +16,8 @@ extends Node2D
 @onready var pops: Sprite2D = $UI/Pops
 @onready var candy_ui: Sprite2D = $UI/CandyUI
 @onready var y_pos = 240
-@onready var gas: float = GameConstants.MAX_GAS
-@onready var def: float = GameConstants.MAX_DEFENSE
+var gas: float
+var def: float
 @onready var gas_opp: float = GameConstants.MAX_GAS
 @onready var def_opp: float = GameConstants.MAX_DEFENSE
 @onready var dmg_coefficient = GameConstants.SQUABBLE_DMG_COEFFICIENT
@@ -33,9 +33,9 @@ var blocking_right: bool = false
 var punching: bool = false
 
 func _ready():
-	start_bell.play()
-	ui.play()
 	var my_player = get_parent() as Player
+	def = my_player.player_defense
+	gas = my_player.player_gas
 	var my_peer_id = multiplayer.get_unique_id()
 	if my_peer_id != my_player.input_multiplayer_authority:
 		visible = false
@@ -49,6 +49,8 @@ func _ready():
 	z_index = 1
 	pov.animation_finished.connect(_reset_square_up_pov)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
+	start_bell.play()
+	ui.play()
 
 func _process(_delta: float) -> void:
 	if multiplayer.get_unique_id() != get_parent().input_multiplayer_authority: return
@@ -66,18 +68,26 @@ func _process(_delta: float) -> void:
 func _increment_gas(delta: float):
 	gas += GameConstants.SQUABBLE_GAS_INCREMENT_RATE * delta
 	if gas > GameConstants.MAX_GAS: gas = GameConstants.MAX_GAS
+	var my_player = get_parent() as Player
+	my_player.player_gas = gas
 	
 func _increment_def(delta: float):
 	def += GameConstants.SQUABBLE_DEF_INCREMENT_RATE * delta
 	if def > GameConstants.MAX_DEFENSE: def = GameConstants.MAX_DEFENSE
+	var my_player = get_parent() as Player
+	my_player.player_defense = def
 
-func decrememnt_gas():
+func decrement_gas():
 	gas -= GameConstants.SQUABBLE_GAS_DECREMENT_PUNCH
 	if gas < 0: gas = 0
+	var my_player = get_parent() as Player
+	my_player.player_gas = gas
 	
 func decrement_def(amount: int):
 	def -= amount
 	if def < GameConstants.SQUABBLE_MIN_DEF_VALUE: def = GameConstants.SQUABBLE_MIN_DEF_VALUE
+	var my_player = get_parent() as Player
+	my_player.player_defense = def
 	
 func gain_candy():
 	var tween = TweenUtils.create_candy_ui_tween(candy_ui, 100, -216, "g")
@@ -115,7 +125,6 @@ func _reset_pop():
 
 func _on_peer_disconnected(peer_id: int):
 	if opponent and opponent.input_multiplayer_authority == peer_id:
-		# Opponent disconnected during squabble, breaking gracefully
 		var parent = get_parent() as Player
 		if parent.has_node("PlayerSyncComponent"):
 			parent.get_node("PlayerSyncComponent").break_squabble.rpc_id(parent.input_multiplayer_authority)
