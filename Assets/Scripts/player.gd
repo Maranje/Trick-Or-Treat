@@ -87,7 +87,6 @@ func setup_individuals():
 	ui.update_health(player_health)
 
 func _process(delta: float) -> void:
-	print(user_name, squabbling)
 	if squabbling and not has_node("Squabble"): squabbling = false
 	ui.update_health(player_health)
 	if not animated_sprite_2d.is_playing(): animated_sprite_2d.play()
