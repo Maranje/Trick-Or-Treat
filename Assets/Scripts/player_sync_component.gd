@@ -25,6 +25,9 @@ func _gather_input(delta: float):
 		_static_situation(animation_select)
 		_scrap_routine(delta)
 		return
+	if parent.player_gas < GameConstants.MAX_GAS:
+		parent.player_gas += GameConstants.SQUABBLE_GAS_INCREMENT_RATE * delta / 4
+		if parent.player_gas > GameConstants.MAX_GAS: parent.player_gas = GameConstants.MAX_GAS
 	if parent.player_health == 0:
 		if not throwing: _static_situation("ko")
 		if flying: _reset_power()
@@ -94,13 +97,20 @@ func _check_current_anim():
 	return false
 
 func _check_throw():
+	var parent = get_parent()
 	if PlayerGlobals.candy_corn <= 0: return 
 	if flying:
 		pass
 	elif Input.is_action_just_pressed("shoot_left"):
-		_set_throw(Vector2(-1500.0, -100), "chuck_left_1", "chuck_left_2", "ko_throw_left")
+		if parent.opponent and parent.position.x > parent.opponent.position.x and parent.opponent.opponent == parent and not parent.squabbling and not parent.opponent.squabbling:
+			start_squabble(parent.opponent)
+		else:
+			_set_throw(Vector2(-1500.0, -100), "chuck_left_1", "chuck_left_2", "ko_throw_left")
 	elif Input.is_action_just_pressed("shoot_right"):
-		_set_throw(Vector2(1500.0, -100), "chuck_right_1", "chuck_right_2", "ko_throw_right")
+		if parent.opponent and parent.position.x < parent.opponent.position.x and parent.opponent.opponent == parent and not parent.squabbling and not parent.opponent.squabbling:
+			start_squabble(parent.opponent)
+		else:
+			_set_throw(Vector2(1500.0, -100), "chuck_right_1", "chuck_right_2", "ko_throw_right")
 
 func _set_throw(impulse: Vector2, animation1: String, animation2: String, animation3: String):
 	var parent = get_parent()
@@ -159,18 +169,10 @@ func _scrap_routine(delta: float):
 	elif Input.is_action_just_pressed("shift_right"):
 		_send_block("block_right")
 	var parent_squabble = parent.get_node("Squabble")
-	var stats_changed = false
-	if parent_squabble.gas < 50: 
+	if parent_squabble.gas < 50:
 		parent_squabble._increment_gas(delta)
-		stats_changed = true
-	if parent_squabble.def < 50: 
-		parent_squabble._increment_def(delta)
-		stats_changed = true
-
-	if stats_changed:
-		if ValidationUtils.is_valid_opponent(opponent):
-			opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, parent_squabble.def, parent_squabble.gas)
-	
+	if ValidationUtils.is_valid_opponent(opponent):
+		opponent.get_node("PlayerSyncComponent").sync_stats.rpc_id(opponent.input_multiplayer_authority, parent_squabble.def, parent_squabble.gas)
 	_update_stats_displays()
 	scrapping = true
 	
@@ -178,7 +180,7 @@ func _update_stats_displays():
 	var parent = get_parent() as Player
 	var parent_squabble = parent.get_node("Squabble")
 	var opponent = parent_squabble.opponent
-	if ValidationUtils.is_valid_node_with_component(opponent, "Squabble"):
+	if ValidationUtils.is_valid_opponent(opponent):
 		parent_squabble.pov_hp.scale.y = 25 * (float(parent.player_health) / 50.0)
 		parent_squabble.pov_def.scale.y = 25 * (parent_squabble.def / 50.0)
 		parent_squabble.pov_gas.scale.y = 25 * (parent_squabble.gas / 50.0)
@@ -206,11 +208,45 @@ func _send_block(animation: String):
 func end_squabble():
 	var squabble = get_parent().get_node("Squabble")
 	var opponent = squabble.opponent
+
+	set_squabbling_flag.rpc(get_parent().input_multiplayer_authority, false)
+
 	break_squabble.rpc_id(get_parent().input_multiplayer_authority)
 	break_squabble.rpc_id(opponent.input_multiplayer_authority)
 	if ValidationUtils.is_valid_opponent(opponent):
 		opponent.get_node("PlayerSyncComponent").break_squabble.rpc_id(opponent.input_multiplayer_authority)
 		opponent.get_node("PlayerSyncComponent").break_squabble.rpc_id(get_parent().input_multiplayer_authority)
+
+func start_squabble(opp):
+	var parent = get_parent()
+	if not ValidationUtils.is_valid_opponent(opp): return
+
+	set_squabbling_flag.rpc(opp.input_multiplayer_authority, true)
+
+	start_squabble_rpc.rpc_id(parent.input_multiplayer_authority, opp.input_multiplayer_authority)
+	start_squabble_rpc.rpc_id(opp.input_multiplayer_authority, parent.input_multiplayer_authority)
+
+@rpc("any_peer", "call_local", "reliable")
+func set_squabbling_flag(player_authority_id: int, squabbling_value: bool):
+	var stage = get_parent().get_parent()
+	if stage:
+		for child in stage.get_children():
+			if child is Player and child.input_multiplayer_authority == player_authority_id:
+				child.squabbling = squabbling_value
+				break
+
+@rpc("any_peer", "call_local", "reliable")
+func start_squabble_rpc(opponent_authority_id: int):
+	var parent = get_parent()
+	if parent.has_node("Squabble"): return
+	if opponent_authority_id == parent.input_multiplayer_authority: return
+	var stage = parent.get_parent()
+	if stage:
+		for child in stage.get_children():
+			if child is Player and child.input_multiplayer_authority == opponent_authority_id:
+				parent.player_squabble.rpc_id(parent.input_multiplayer_authority, opponent_authority_id)
+				child.player_squabble.rpc_id(child.input_multiplayer_authority, parent.input_multiplayer_authority)
+				break
 
 @rpc("any_peer", "call_local", "reliable")
 func edit_candy(candy: int):
@@ -247,7 +283,7 @@ func break_squabble():
 func pov_punch(animation: String):
 	if not get_parent().has_node("Squabble"): return
 	var squabble = get_parent().get_node("Squabble")
-	squabble.decrememnt_gas()
+	squabble.decrement_gas()
 	squabble.pov.animation = animation
 	squabble.pov.play()
 	if not squabble.punches.playing:
@@ -295,10 +331,7 @@ func _check_hit(punch_direction: String):
 	var squabble = parent.get_node("Squabble")
 	var opponent = squabble.opponent
 	var calc_damage: float
-	if not opponent or not \
-		is_instance_valid(opponent) or not \
-		opponent.has_node("PlayerSyncComponent") or not \
-		opponent.has_node("Squabble"): return
+	if not ValidationUtils.is_valid_opponent(opponent): return
 	squabble._reset_square_up_opp()
 	squabble.decrement_def(4)
 	if (punch_direction == "punch_left" and squabble.blocking_right) or \

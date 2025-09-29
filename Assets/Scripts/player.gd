@@ -26,6 +26,8 @@ var squabbling: bool = false
 var rattled: bool = false
 var identifiable: bool = true
 var player_health: int = GameConstants.MAX_HEALTH
+var player_defense: int = GameConstants.MAX_DEFENSE
+var player_gas: float = GameConstants.MAX_GAS
 var sprite_frames: int = 0
 var total_costumes: int = 0
 var user_name: String
@@ -129,6 +131,7 @@ func add_candy():
 func add_candy_corn():
 	PlayerGlobals.candy_corn += 1
 
+<<<<<<< HEAD
 @rpc("any_peer", "call_local", "reliable") 
 func set_squabbling():
 	squabbling = true
@@ -143,6 +146,21 @@ func _on_player_collision(body):
 		player_squabble(body)
 		body.set_squabbling.rpc()
 		opponent = body
+=======
+@rpc("any_peer", "call_local", "reliable")
+func _set_opponent_body(body_authority_id: int):
+	var stage = get_parent()
+	if stage:
+		for child in stage.get_children():
+			if child is Player and child.input_multiplayer_authority == body_authority_id:
+				opponent = child
+				break
+
+func _on_player_collision(body):
+	if opponent: return
+	if body is Player and not body == self:
+		_set_opponent_body.rpc(body.input_multiplayer_authority)
+>>>>>>> 0b7a72a6f65fed143d07d0910298f76a4b42933f
 		
 func _collision_reset(body):
 	if body != opponent: return
@@ -164,14 +182,27 @@ func _inflict_meelee_damage(body):
 		body.apply_damage.rpc_id(1, 2)
 		body.set_rattled.rpc()
 
-func player_squabble(opp: Player):
+@rpc("any_peer", "call_local", "reliable")
+func player_squabble(opponent_authority_id: int):
+	if has_node("Squabble"): return
+
+	var stage = get_parent()
+	var opp: Player = null
+	if stage:
+		for child in stage.get_children():
+			if child is Player and child.input_multiplayer_authority == opponent_authority_id:
+				opp = child
+				break
+
+	if not opp:
+		return
 	var squabble_instance = squabble.instantiate()
 	squabble_instance.opponent = opp
 	add_child(squabble_instance)
 	if position.x < opp.position.x:
 		animated_sprite_2d.animation = "squabble_right"
 		player_sync_component.animation_select = "squabble_right"
-	else: 
+	else:
 		animated_sprite_2d.animation = "squabble_left"
 		player_sync_component.animation_select = "squabble_left"
 	prev_anim = animated_sprite_2d.animation
