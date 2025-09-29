@@ -131,22 +131,10 @@ func add_candy():
 func add_candy_corn():
 	PlayerGlobals.candy_corn += 1
 
-<<<<<<< HEAD
 @rpc("any_peer", "call_local", "reliable") 
 func set_squabbling():
 	squabbling = true
 
-func _on_player_collision(body):
-	if opponent: return
-	if body is Player 			\
-		and body != self 		\
-		and player_active		\
-		and body.player_active 	\
-		and not body.squabbling:
-		player_squabble(body)
-		body.set_squabbling.rpc()
-		opponent = body
-=======
 @rpc("any_peer", "call_local", "reliable")
 func _set_opponent_body(body_authority_id: int):
 	var stage = get_parent()
@@ -160,7 +148,6 @@ func _on_player_collision(body):
 	if opponent: return
 	if body is Player and not body == self:
 		_set_opponent_body.rpc(body.input_multiplayer_authority)
->>>>>>> 0b7a72a6f65fed143d07d0910298f76a4b42933f
 		
 func _collision_reset(body):
 	if body != opponent: return
