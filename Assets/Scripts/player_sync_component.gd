@@ -102,12 +102,12 @@ func _check_throw():
 	if flying:
 		pass
 	elif Input.is_action_just_pressed("shoot_left"):
-		if parent.opponent and parent.position.x > parent.opponent.position.x and parent.opponent.opponent == parent and not parent.squabbling and not parent.opponent.squabbling:
+		if parent.player_active and parent.opponent and parent.position.x > parent.opponent.position.x and parent.opponent.opponent == parent and not parent.squabbling and not parent.opponent.squabbling:
 			start_squabble(parent.opponent)
 		else:
 			_set_throw(Vector2(-1500.0, -100), "chuck_left_1", "chuck_left_2", "ko_throw_left")
 	elif Input.is_action_just_pressed("shoot_right"):
-		if parent.opponent and parent.position.x < parent.opponent.position.x and parent.opponent.opponent == parent and not parent.squabbling and not parent.opponent.squabbling:
+		if parent.player_active and parent.opponent and parent.position.x < parent.opponent.position.x and parent.opponent.opponent == parent and not parent.squabbling and not parent.opponent.squabbling:
 			start_squabble(parent.opponent)
 		else:
 			_set_throw(Vector2(1500.0, -100), "chuck_right_1", "chuck_right_2", "ko_throw_right")
@@ -156,7 +156,7 @@ func _scrap_routine(delta: float):
 	var parent = get_parent()
 	if not parent.has_node("Squabble"): return
 	var opponent = parent.get_node("Squabble").opponent
-	if Input.is_action_pressed("ui_accept") or parent.player_health == 0 or opponent.player_health == 0:
+	if Input.is_action_pressed("ui_accept") or parent.player_health == 0 or opponent.player_health == 0 or not parent.player_active:
 		if scrapping: end_squabble()
 		scrapping = false
 		return
