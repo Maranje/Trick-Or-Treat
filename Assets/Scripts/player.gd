@@ -85,7 +85,8 @@ func setup_individuals():
 	ui.update_health(player_health)
 
 func _process(delta: float) -> void:
-	if squabbling and not has_node("Squabbling"): squabbling = false #sometimes this shit just sucks. idk.
+	print(user_name, squabbling)
+	if squabbling and not has_node("Squabble"): squabbling = false
 	ui.update_health(player_health)
 	if not animated_sprite_2d.is_playing(): animated_sprite_2d.play()
 	if not is_multiplayer_authority(): return
@@ -128,6 +129,10 @@ func add_candy():
 func add_candy_corn():
 	PlayerGlobals.candy_corn += 1
 
+@rpc("any_peer", "call_local", "reliable") 
+func set_squabbling():
+	squabbling = true
+
 func _on_player_collision(body):
 	if opponent: return
 	if body is Player 			\
@@ -136,7 +141,7 @@ func _on_player_collision(body):
 		and body.player_active 	\
 		and not body.squabbling:
 		player_squabble(body)
-		body.squabbling = true
+		body.set_squabbling.rpc()
 		opponent = body
 		
 func _collision_reset(body):
