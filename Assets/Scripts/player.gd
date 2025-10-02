@@ -4,10 +4,13 @@ extends CharacterBody2D
 var doorbell: PackedScene = preload("uid://bx542d0joldxk")
 var sfx_scene: PackedScene = preload("uid://bu74wfrxbow13")
 var candycorn: PackedScene = preload("uid://e1hrcf4p5may")
+var shuriken: PackedScene = preload("uid://b1rhyqngjufwy")
+var egg: PackedScene = preload("uid://deegrl7iop7mx")
 var squabble: PackedScene = preload("uid://e1mwxdchlsyn")
 
 @onready var candy_spawner: MultiplayerSpawner = $CandyCornBulletSpawner
 @onready var sfx_spawner: MultiplayerSpawner = $SFXSpawner
+@onready var power_spawner: MultiplayerSpawner = $PowerSpawner
 @onready var player_sync_component: MultiplayerSynchronizer = $PlayerSyncComponent
 @onready var collision_body: CollisionShape2D = $Body
 @onready var ko_collision_body: CollisionShape2D = $KOBody
@@ -72,6 +75,19 @@ func _ready() -> void:
 		var new_sfx = sfx_scene.instantiate()
 		new_sfx.stream = data.stream
 		return new_sfx
+	if power != 5 and power != 6: return
+	power_spawner.spawn_function = func(data):
+		var power_inst
+		if power == 5:
+			power_inst = shuriken.instantiate()
+		elif power == 6:
+			power_inst = egg.instantiate()
+		power_inst.direction = data.direction
+		if data.direction.x < 0:
+			power_inst.position.x -= 25
+		else:
+			power_inst.position.x += 25
+		return power_inst
 
 func setup_individuals():
 	camera_2d.enabled = false
@@ -80,6 +96,9 @@ func setup_individuals():
 		camera_2d.enabled = true
 		camera_2d.make_current()
 		_set_costume_power_remote.rpc_id(1)
+		_set_costume_power_local()
+	else:
+		# Set up costume powers for other players too
 		_set_costume_power_local()
 	tag.text = user_name
 	animated_sprite_2d.sprite_frames = PlayerGlobals.costumes[sprite_frames]
@@ -243,6 +262,15 @@ func shoot_candy_corn(direction: Vector2):
 	if not multiplayer.is_server():
 		return
 	candy_spawner.spawn({"direction": direction})
+	
+@rpc("any_peer", "call_local", "reliable")
+func throw_projectile(direction: Vector2):
+	if not multiplayer.is_server():
+		return
+	if not power_spawner.spawn_function.is_valid():
+		return
+	power_spawner.spawn({"direction": direction})
+
 
 @rpc("any_peer", "call_local", "reliable")
 func _set_costume_power_remote():
@@ -253,33 +281,34 @@ func _set_costume_power_local():
 
 func _set_costume_power_common():
 	match sprite_frames:
-		0:
+		0:#default
 			return
-		1:
+		1:#clown
 			sfx_stream = 1
-		2:
+		2:#cape
 			power = 2
-		3:
-			return
-		4:
+		3:#ninja
+			power = 5
+			
+		4:#belt
 			power = 3
 			sfx_stream = 4
-		5:
+		5:#nipples
 			return
-		6:
+		6:#faceless
 			identifiable = false
-		7:
-			return
-		8:
+		7:#egg
+			power = 6
+		8:#hole
 			collision_layer = 2
-		9:
+		9:#unibrow
 			return
-		10:
+		10:#static
 			power = 1
 			sfx_stream = 3
-		11:
+		11:#eyepatch
 			if multiplayer.get_unique_id() == input_multiplayer_authority:
 				ui.obstruction.visible = true
 				ui.obstruction.texture = load("uid://baa0kxu64qnkv")
-		12:
+		12:#witch
 			power = 4

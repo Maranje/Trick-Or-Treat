@@ -102,12 +102,12 @@ func _check_throw():
 	if flying:
 		pass
 	elif Input.is_action_just_pressed("shoot_left"):
-		if parent.opponent and parent.position.x > parent.opponent.position.x and parent.opponent.opponent == parent and not parent.squabbling and not parent.opponent.squabbling:
+		if parent.player_active and parent.opponent and parent.opponent.player_active and parent.position.x > parent.opponent.position.x and parent.opponent.opponent == parent and not parent.squabbling and not parent.opponent.squabbling:
 			start_squabble(parent.opponent)
 		else:
 			_set_throw(Vector2(-1500.0, -100), "chuck_left_1", "chuck_left_2", "ko_throw_left")
 	elif Input.is_action_just_pressed("shoot_right"):
-		if parent.opponent and parent.position.x < parent.opponent.position.x and parent.opponent.opponent == parent and not parent.squabbling and not parent.opponent.squabbling:
+		if parent.player_active and parent.opponent and parent.opponent.player_active and parent.position.x < parent.opponent.position.x and parent.opponent.opponent == parent and not parent.squabbling and not parent.opponent.squabbling:
 			start_squabble(parent.opponent)
 		else:
 			_set_throw(Vector2(1500.0, -100), "chuck_right_1", "chuck_right_2", "ko_throw_right")
@@ -117,7 +117,7 @@ func _set_throw(impulse: Vector2, animation1: String, animation2: String, animat
 	var timer_wait_time: float
 	if parent.player_active:
 		parent.shoot_candy_corn.rpc_id(1, impulse)
-		if animation1 != "none" and animation2 != "none" and animation3 != " none":
+		if animation1 != "none" and animation2 != "none" and animation3 != "none":
 			timer_wait_time = 0.15
 			if chuck_anim:
 				animation_select = animation1
@@ -415,4 +415,33 @@ func _use_power(shift_dir: int):
 				if direction == "left": animation_select = "fly_left"
 				elif direction == "right": animation_select = "fly_right"
 				TimerUtils.create_one_shot_timer(self, 0.3, func(): mounted = true)
-			
+		5:
+			if parent.player_active:
+				parent.throw_projectile.rpc_id(1, Vector2(1000 * shift_dir, -100))
+				var timer_wait_time = 0.15
+				if chuck_anim:
+					if shift_dir < 0: animation_select = "chuck_left_1"
+					elif shift_dir > 0: animation_select = "chuck_right_1"
+					chuck_anim = false
+				else:
+					if shift_dir < 0: animation_select = "chuck_left_2"
+					elif shift_dir > 0: animation_select = "chuck_right_2"
+					chuck_anim = true
+				movement = Vector2.ZERO
+				throwing = true
+				throw_timer = TimerUtils.create_one_shot_timer(self, timer_wait_time, _toggle_throwing_false)
+		6:
+			if parent.player_active:
+				parent.throw_projectile.rpc_id(1, Vector2(1000 * shift_dir, -100))
+				var timer_wait_time = 0.15
+				if chuck_anim:
+					if shift_dir < 0: animation_select = "chuck_left_1"
+					elif shift_dir > 0: animation_select = "chuck_right_1"
+					chuck_anim = false
+				else:
+					if shift_dir < 0: animation_select = "chuck_left_2"
+					elif shift_dir > 0: animation_select = "chuck_right_2"
+					chuck_anim = true
+				movement = Vector2.ZERO
+				throwing = true
+				throw_timer = TimerUtils.create_one_shot_timer(self, timer_wait_time, _toggle_throwing_false)
