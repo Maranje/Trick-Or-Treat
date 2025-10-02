@@ -717,7 +717,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"squabble_left",
-"speed": 12.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -734,5 +734,5 @@ animations = [{
 }],
 "loop": true,
 "name": &"squabble_right",
-"speed": 12.0
+"speed": 8.0
 }]

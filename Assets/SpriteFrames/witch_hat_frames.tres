@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=95 format=3 uid="uid://lao147i5u1q5"]
+[gd_resource type="SpriteFrames" load_steps=99 format=3 uid="uid://lao147i5u1q5"]
 
 [ext_resource type="Texture2D" uid="uid://olgmhr42v5a6" path="res://Assets/Sprites/WitchHat/WitchHat.png" id="1_o4lll"]
 [ext_resource type="Texture2D" uid="uid://1mew7prmjku6" path="res://Assets/Sprites/Stuff/KO.png" id="2_mh87d"]
@@ -370,6 +370,22 @@ region = Rect2(128, 528, 64, 88)
 [sub_resource type="AtlasTexture" id="AtlasTexture_s3pyy"]
 atlas = ExtResource("1_o4lll")
 region = Rect2(192, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0fk1g"]
+atlas = ExtResource("1_o4lll")
+region = Rect2(256, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7knns"]
+atlas = ExtResource("1_o4lll")
+region = Rect2(320, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vh7fg"]
+atlas = ExtResource("1_o4lll")
+region = Rect2(384, 528, 64, 88)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ypkum"]
+atlas = ExtResource("1_o4lll")
+region = Rect2(448, 528, 64, 88)
 
 [resource]
 animations = [{
@@ -769,7 +785,19 @@ animations = [{
 "name": &"squabble_left",
 "speed": 8.0
 }, {
-"frames": [],
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0fk1g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7knns")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vh7fg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ypkum")
+}],
 "loop": true,
 "name": &"squabble_right",
 "speed": 8.0
