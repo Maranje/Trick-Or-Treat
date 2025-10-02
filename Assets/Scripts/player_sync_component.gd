@@ -102,20 +102,13 @@ func _check_throw():
 	if flying:
 		pass
 	elif Input.is_action_just_pressed("shoot_left"):
-<<<<<<< HEAD
 		if parent.player_active and parent.opponent and parent.opponent.player_active and parent.position.x > parent.opponent.position.x and parent.opponent.opponent == parent and not parent.squabbling and not parent.opponent.squabbling:
-=======
-		if parent.player_active and parent.opponent and parent.position.x > parent.opponent.position.x and parent.opponent.opponent == parent and not parent.squabbling and not parent.opponent.squabbling:
->>>>>>> a66705cbb7793a852ad95fc4dca3aebf6f1ed795
+
 			start_squabble(parent.opponent)
 		else:
 			_set_throw(Vector2(-1500.0, -100), "chuck_left_1", "chuck_left_2", "ko_throw_left")
 	elif Input.is_action_just_pressed("shoot_right"):
-<<<<<<< HEAD
 		if parent.player_active and parent.opponent and parent.opponent.player_active and parent.position.x < parent.opponent.position.x and parent.opponent.opponent == parent and not parent.squabbling and not parent.opponent.squabbling:
-=======
-		if parent.player_active and parent.opponent and parent.position.x < parent.opponent.position.x and parent.opponent.opponent == parent and not parent.squabbling and not parent.opponent.squabbling:
->>>>>>> a66705cbb7793a852ad95fc4dca3aebf6f1ed795
 			start_squabble(parent.opponent)
 		else:
 			_set_throw(Vector2(1500.0, -100), "chuck_right_1", "chuck_right_2", "ko_throw_right")
