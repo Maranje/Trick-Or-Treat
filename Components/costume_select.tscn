@@ -21,7 +21,8 @@ texture_filter = 1
 position = Vector2(0, -5.5)
 scale = Vector2(0.9, 0.9)
 texture = ExtResource("1_0dhp8")
-vframes = 13
+hframes = 6
+vframes = 5
 
 [node name="ButtonLeft" type="Button" parent="."]
 texture_filter = 1
@@ -62,3 +63,13 @@ offset_bottom = 23.0
 scale = Vector2(0.5, 0.5)
 text = "100"
 label_settings = SubResource("LabelSettings_24ean")
+
+[node name="CostumeNumber" type="Label" parent="."]
+offset_left = -31.0
+offset_top = 33.0
+offset_right = -3.0
+offset_bottom = 56.0
+scale = Vector2(0.5, 0.5)
+text = "0"
+label_settings = SubResource("LabelSettings_24ean")
+horizontal_alignment = 2

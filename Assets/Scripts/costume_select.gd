@@ -5,9 +5,11 @@ extends Node2D
 @onready var button_right: Button = $ButtonRight
 @onready var buy_button: Button = $BuyButton
 @onready var costume_number: int = PlayerGlobals.current_costume
+@onready var costume_number_label: Label = $CostumeNumber
 
 func _ready() -> void:
 	costume.frame = costume_number
+	costume_number_label.text = str("#", costume_number)
 	button_left.pressed.connect(_costume_button_left_pressed)
 	button_right.pressed.connect(_costume_button_right_pressed)
 	button_left.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
@@ -17,9 +19,13 @@ func _ready() -> void:
 	update_ui()
 
 func update_ui():
+	costume_number_label.text = str("#", costume_number)
 	if costume_number in PlayerGlobals.costumes_owned:
 		buy_button.visible = false
 		get_tree().current_scene.get_node("Lobby/Ready").disabled = false
+	elif costume_number > 12:
+		buy_button.visible = false
+		get_tree().current_scene.get_node("Lobby/Ready").disabled = true
 	else: 
 		buy_button.visible = true
 		get_tree().current_scene.get_node("Lobby/Ready").disabled = true

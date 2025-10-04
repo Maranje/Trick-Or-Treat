@@ -23,7 +23,24 @@ var costumes = [
 	preload("res://Assets/SpriteFrames/unibrow_frames.tres"),
 	preload("res://Assets/SpriteFrames/static_frames.tres"),
 	preload("res://Assets/SpriteFrames/eyepatch.tres"),
-	preload("res://Assets/SpriteFrames/witch_hat_frames.tres")
+	preload("res://Assets/SpriteFrames/witch_hat_frames.tres"),
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null,
+	null
 ]
 
 const SAVE_FILE = "user://gamedata.save"
